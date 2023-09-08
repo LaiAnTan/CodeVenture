@@ -71,14 +71,14 @@ class StudentDB:
     @classmethod
     def add_student(cls, student_details: tuple):
         # used placeholder (?) instead of named fields for easy addition of new fields in the future
-        if cls.fetch_attr("username", user_data[0]) != None:
+        if cls.fetch_attr("username", student_details[0]) != None:
             raise cls.UserExistsException
         cls.cursor.execute(f"INSERT INTO {cls.db_name} VALUES {cls.db_placeholders}", student_details)
         cls.conn.commit()
 
     @classmethod
     def remove_student(cls, username):
-        if cls.fetch_attr("username", user_data[0]) == None:
+        if cls.fetch_attr("username", username[0]) == None:
             raise cls.UserNotFoundException
         cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE username=:username", {"username": username})
         cls.conn.commit()

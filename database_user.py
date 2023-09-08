@@ -66,7 +66,7 @@ class UserDB:
 
     @classmethod
     def remove_user(cls, username):
-        if cls.fetch_attr("username", user_data[0]) == None:
+        if cls.fetch_attr("username", username) == None:
             raise cls.UserNotFoundException
         cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE username=:username", {"username": username})
         cls.conn.commit()
