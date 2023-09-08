@@ -1,11 +1,13 @@
 import sqlite3 as sqlite3
 import os
-class UserDB:
+
+class StudentDB:
 
     """
-    Singleton class that handles users database operations
+    Singleton class that handles student database operations
     """
-    db_name = "users"
+    
+    db_name = "students"
     
     # database path
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -13,10 +15,20 @@ class UserDB:
 
     _instance = None
 
+    """
+    notes:
+    - subscription is boolean (0, 1)
+    - quiz results and challenge results are strings
+    that are converted from a list of objects
+    between objects they are seperated by ;
+    internally they are seperated by ,
+    """
     db_fields = """
-                username text, 
-                password text, 
-                user_type text
+                username text,
+                subscription integer,
+                date_of_birth text,
+                quiz_results text,
+                challenge_results texxt
                 """
     
     # placeholder for field
@@ -53,7 +65,7 @@ class UserDB:
     def new_users_db(cls):
         # ONLY RUN THIS FUNCTION IF YOU WANT A NEW USERS DATABASE TO BE CREATED
         if cls.db_exists() == False:
-            cls.cursor.execute(f"CREATE TABLE {cls.db_name}({cls.db_fields})")
+            cls.cursor.execute(f"CREATE TABLE users({cls.db_fields})")
             cls.conn.commit()
 
     @classmethod

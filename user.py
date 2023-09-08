@@ -5,7 +5,7 @@ from database_user import UserDB
 
 class User(ABC):
 
-    def __init__(self, name, username, password):
+    def __init__(self, username):
         """
         Initializes the User abstract class.
         Note only the username is saved here,

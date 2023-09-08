@@ -1,2 +1,3 @@
-tlai-an,abc123,Tan Lai An
-# admin,admin,admin (this is a comment)
+tlai-an,abc123,student
+john,imjohn,educator
+admin,admin,admin

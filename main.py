@@ -16,6 +16,6 @@ if __name__ == "__main__":
         except db.UserExistsException:
             continue
     
-    test = User(users[0][2], users[0][0], users[0][1])
+    test = User(users[0][0])
     user_input_pw = input("Enter password: ")
     print(test.login(user_input_pw))
