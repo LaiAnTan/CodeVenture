@@ -27,13 +27,19 @@ class UserDB:
     cursor = conn.cursor()
     
     class UserExistsException(Exception):
-        """Called when adding user that already exists in the database"""
+        """Called when trying to add user that already exists in the database"""
         
         def __init__(self, msg="User already exists in the database"):
+            super().__init__(msg)
+    
+    class UserNotFoundException(Exception):
+        """Called when trying to delete user that does not exist in the database"""
+        def __init__(self, msg="User not found in the database"):
             super().__init__(msg)
 
     @classmethod
     def instance(cls):
+        """Creates a new instance if it doesnt already exist"""
         if cls._instance is None:
             cls._instance = cls.__new__(cls)
         return cls._instance
@@ -60,12 +66,15 @@ class UserDB:
 
     @classmethod
     def remove_user(cls, username):
+        if cls.fetch_attr("username", user_data[0]) == None:
+            raise cls.UserNotFoundException
         cls.cursor.execute("DELETE FROM users WHERE username=:username", {"username": username})
         cls.conn.commit()
 
     @classmethod
     def fetch_attr(cls, field, username):
         # fetches the required attribute with the username that matches it
+        # returns None if user not found
         return cls.cursor.execute(f"SELECT {field} from users WHERE username=:username", {"username": username}).fetchone()
 
 if __name__ == "__main__":
