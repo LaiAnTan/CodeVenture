@@ -62,22 +62,22 @@ class StudentDB:
         return cls.cursor.fetchone() != None
 
     @classmethod
-    def new_users_db(cls):
+    def new_student_db(cls):
         # ONLY RUN THIS FUNCTION IF YOU WANT A NEW USERS DATABASE TO BE CREATED
         if cls.db_exists() == False:
-            cls.cursor.execute(f"CREATE TABLE users({cls.db_fields})")
+            cls.cursor.execute(f"CREATE TABLE {cls.db_name}({cls.db_fields})")
             cls.conn.commit()
 
     @classmethod
-    def add_user(cls, user_data: tuple):
+    def add_student(cls, student_details: tuple):
         # used placeholder (?) instead of named fields for easy addition of new fields in the future
         if cls.fetch_attr("username", user_data[0]) != None:
             raise cls.UserExistsException
-        cls.cursor.execute(f"INSERT INTO {cls.db_name} VALUES {cls.db_placeholders}", user_data)
+        cls.cursor.execute(f"INSERT INTO {cls.db_name} VALUES {cls.db_placeholders}", student_details)
         cls.conn.commit()
 
     @classmethod
-    def remove_user(cls, username):
+    def remove_student(cls, username):
         if cls.fetch_attr("username", user_data[0]) == None:
             raise cls.UserNotFoundException
         cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE username=:username", {"username": username})

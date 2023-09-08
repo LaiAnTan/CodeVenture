@@ -1,4 +1,5 @@
-from user import User, import_users_from_csv
+from user import User
+from user_functions import import_users_from_csv, create_new_user
 from database_user import UserDB
 import os
 

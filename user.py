@@ -51,20 +51,5 @@ class User(ABC):
     # def export_user_data():
     #     pass
 
-def import_users_from_csv(filename) -> list[tuple]:
-    """
-    Reads from a csv file containing user data
-    and converts it into a list of tuples for database insertion
-    """
-    l = list()
-    with open(filename, "r") as f:
-        for line in f:
-            line = line.rstrip('\n')
-            if line == "" or line[0] == "#":
-                continue
-            values = line.split(",")
-            l.append((values))
-    return l
-
 if __name__ == "__main__":
     print(import_users_from_csv("test_users.txt"))
