@@ -8,7 +8,9 @@ from interface import UI
 from ui_login import login_page
 
 def register_page(ui: UI):
-    ui.frame.pack_forget()
+
+    ui.frame.destroy()
+    ui.frame = ctk.CTkFrame(ui.main)
 
     def register_debug():
         print("Username: " + username.get())

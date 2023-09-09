@@ -5,7 +5,9 @@ import customtkinter as ctk
 from interface import UI
 
 def login_page(ui: UI):
-    ui.frame.pack_forget()
+
+    ui.frame.destroy()
+    ui.frame = ctk.CTkFrame(ui.main)
 
     def login_debug():
         print("Username: " + username1.get())
