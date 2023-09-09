@@ -7,8 +7,8 @@ class StudentDB(db.DBBase):
 	"""
 
 	@classmethod
-	def instance(cls):
-		return super().instance(
+	def __new__(cls, db_name=None, db_fields=None):
+		return super().__new__(
 			"students",
 			"""
 			username text,
@@ -17,7 +17,7 @@ class StudentDB(db.DBBase):
 			quiz_results text,
 			challenge_results texxt
 			"""
-		)
+			)
 
 if __name__ == "__main__":
 	pass

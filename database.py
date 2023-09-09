@@ -34,6 +34,9 @@ class DBBase:
 		"""
 		Initializer for class variables
 		"""
+		if cls._instance:
+			return cls._instance
+		cls._instance = super(DBBase, cls).__new__(cls)
 		cls.db_name = db_name
 		cls.db_path = os.path.join(cls.BASE_DIR, f"{cls.db_name}.db")
 		cls.db_fields = fields
@@ -48,14 +51,11 @@ class DBBase:
 		# connection and cursor
 		cls.conn = sqlite3.connect(cls.db_path)
 		cls.cursor = cls.conn.cursor()
-		return cls
+		return cls._instance
 
 	@classmethod
-	def instance(cls, name: str, field: str):
-		"""Creates a new instance of the singleton if it doesnt already exist"""
-		if cls._instance is None:
-			cls._instance = cls.__new__(name, field)
-		return cls._instance
+	def __del__(cls):
+		cls.conn.close()
 
 	@classmethod
 	def db_exists(cls):

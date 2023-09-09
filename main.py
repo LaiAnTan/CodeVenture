@@ -5,7 +5,7 @@ from database_user import UserDB
 import os
 
 if __name__ == "__main__":
-    db: UserDB = UserDB.instance()
+    db: UserDB = UserDB()
     db.new_db()
     if db.db_exists() == False:
         print("where did my db go")

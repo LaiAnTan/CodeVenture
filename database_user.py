@@ -7,15 +7,14 @@ class UserDB(db.DBBase):
 	"""
 
 	@classmethod
-	def instance(cls):
-		return super().instance(
-			"users",
-			"""
-			username text,
-			password text,
-			user_type text
-			"""
-		)
+	def __new__(cls, db_name=None, db_fields=None):
+		return super(UserDB, cls).__new__("users",
+				"""
+				username text,
+				password text,
+				user_type text
+				"""
+			)
 
 if __name__ == "__main__":
 	pass
