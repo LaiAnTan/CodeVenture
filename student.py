@@ -1,5 +1,8 @@
 from user import User
 
+# this class is only used if you logged in as a student
+
+# handles everything a student does and also updates database respectively
 class Student(User):
     
     user_type = "student"
