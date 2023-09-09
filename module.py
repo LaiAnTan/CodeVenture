@@ -30,6 +30,9 @@ class Module(ac.Activity):
 					self.SourcesExtractor(self.footer, self.img, "IMG-CONT-END")
 				case "CODE-CONT-START":
 					self.SourcesExtractor(self.footer, self.code, "CODE-CONT-END")
+		# self.img = { x.split('-')[0] : Image.open(self.ModulePath + x.split('-')[1]) for x in self.img_src }
+		# self.code = { x.split('-')[0] : x.split('-')[1] for x in self.img_src }
+
 
 	def RunActivity(self):
 		print("Module Activity Running...")

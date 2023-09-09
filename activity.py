@@ -71,13 +71,6 @@ class Activity(ABC):
 					case "SOURCES-START":
 						self.__get_Sources(file)
 
-		# self.__cleanup()
-
-	def __cleanup(self):
-		## not sure about the Image thing
-		self.img = { x.split('-')[0] : Image.open(self.ModulePath + x.split('-')[1]) for x in self.img_src }
-		self.code = { x.split('-')[0] : x.split('-')[1] for x in self.img_src }
-
 	def __str__(self):
 		# this is actually meant for developers only
 		# will implement prettier one later
