@@ -3,7 +3,7 @@ import os
 
 ## haha funny attempt on inheritance
 ## pray i dont blow up and cry and die and distort
-class DBBase:
+class DBBase(object):
 	"""
 	Singleton class that handles epic database for all your database needs
 	"""
@@ -31,30 +31,22 @@ class DBBase:
 
 	@classmethod
 	def	__new__(cls, db_name: str, fields: str):
-		"""
-		Initializer for class variables
-		"""
-		cls.db_name = db_name
-		cls.db_path = os.path.join(cls.BASE_DIR, f"{cls.db_name}.db")
-		cls.db_fields = fields
-		
-		# ensure that the id field is the first
-		# i will distort if it isnt
-		cls.db_idfield = fields.split(",")[0].split()[0]
-
-		# placeholder for field
-		cls.db_placeholders = "(" + "".join(["?, " for i in range(len(cls.db_fields.split(",")) - 1)]) + "?" + ")"
-
-		# connection and cursor
-		cls.conn = sqlite3.connect(cls.db_path)
-		cls.cursor = cls.conn.cursor()
-		return cls
-
-	@classmethod
-	def instance(cls, name: str, field: str):
-		"""Creates a new instance of the singleton if it doesnt already exist"""
 		if cls._instance is None:
-			cls._instance = cls.__new__(name, field)
+			cls._instance = super(DBBase, cls).__new__(cls)
+			cls.db_name = db_name
+			cls.db_path = os.path.join(cls.BASE_DIR, f"{cls.db_name}.db")
+			cls.db_fields = fields
+			
+			# ensure that the id field is the first
+			# i will distort if it isnt
+			cls.db_idfield = fields.split(",")[0].split()[0]
+
+			# placeholder for field
+			cls.db_placeholders = "(" + "".join(["?, " for i in range(len(cls.db_fields.split(",")) - 1)]) + "?" + ")"
+
+			# connection and cursor
+			cls.conn = sqlite3.connect(cls.db_path)
+			cls.cursor = cls.conn.cursor()
 		return cls._instance
 
 	@classmethod

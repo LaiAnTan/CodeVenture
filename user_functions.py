@@ -20,7 +20,7 @@ def import_users_from_csv(filename) -> list[tuple]:
 def create_new_user(username: str, password: str, user_type: str, details=None) -> bool:
     if details:
         pass
-    user_db = UserDB.instance()
+    user_db = UserDB()
     try:
         user_db.add_user((username, password, user_type))
     except user_db.UserExistsException:

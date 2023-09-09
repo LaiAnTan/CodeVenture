@@ -34,7 +34,7 @@ class User(ABC):
         Tries to match pw_input with password from db
         """
         # accessing db (UserDB.make_singleton() must be called before this)
-        db = UserDB.instance()
+        db = UserDB()
         user_pw = db.fetch_attr("password", self.get_username())
         if user_pw == None: # user not in database
             return False

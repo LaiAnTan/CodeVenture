@@ -7,8 +7,8 @@ class StudentDB(db.DBBase):
 	"""
 
 	@classmethod
-	def instance(cls):
-		return super().instance(
+	def __new__(cls, placeholder=None):
+		return super().__new__(
 			"students",
 			"""
 			username text,
