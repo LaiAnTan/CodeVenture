@@ -29,7 +29,7 @@ class Achievements():
         current_completed: The current activity level.
         """
         for achievement in self.achievements:
-            if not achievement['passed'] and self.met_criteria(achievement['Depending_criteria'], current_completed):
+            if not achievement['passed'] and self.met_criteria(achievement['depending_criteria'], current_completed):
                 achievement['passed'] = True
                 print(f"Congratulations! You received the {achievement['name']}")
 
@@ -54,7 +54,9 @@ if __name__ == "__main__":
     current_completed = 5
 
     # Adds an achievement
-    achievements.add_achievement("Bronze Badge", "Complete 3 learning modules", 3)
+    achievements.add_achievement("Bronze Badge", "Complete 5 learning modules", 5)
+    achievements.add_achievement("Silver Badge", "Complete 15 learning modules", 15)
+    achievements.add_achievement("Gold Badge", "Complete 30 learning modules", 30)
 
     # Checks if the achievement's criteria has been met
     achievements.check_achievements(current_completed)
