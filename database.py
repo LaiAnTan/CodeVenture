@@ -87,7 +87,7 @@ class DBBase:
 		- please ensure the first index of the data is a special id (primary / foreign key) for the data
 		"""
 		if cls.fetch_attr(cls.db_idfield, data[0]) != None:
-			raise cls.UserExistsException
+			raise cls.DuplicateEntryException
 		cls.cursor.execute(f"INSERT INTO {cls.db_name} VALUES {cls.db_placeholders}", data)
 		cls.conn.commit()
 
@@ -97,7 +97,7 @@ class DBBase:
 		removes a singular entry from the database
 		"""
 		if cls.fetch_attr("username", data_id) == None:
-			raise cls.UserNotFoundException
+			raise cls.EntryNotFoundException
 		cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {{cls.db_idfield}: data_id})
 		cls.conn.commit()
 

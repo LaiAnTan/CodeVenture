@@ -6,7 +6,7 @@ import os
 
 if __name__ == "__main__":
     db: UserDB = UserDB.instance()
-    db.new_users_db()
+    db.new_db()
     if db.db_exists() == False:
         print("where did my db go")
     else:
@@ -14,8 +14,8 @@ if __name__ == "__main__":
     users = import_users_from_csv("test_users.txt")
     for user in users:
         try:
-            db.add_user(user)
-        except db.UserExistsException:
+            db.add_entry(user)
+        except db.DuplicateEntryException:
             continue
     
     test = User(users[0][0])
