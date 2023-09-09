@@ -1,10 +1,11 @@
 from user import User
 from user_functions import import_users_from_csv, create_new_user
+from database import DBBase
 from database_user import UserDB
 import os
 
 if __name__ == "__main__":
-    db = UserDB().instance()
+    db: UserDB = UserDB.instance()
     db.new_users_db()
     if db.db_exists() == False:
         print("where did my db go")

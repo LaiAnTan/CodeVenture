@@ -34,7 +34,7 @@ class User(ABC):
         Tries to match pw_input with password from db
         """
         # accessing db (UserDB.make_singleton() must be called before this)
-        db = UserDB()
+        db = UserDB.instance()
         user_pw = db.fetch_attr("password", self.get_username())
         if user_pw == None: # user not in database
             return False
@@ -44,7 +44,7 @@ class User(ABC):
         else: # login failed
             return False
     
-    def logout() -> bool:
+    def logout(self) -> bool:
         self.login_status = False
     
     # @abstractmethod
@@ -52,4 +52,6 @@ class User(ABC):
     #     pass
 
 if __name__ == "__main__":
+    from user_functions import import_users_from_csv
+
     print(import_users_from_csv("test_users.txt"))

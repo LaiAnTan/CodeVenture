@@ -1,6 +1,6 @@
 from database_user import UserDB
 from database_student import StudentDB
-from database_educator import EducatorDB
+# from database_educator import EducatorDB
 
 def import_users_from_csv(filename) -> list[tuple]:
     """
@@ -21,7 +21,7 @@ def import_users_from_csv(filename) -> list[tuple]:
 def create_new_user(username: str, password: str, user_type: str, details=None) -> bool:
     if details:
         pass
-    user_db = UserDB()
+    user_db = UserDB.instance()
     try:
         user_db.add_user((username, password, user_type))
     except user_db.UserExistsException:
@@ -32,9 +32,10 @@ def create_new_user(username: str, password: str, user_type: str, details=None) 
             if details:
                 student_db.add_student(details)
         case "educator":
-            educator_db = EducatorDB()
-            if details:
-                educator_db.add_educator(details)
+            pass
+            # educator_db = EducatorDB()
+            # if details:
+            #     educator_db.add_educator(details)
         case _: # should never happen
             pass
     return True

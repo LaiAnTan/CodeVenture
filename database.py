@@ -3,7 +3,7 @@ import os
 
 ## haha funny attempt on inheritance
 ## pray i dont blow up and cry and die and distort
-class UserDB:
+class DBBase:
 	"""
 	Singleton class that handles epic database for all your database needs
 	"""
@@ -26,7 +26,7 @@ class UserDB:
 		
 		# ensure that the id field is the first
 		# i will distort if it isnt
-		cls.db_idfield = fields.split(",")[0]
+		cls.db_idfield = fields.split(",")[0].split(' ')[0]
 
 		# placeholder for field
 		cls.db_placeholders = "(" + "".join(["?, " for i in range(len(cls.db_fields.split(",")) - 1)]) + "?" + ")"
@@ -34,6 +34,7 @@ class UserDB:
 		# connection and cursor
 		cls.conn = sqlite3.connect(cls.db_path)
 		cls.cursor = cls.conn.cursor()
+		return cls
 
 	class UserExistsException(Exception):
 		"""Called when trying to add user that already exists in the database"""
@@ -47,10 +48,10 @@ class UserDB:
 			super().__init__(msg)
 
 	@classmethod
-	def instance(cls, name: str, fields: str):
+	def instance(cls, name: str, field: str):
 		"""Creates a new instance if it doesnt already exist"""
 		if cls._instance is None:
-			cls._instance = cls.__new__(cls, name, fields)
+			cls._instance = cls.__new__(name, field)
 		return cls._instance
 
 	@classmethod
@@ -86,6 +87,4 @@ class UserDB:
 		# fetches the required attribute with the username that matches it
 		# returns None if user not found
 		return cls.cursor.execute(f"SELECT {field} from {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {cls.db_idfield: data_id}).fetchone()
-
-if __name__ == "__main__":
-	pass
+	
