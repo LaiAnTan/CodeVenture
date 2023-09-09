@@ -7,6 +7,7 @@ from interface import UI
 # pages
 from ui_login import login_page
 
+
 #create frame to add widgets to
 # def front_page(app):
 #     frame = ctk.CTkFrame(app)

@@ -14,6 +14,7 @@ class UI:
     ctk.set_default_color_theme("dark-blue")
 
     frame = ctk.CTkFrame(main)
+    main.title("CodeVenture - Development Build")
 
     main.minsize(900, 600)
 

@@ -4,6 +4,8 @@ import customtkinter as ctk
 # main class
 from interface import UI
 
+from ui_loading import loading_page
+
 def login_page(ui: UI):
 
     ui.frame.destroy()
@@ -88,7 +90,7 @@ def login_page(ui: UI):
                                 font=("Helvetica", 14),
                                 width=120,
                                 height=50,
-                                command=login_debug
+                                command=lambda: loading_page(ui)
                                 )
     login_button.pack(
                     padx=30,
