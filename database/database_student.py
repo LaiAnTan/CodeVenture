@@ -1,4 +1,4 @@
-import database as db
+import database.database_base as db
 
 class StudentDB(db.DBBase):
 

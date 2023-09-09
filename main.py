@@ -1,9 +1,8 @@
-from user import User
+from user.user_base import User
 from user_functions import import_users_from_csv, create_new_user
-from database import DBBase
-from database_user import UserDB
+from database.database_base import DBBase
+from database.database_user import UserDB
 import os
-
 if __name__ == "__main__":
     db = UserDB()
     db.new_db()

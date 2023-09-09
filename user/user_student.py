@@ -1,5 +1,5 @@
-from user import User
-from database_student import StudentDB
+from user.user_base import User
+from database.database_student import StudentDB
 
 # this class is only used if you logged in as a student
 

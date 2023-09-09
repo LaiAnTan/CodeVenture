@@ -1,5 +1,5 @@
-from database_user import UserDB
-from database_student import StudentDB
+from database.database_user import UserDB
+from database.database_student import StudentDB
 # from database_educator import EducatorDB
 
 def import_users_from_csv(filename) -> list[tuple]:
