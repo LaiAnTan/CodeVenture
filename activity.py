@@ -1,62 +1,86 @@
 import os
-from  PIL import ImageTk, Image
+from PIL import ImageTk, Image
+from enum import Enum
+from abc import ABC, abstractmethod
 
-## 0 - Challange, 1 - Module, 2 - Quiz
-activitiestype = ["Challenge", "Module", "Quiz"]
-data_file = "data.ilovemen"
+class Activity(ABC):
+	data_file = "data.ilovemen"
 
-class Activity:
-	def	__init__(self, filename: str, ac_type: int) -> None:
-		self.ModulePath = os.getcwd() + f"/Activities/{activitiestype[ac_type]}/" + filename + "/"
+	class AType(Enum):
+		Module = 1
+		Challenge = 2
+		Quiz = 3
+
+	def	__init__(self, filename: str, ac_type: AType) -> None:
+		self.ModulePath = os.getcwd() + f"/Activities/{ac_type.name}/" + filename + "/"
 		self.content = []
-		self.img_src = []
-		self.img = []
+		self.footer = []
+		self.type = ac_type
 
-		get_content = False
-		get_img = False
-		with open(self.ModulePath + data_file) as file:
+		self.id = "null"
+		self.title = "null"
+		self.difficulty = "null"
+		self.tag = []
+		self.achievement = []
+		self.up_level = []
+
+	def	__get_Headers(self, file):
+		for line in file:
+			line = line.strip('\n')
+			if line == "HEADER-END":
+				break
+
+			stuff = line.split("|")
+			match stuff[0]:
+				case "A_ID":
+					self.id = stuff[1]
+				case "TITLE":
+					self.title = stuff[1]
+				case "DIFFICULTY":
+					self.difficulty = stuff[1].count('*')
+				case "TAG":
+					self.tag = stuff[1].split(',')
+				case "ACHIEVEMENT":
+					self.achievement = stuff[1]
+				case "UP_LEVEL":
+					self.up_level = stuff[1].split(',')
+
+	def	__get_Content(self, file):
+		for line in file:
+			line = line.strip('\n')
+			if line == "CONTENT-END":
+				break
+			self.content.append(line)
+
+	def __get_Sources(self, file):
+		for line in file:
+			line = line.strip('\n')
+			if line == "SOURCES-END":
+				break
+			self.footer.append(line)
+
+	def read_mf_read(self):
+		with open(self.ModulePath + Activity.data_file) as file:
 			for line in file:
 				line = line.strip('\n')
-				if get_content:
-					if line == "CONTENT-END":
-						get_content = False
-						continue
-					self.content.append(line)
-					continue
-
-				if get_img:
-					if line == "IMG-CONT-END":
-						get_img = False
-						continue
-					self.img_src.append(line)
-					continue
-
-				stuff = line.split("|")
-				match stuff[0]:
-					case "A_ID":
-						self.id = stuff[1]
-					case "TITLE":
-						self.title = stuff[1]
-					case "DIFFICULTY":
-						self.difficulty = stuff[1].count('*')
-					case "TAG":
-						self.tag = stuff[1].split(',')
-					case "ACHIEVEMENT":
-						self.achievement = stuff[1]
-					case "UP_LEVEL":
-						self.up_level = stuff[1].split(',')
+				match line:
+					case "HEADER-START":
+						self.__get_Headers(file)
 					case "CONTENT-START":
-						get_content = True
-					case "IMG-CONT-START":
-						get_img = True
+						self.__get_Content(file)
+					case "SOURCES-START":
+						self.__get_Sources(file)
 
-		self.cleanup()
+		# self.__cleanup()
 
-	def cleanup(self):
+	def __cleanup(self):
 		## not sure about the Image thing
 		self.img = { x.split('-')[0] : Image.open(self.ModulePath + x.split('-')[1]) for x in self.img_src }
+		self.code = { x.split('-')[0] : x.split('-')[1] for x in self.img_src }
 
 	def __str__(self):
+		# this is actually meant for developers only
+		# will implement prettier one later
 		description_msg = ''.join(self.content)
 		line_len = 32
 		desc_len = 10
@@ -71,21 +95,24 @@ class Activity:
 			f"Difficulty = {self.difficulty}",
 			f"Associated Tags = {str(self.tag).strip('[]')}",
 			"-" * line_len,
-			f"Description",
+			f"Contents",
 			"-" * line_len
 		]
 		data.extend(description)
 		data.extend(
 			[
 				"-" * line_len,
-				f"Images",
+				f"Sources",
 				"-" * line_len,
 			]
 		)
-		data.extend(self.img_src)
+		data.extend(self.footer)
 
 		return "\n".join(data)
 
+	@abstractmethod
+	def	RunActivity(self):
+		pass
+
 if __name__ == "__main__":
-	FuckMe = Activity("MD0000", 1)
-	print(FuckMe)
+	pass
