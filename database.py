@@ -31,23 +31,31 @@ class DBBase(object):
 
 	@classmethod
 	def	__new__(cls, db_name: str, fields: str):
-		if cls._instance is None:
-			cls._instance = super(DBBase, cls).__new__(cls)
-			cls.db_name = db_name
-			cls.db_path = os.path.join(cls.BASE_DIR, f"{cls.db_name}.db")
-			cls.db_fields = fields
-			
-			# ensure that the id field is the first
-			# i will distort if it isnt
-			cls.db_idfield = fields.split(",")[0].split()[0]
+		"""
+		Initializer for class variables
+		"""
+		if cls._instance:
+			return cls._instance
+		cls._instance = super(DBBase, cls).__new__(cls)
+		cls.db_name = db_name
+		cls.db_path = os.path.join(cls.BASE_DIR, f"{cls.db_name}.db")
+		cls.db_fields = fields
+		
+		# ensure that the id field is the first
+		# i will distort if it isnt
+		cls.db_idfield = fields.split(",")[0].split()[0]
 
-			# placeholder for field
-			cls.db_placeholders = "(" + "".join(["?, " for i in range(len(cls.db_fields.split(",")) - 1)]) + "?" + ")"
+		# placeholder for field
+		cls.db_placeholders = "(" + "".join(["?, " for i in range(len(cls.db_fields.split(",")) - 1)]) + "?" + ")"
 
-			# connection and cursor
-			cls.conn = sqlite3.connect(cls.db_path)
-			cls.cursor = cls.conn.cursor()
+		# connection and cursor
+		cls.conn = sqlite3.connect(cls.db_path)
+		cls.cursor = cls.conn.cursor()
 		return cls._instance
+
+	@classmethod
+	def __del__(cls):
+		cls.conn.close()
 
 	@classmethod
 	def db_exists(cls):

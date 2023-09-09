@@ -17,7 +17,7 @@ class StudentDB(db.DBBase):
 			quiz_results text,
 			challenge_results texxt
 			"""
-		)
+			)
 
 if __name__ == "__main__":
 	pass

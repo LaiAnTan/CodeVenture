@@ -13,14 +13,13 @@ class UserDB(db.DBBase):
 	"""
 	@classmethod
 	def __new__(cls, placeholder=None):
-		return super().__new__(
-			"users",
-			"""
-			username text
-			password text,
-			user_type text
-			"""
-		)
+		return super(UserDB, cls).__new__("users",
+				"""
+				username text,
+				password text,
+				user_type text
+				"""
+			)
 
 if __name__ == "__main__":
 	pass
