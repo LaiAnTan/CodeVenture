@@ -17,7 +17,6 @@ def import_users_from_csv(filename) -> list[tuple]:
             l.append((values))
     return l
 
-# kwargs for extra user information if student or educator
 def create_new_user(username: str, password: str, user_type: str, details=None) -> bool:
     if details:
         pass
