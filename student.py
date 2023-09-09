@@ -1,4 +1,5 @@
 from user import User
+from database_student import StudentDB
 
 # this class is only used if you logged in as a student
 
@@ -12,12 +13,13 @@ class Student(User):
         Initializes the Student class that is inherited from User.
         """
         super().__init__(name, username)
+        
         # query from db
-        """
-        self.student_id
-        self.subscription_status
-        self.stats: Stats
-        self.dob
-        self.quiz_results
-        self.challenge_results
-        """
+        db = StudentDB()
+        self.id = db.fetch_attr("id", self.username)
+        self.subciption_status = db.fetch_attr("subscription", self.username)
+        self.dob = db.fetch_attr("date_of_birth", self.username)
+        self.completed_quiz = db.fetch_attr("completed_quiz", self.username)
+        self.completed_challenge = db.fetch_attr("completed_challenge", self.username)
+
+        # convert completed_quiz & completed_challenge into dicts of QuizResult and ChallengeResult objects

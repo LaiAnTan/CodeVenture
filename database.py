@@ -28,6 +28,10 @@ class DBBase(object):
 		"""Called when trying to delete entry that does not exist in the database"""
 		def __init__(self, msg="User not found in the database"):
 			super().__init__(msg)
+	
+	class WrongDatatypeException(Exception):
+		def __init__(self, msg="Value datatype does not match column"):
+			super().__init__(msg)
 
 	@classmethod
 	def	__new__(cls, db_name: str, fields: str):
@@ -96,7 +100,7 @@ class DBBase(object):
 		"""
 		removes a singular entry from the database
 		"""
-		if cls.fetch_attr("username", data_id) == None:
+		if cls.fetch_attr(cls.db_idfield, data_id) == None:
 			raise cls.EntryNotFoundException
 		cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {{cls.db_idfield}: data_id})
 		cls.conn.commit()
@@ -110,3 +114,32 @@ class DBBase(object):
 		# fetches the required attribute with the data that matches it
 		# returns None if user not found
 		return cls.cursor.execute(f"SELECT {field} from {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {cls.db_idfield: data_id}).fetchone()
+
+	@classmethod
+	def update_attr(cls, field, data_id, new_value):
+		"""
+		updates the value in (field) that corresponds to entry with (data_id) with (new_value)
+
+		raises EntryNotFoundException if the entry doesnt exist
+		raises WrongDatatypeException if the datatype of new_value does not match the field
+		"""
+		cls.cursor.execute(f"SELECT name, type FROM pragma_table_info('{cls.db_name}') WHERE name='{field}'")
+		field_type = cls.cursor.fetchone()[1]
+
+		match field_type:
+			case "TEXT":
+				if isinstance(new_value, str) == False:
+					raise WrongDatatypeException
+			case "INTEGER":
+				if isinstance(new_value, int) == False:
+					raise WrongDatatypeException
+			case "REAL":
+				if isinstance(new_value, float) == False:
+					raise WrongDatatypeException
+			case _:
+				pass
+		
+		if cls.fetch_attr(cls.db_idfield, data_id) == None:
+			raise cls.EntryNotFoundException
+		cls.cursor.execute(f"UPDATE {cls.db_name} SET {field}=:new_value WHERE {cls.db_idfield}=:{cls.db_idfield}", {'new_value':new_value, cls.db_idfield: data_id})
+		cls.conn.commit()

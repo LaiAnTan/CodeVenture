@@ -2,22 +2,27 @@ import database as db
 
 class StudentDB(db.DBBase):
 
-	"""
-	Singleton class that handles student database operations
-	"""
+    """
+    Singleton class that handles student database operations
 
-	@classmethod
-	def __new__(cls, placeholder=None):
-		return super().__new__(
-			"students",
-			"""
-			username text,
-			subscription integer,
-			date_of_birth text,
-			quiz_results text,
-			challenge_results texxt
-			"""
-			)
+    Notes:
+    completed_quiz and completed_challenge are comma-seperated strings
+    containing names of activities a student has completed.
+    """
+
+    @classmethod
+    def __new__(cls, placeholder=None):
+        return super().__new__(
+            "students",
+            """
+            username text,
+            id text,
+            subscription integer,
+            date_of_birth text,
+            completed_quiz text,
+            completed_challenge text
+            """
+            )
 
 if __name__ == "__main__":
-	pass
+    pass

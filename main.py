@@ -21,3 +21,5 @@ if __name__ == "__main__":
     test = User(users[0][0])
     user_input_pw = input("Enter password: ")
     print(test.login(user_input_pw))
+
+    print(db.update_attr("username", "john", "heh"))
