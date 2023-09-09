@@ -26,7 +26,7 @@ class DBBase:
 		
 		# ensure that the id field is the first
 		# i will distort if it isnt
-		cls.db_idfield = fields.split(",")[0].split(' ')[0]
+		cls.db_idfield = fields.split(",")[0].split()[0]
 
 		# placeholder for field
 		cls.db_placeholders = "(" + "".join(["?, " for i in range(len(cls.db_fields.split(",")) - 1)]) + "?" + ")"
