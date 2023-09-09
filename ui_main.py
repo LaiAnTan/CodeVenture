@@ -1,9 +1,11 @@
+# library
 import customtkinter as ctk
-from ui_login import login_page
-from ui_register import register_page
+
+# main class
 from interface import UI
 
-#initiate window
+# pages
+from ui_login import login_page
 
 #create frame to add widgets to
 # def front_page(app):

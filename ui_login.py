@@ -1,4 +1,7 @@
+# library
 import customtkinter as ctk
+
+# main class
 from interface import UI
 
 def login_page(ui: UI):
@@ -90,6 +93,7 @@ def login_page(ui: UI):
                     pady=45
                     )
 
+    from ui_register import register_page
     register_button = ctk.CTkButton(ui.frame,
                                 text="Register",
                                 font=("Helvetica", 14),
