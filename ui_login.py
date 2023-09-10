@@ -17,7 +17,7 @@ def login_page(ui: UI):
 
     ui.frame.pack(
                 padx=30,
-                pady=20,
+                pady=25,
                 fill="both",
                 expand=True
                 )

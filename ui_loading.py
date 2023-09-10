@@ -4,66 +4,48 @@ from interface import UI
 
 from ui_mainlobby import main_lobby
 
+def loading_page(ui:UI):
+    
+    dots = 0
+    counter = 0
+    colour_lst = ["#ffffff", "#ededed", "#d6d6d6", "#b5b3b3", "#a1a1a1", "#8a8a8a", "#737272", "#6a6a6a" ,"#5c5c5c", "#4a4a4a", "#3a3a3a" ,"#2b2b2b", "#212121", '#212121', '#2b2b2b', '#3a3a3a', '#4a4a4a', '#5c5c5c', '#6a6a6a', '#737272', '#8a8a8a', '#a1a1a1', '#b5b3b3', '#d6d6d6', '#ededed', '#ffffff']
 
-def loading_page(ui: UI):
-    ui.frame.destroy()
-    ui.frame = ctk.CTkFrame(ui.main)
-
-    ui.frame.pack(
-                padx=30,
-                pady=20,
-                fill="both",
-                expand=True
+    def fade_word(colour, dots):
+        ui.frame.destroy()
+        ui.frame = ctk.CTkFrame(ui.main)
+        ui.frame.pack(
+                    padx=30,
+                    pady=25,
+                    fill="both",
+                    expand=True
+                    )
+    
+    
+        label1 = ctk.CTkLabel(ui.frame,
+                            text="CodeVenture",
+                            font=("Helvetica Bold", 60),
+                            text_color=colour
+                            )
+        
+        label1.pack(
+                pady=(200, 10)
                 )
-    
-    label1 = ctk.CTkLabel(ui.frame,
-                        text="CodeVenture",
-                        font=("Helvetica Bold", 20)
-                        )
-    
-    label1.pack(
-            padx=10,
-            pady=20
-            )
-    
-    label2 = ctk.CTkLabel(ui.frame,
-                          text="Loading...",
-                          font=("Helvetica", 18)
-                          )
-    
-    label2.pack(
-            padx=10,
-            pady=10
-            )
-    
-    progressbar1 = ctk.CTkProgressBar(ui.frame, 
-									width=300,
-									height=30,
-									mode="indeterminate",
-									indeterminate_speed=0.5
-									)
-    
-    progressbar1.pack(padx=10, 
-					pady=50
-					)
-    progressbar1.stop()
-
-    from ui_login import login_page
-    
-    def loading_bar():
-        progressbar1.start()
-        ui.frame.after(5000, lambda: main_lobby(ui))
-
-    button1 = ctk.CTkButton(ui.frame,
-                            text="debug go back",
-                            font= ("Helvetica", 14),
-                            command=lambda: login_page(ui)
-                            )   
-    
-    button1.pack(padx=10,
-                pady=10
+        
+        label2 = ctk.CTkLabel(ui.frame,
+                            text="We are working hard" + "." * dots,
+                            font=("Helvetica", 18)
+                            )
+        
+        label2.pack(
+                pady=0
                 )
-    
-    ui.frame.after(1, lambda: loading_bar())
+        
 
+    while counter < 65:
+        ui.frame.after(65, fade_word(colour_lst[counter % 26], dots))
+        counter += 1
+        dots += 1
+        if dots > 6:
+            dots = 0
 
+    ui.frame.after(1,main_lobby(ui))
