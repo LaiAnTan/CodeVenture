@@ -17,6 +17,7 @@ class Activity(ABC):
 		self.footer = []
 		self.type = ac_type
 
+		## header values
 		self.id = "null"
 		self.title = "null"
 		self.difficulty = "null"
@@ -78,7 +79,15 @@ class Activity(ABC):
 		line_len = 32
 		desc_len = 10
 
-		description = [ description_msg[(line_len * x) : (line_len * (x + 1))] for x in range(desc_len) ]
+		# shit
+		# description = [ description_msg[(line_len * x) : (line_len * (x + 1))] for x in range(desc_len) if description_msg[(line_len * x) : (line_len * (x + 1))] ]
+
+		description = []
+		for x in range(desc_len):
+			to_append = description_msg[(line_len * x):(line_len * (x + 1))]
+			if not to_append:
+				break
+			description.append(to_append)
 
 		## EPIC STRING BUILDING WOWOWOOWO
 		data = [
@@ -95,7 +104,7 @@ class Activity(ABC):
 		data.extend(
 			[
 				"-" * line_len,
-				f"Sources",
+				f"Footer",
 				"-" * line_len,
 			]
 		)
