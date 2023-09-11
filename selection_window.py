@@ -76,9 +76,3 @@ class SelectionScreen():
 	@classmethod
 	def __beep_boop(self) -> None:
 		print("Button Pressed!")
-
-if __name__ == "__main__":
-	test = App()
-	from window_gen import selection_screen
-	selection_screen(test)
-	test.mainloop()
