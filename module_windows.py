@@ -1,3 +1,4 @@
+import pygments as pyg
 import customtkinter as ctk
 from PIL import Image
 
@@ -93,14 +94,12 @@ class ModuleWindow():
 						image = Image.open(self.module.ModulePath + self.module.img[content[1]])
 						size = self.image_resizer(image, main_content_frame_width - 50)
 
-						image_container = ctk.CTkImage(
-							light_image=image,
-							size=size
-						)
-
 						paragraph = ctk.CTkLabel(
 							paragraph_frame,
-							image=image_container,
+							image= ctk.CTkImage(
+									light_image=image,
+									size=size
+								),
 							text=""
 						)
 					else:
@@ -112,6 +111,7 @@ class ModuleWindow():
 						)
 
 				case Module.Content_Type.Code:
+
 					paragraph = ctk.CTkLabel(
 						paragraph_frame,
 						text="will display a image of a poorly formatted code here",
