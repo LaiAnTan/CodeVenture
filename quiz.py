@@ -51,7 +51,7 @@ class Quiz(ac.Activity):
 
 	def __init__(self, filename: str) -> None:
 		self.answers = {}
-		self.questions = []
+		self.questions: list[Question] = []
 
 		super().__init__(filename, ac.Activity.AType["Quiz"])
 		self.read_mf_read()

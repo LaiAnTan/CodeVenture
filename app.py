@@ -29,7 +29,7 @@ class App():
 	@classmethod
 	def clean_frame(cls):
 		print("Cleaning main_frame to render next frame")
-		cls.main_frame.place_forget()
+		# cls.main_frame.place_forget()
 		for widgets in cls.main_frame.winfo_children():
 			widgets.destroy()
 

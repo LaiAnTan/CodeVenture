@@ -8,7 +8,7 @@ class ChallangeWindow():
 	def __init__(self, challenge: Challange):
 		self.challenge = challenge
 
-	def FillFrames(self, attach: App):
+	def	FillFrames(self, attach: App):
 		back_button = ctk.CTkButton(
 			attach.main_frame,
 			text="Back",
@@ -39,4 +39,3 @@ class ChallangeWindow():
 			padx=5,
 			pady=5
 		)
-

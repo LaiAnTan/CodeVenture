@@ -13,8 +13,8 @@ class Activity(ABC):
 
 	def	__init__(self, filename: str, ac_type: AType) -> None:
 		self.ModulePath = os.getcwd() + f"/Activities/{ac_type.name}/" + filename + "/"
-		self.content = []
-		self.footer = []
+		self.content: list[str] = []
+		self.footer: list[str] = []
 		self.type = ac_type
 
 		## header values
