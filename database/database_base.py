@@ -45,8 +45,8 @@ class DBBase(object):
 		cls.db_path = os.path.join(cls.BASE_DIR, f"{cls.db_name}.db")
 		cls.db_fields = fields
 		
-		# ensure that the id field is the first
-		# i will distort if it isnt
+		# note: id_field is the first field in the database
+        # it is used for as a primary key (unique identifier for each entry)
 		cls.db_idfield = fields.split(",")[0].split()[0]
 
 		# placeholder for field
