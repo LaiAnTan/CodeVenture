@@ -41,7 +41,7 @@ def loading_page(ui:UI):
         
 
     while counter < 65:
-        ui.frame.after(55, fade_word(colour_lst[counter % 26], dots))
+        ui.frame.after(75, fade_word(colour_lst[counter % 26], dots))
         counter += 1
         dots += 1
         if dots > 6:
