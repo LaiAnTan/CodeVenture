@@ -10,8 +10,12 @@ def loading_page(ui:UI):
     colour_lst = ["#ffffff", "#ededed", "#d6d6d6", "#b5b3b3", "#a1a1a1", "#8a8a8a", "#737272", "#6a6a6a" ,"#5c5c5c", "#4a4a4a", "#3a3a3a" ,"#2b2b2b", "#212121", '#212121', '#2b2b2b', '#3a3a3a', '#4a4a4a', '#5c5c5c', '#6a6a6a', '#737272', '#8a8a8a', '#a1a1a1', '#b5b3b3', '#d6d6d6', '#ededed', '#ffffff']
 
     def fade_word(colour, dots):
-        ui.frame.destroy()
-        ui.frame = ctk.CTkFrame(ui.main)
+        try:
+            for widget in ui.frame.winfo_children():
+                widget.destroy()
+        except:
+            pass
+
         ui.frame.pack(
                     padx=30,
                     pady=25,
