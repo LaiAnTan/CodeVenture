@@ -1,3 +1,4 @@
+import customtkinter as ctk
 from App import App
 from user.user_student import Student
 
@@ -6,210 +7,100 @@ class ProfilePage:
     def __init__(self, student: Student):
         self.student = student
 
-	def image_resizer(self, image, max_width):
-		width, height = image.size
-		if width > max_width:
-			height = ( height * max_width ) / width
-			width = width
-		return width, height
-	
-	def FillFrames(self, attach: App):
+    def FillFrames(self, attach: App):
 
-		## header details -------------------------------------------
+        ## header details -------------------------------------------
 
-		header_frame = ctk.CTkFrame(
-			attach.main_frame
-		)
+        header_frame = ctk.CTkFrame(
+            attach.main_frame
+        )
 
-		quiz_name = ctk.CTkLabel(
-			header_frame,
-			text=f"{self.module.id} {self.module.title}"
-		)
+        profile_title = ctk.CTkLabel(
+            header_frame,
+            text=f"Dashboard: {self.student.username}'s profile"
+        )
 
-		back_button = ctk.CTkButton(
-			header_frame,
-			text="Back",
-			command=lambda : selection_screen(attach),
-			width=20
-		)
+        back_button = ctk.CTkButton(
+            header_frame,
+            text="Back",
+            command=lambda : exit(),
+            width=20
+        )
 
-		quiz_name.pack(
-			side=ctk.LEFT,
-			padx=5,
-			pady=5
-		)
+        profile_title.pack(
+            side=ctk.LEFT,
+            padx=5,
+            pady=5
+        )
 
-		back_button.pack(
-			side=ctk.RIGHT,
-			padx=5,
-			pady=5
-		)
+        back_button.pack(
+            side=ctk.RIGHT,
+            padx=5,
+            pady=5
+        )
 
-		header_frame.grid(
-			row=0,
-			column=0,
-			sticky="we",
-			padx=5,
-			pady=5
-		)
+        header_frame.grid(
+            row=0,
+            column=0,
+            sticky="we",
+            padx=5,
+            pady=5
+        )
 
-		## header details end --------------------------------------------
+        ## header details end --------------------------------------------
 
-		content_frame = ctk.CTkFrame(
-			attach.main_frame,
-		)
 
-		## main_content frame ----------------------------
+        ## user details
 
-		main_content_frame_width = 550
+        user_details_frame = ctk.CTkFrame(
+            attach.main_frame
+        )
 
-		main_content_frame = ctk.CTkScrollableFrame(
-			content_frame,
-			width=main_content_frame_width,
-			height=460
-		)
+        user_details_frame.grid(
+            row=0,
+            column=0
+        )
 
-		for index, content in enumerate(self.module.content):
-			paragraph_frame = ctk.CTkFrame(
-				main_content_frame
-			)
+        username_label = ctk.CTkLabel(
+            user_details_frame,
+            text=f"Username: {self.student.username}"
+        )
 
-			match content[0]:
-				case Module.Content_Type.Paragraph:
-					paragraph = ctk.CTkLabel(
-						paragraph_frame,
-						text=content[1],
-						width=main_content_frame_width,
-						wraplength=main_content_frame_width - 10,
-						anchor="w",
-						justify="left"
-					)
+        ## graph
 
-				case Module.Content_Type.Image:
-					if self.module.img.get(content[1]):
-						image = Image.open(self.module.ModulePath + self.module.img[content[1]])
-						size = self.image_resizer(image, main_content_frame_width - 50)
+        graph_frame = ctk.CTkFrame(
+            attach.main_frame
+        )
 
-						image_container = ctk.CTkImage(
-							light_image=image,
-							size=size
-						)
+        ## completion stats
 
-						paragraph = ctk.CTkLabel(
-							paragraph_frame,
-							image=image_container,
-							text=""
-						)
-					else:
-						paragraph = ctk.CTkLabel(
-							paragraph_frame,
-							text=f"Error displaying image {content[1]}",
-							width=main_content_frame_width,
-							wraplength=main_content_frame_width - 10,
-						)
+        completion_frame = ctk.CTkFrame(
+            attach.main_frame
+        )
 
-				case Module.Content_Type.Code:
-					paragraph = ctk.CTkLabel(
-						paragraph_frame,
-						text="will display a image of a poorly formatted code here",
-						width=main_content_frame_width,
-						wraplength=main_content_frame_width - 10,
-						anchor="w",
-						justify="left"
-					)
+        ## achievements
 
-			paragraph.grid(
-				row=0,
-				column=0,
-				padx=5,
-				pady=5
-			)
+        achievement_frame = ctk.CTkFrame(
+            attach.main_frame
+        )
 
-			paragraph_frame.grid(
-				row=index,
-				column=0,
-				padx=5,
-				pady=10
-			)
+        graph_frame.grid(
+            row=0,
+            column=1
+        )
 
-		main_content_frame.grid(
-			row=0,
-			column=0,
-			padx=5,
-			pady=5
-		)
+        completion_frame.grid(
+            row=1,
+            column=0
+        )
 
-		## qna frame end -------------------------------
+        achievement_frame.grid(
+            row=1,
+            column=1
+        )
 
-		## some optional side bar start -----------------------
-
-		sidebar_width = 50
-		sidebar_frame = ctk.CTkFrame(
-			content_frame,
-			width=sidebar_width
-		)
-
-		some_label = ctk.CTkLabel(
-			sidebar_frame,
-			text="does module need a side bar tho....?",
-			width=sidebar_width,
-			wraplength=sidebar_width,
-		)
-
-		some_label.grid(
-			row=0,
-			column=0,
-			padx=5,
-			pady=5
-		)
-
-		sidebar_frame.grid(
-			row=0,
-			column=1,
-			padx=5,
-			pady=5
-		)
-		
-		## some optional side bar end ----------------------------
-		
-		content_frame.grid(
-			row=1,
-			column=0,
-			padx=5,
-			pady=5,
-		)
-
-		## footer ---------------------------------------------
-
-		footer_frame = ctk.CTkFrame(
-			attach.main_frame,
-		)
-
-		submit_button = ctk.CTkButton(
-			footer_frame,
-			text="Complete",
-			width=150,
-			command= self.__beep_boop_button
-		)
-
-		submit_button.grid(
-			row=0,
-			column=0,
-			padx=0,
-			pady=0
-		)
-
-		footer_frame.grid(
-			row=2,
-			column=0,
-			padx=5,
-			pady=5
-		)
-
-		## footer end ------------------------------------------
-
-	def __beep_boop(self, var):
-		print("Value has changed = ", [x.get() for x in var])
-
-	def __beep_boop_button(self):
-		print("yeah yeah yeah setting it to completed... TRUST, WDYM IM NOT?")
+if __name__ == "__main__":
+    test = App()
+    p = ProfilePage(Student("tlai-an"))
+    p.FillFrames(test)
+    test.mainloop()
