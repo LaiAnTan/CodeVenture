@@ -9,6 +9,11 @@ class ProfilePage:
 
     def FillFrames(self, attach: App):
 
+        attach.main_frame.grid(
+            row=0,
+            column=0
+        )
+
         ## header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
@@ -49,11 +54,21 @@ class ProfilePage:
 
         ## header details end --------------------------------------------
 
+        ## content frame
+
+        content_frame = ctk.CTkFrame(
+            attach.main_frame
+        )
+
+        content_frame.grid(
+            row=1,
+            column=0
+        )
 
         ## user details
 
         user_details_frame = ctk.CTkFrame(
-            attach.main_frame
+            content_frame
         )
 
         user_details_frame.grid(
@@ -61,27 +76,38 @@ class ProfilePage:
             column=0
         )
 
-        username_label = ctk.CTkLabel(
+        user_details_label = ctk.CTkLabel(
             user_details_frame,
-            text=f"Username: {self.student.username}"
+            text=f"""Username: {self.student.username}
+Subscription: Active
+Date of birth: 20/10/2020
+"""
+        )
+
+        user_details_label.pack(
+            side=ctk.LEFT,
+            pady=5,
+            padx=5,
+            fill=ctk.BOTH,
+            expand=True
         )
 
         ## graph
 
         graph_frame = ctk.CTkFrame(
-            attach.main_frame
+            content_frame
         )
 
         ## completion stats
 
         completion_frame = ctk.CTkFrame(
-            attach.main_frame
+            content_frame
         )
 
         ## achievements
 
         achievement_frame = ctk.CTkFrame(
-            attach.main_frame
+            content_frame
         )
 
         graph_frame.grid(
