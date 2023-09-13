@@ -122,6 +122,7 @@ def register_page(ui: UI):
                                 command=lambda: login_page(ui)
                                 )
     
-    login_button.pack(padx=30,
-                      pady=10
-                      )
+    login_button.pack(
+                    padx=30,
+                    pady=10
+                    )
