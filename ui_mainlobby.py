@@ -14,6 +14,8 @@ def main_lobby(ui: UI):
                 expand=True
                 )
     
+    ui.frame.grid(column=3, row=2)
+    
     label1 = ctk.CTkLabel(ui.frame,
                         text="MAIN MENU OMGGGGG WHATT?!?!?!",
                         font=("Helvetica Bold", 20)

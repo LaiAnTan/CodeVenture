@@ -5,7 +5,6 @@ from interface import UI
 from ui_mainlobby import main_lobby
 
 def loading_page(ui:UI):
-    
     dots = 0
     counter = 0
     colour_lst = ["#ffffff", "#ededed", "#d6d6d6", "#b5b3b3", "#a1a1a1", "#8a8a8a", "#737272", "#6a6a6a" ,"#5c5c5c", "#4a4a4a", "#3a3a3a" ,"#2b2b2b", "#212121", '#212121', '#2b2b2b', '#3a3a3a', '#4a4a4a', '#5c5c5c', '#6a6a6a', '#737272', '#8a8a8a', '#a1a1a1', '#b5b3b3', '#d6d6d6', '#ededed', '#ffffff']
@@ -32,7 +31,7 @@ def loading_page(ui:UI):
                 )
         
         label2 = ctk.CTkLabel(ui.frame,
-                            text="We are working hard" + "." * dots,
+                            text="Loading crypto miner 0.0 " + "." * dots,
                             font=("Helvetica", 18)
                             )
         
@@ -42,7 +41,7 @@ def loading_page(ui:UI):
         
 
     while counter < 65:
-        ui.frame.after(65, fade_word(colour_lst[counter % 26], dots))
+        ui.frame.after(55, fade_word(colour_lst[counter % 26], dots))
         counter += 1
         dots += 1
         if dots > 6:
