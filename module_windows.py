@@ -18,7 +18,7 @@ class ModuleWindow():
 
 		back_button.grid(
 			row=0,
-			column=3,
+			column=1,
 			padx=5,
 			pady=5
 		)
@@ -35,6 +35,7 @@ class ModuleWindow():
 		placeholder.grid(
 			row=1,
 			column=0,
+			columnspan=1,
 			padx=5,
 			pady=5
 		)

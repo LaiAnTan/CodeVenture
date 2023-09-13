@@ -39,6 +39,12 @@ class Question():
 
 	def	get_ID(self):
 		return self.id
+	
+	def get_Prompt(self):
+		return "\n".join(self.prompt)
+	
+	def get_Options(self):
+		return self.options
 
 class Quiz(ac.Activity):
 	answer_sheet = "answer.ans"
