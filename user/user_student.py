@@ -23,3 +23,27 @@ class Student(User):
         self.completed_challenge = db.fetch_attr("completed_challenge", self.username)
 
         # convert completed_quiz & completed_challenge into dicts of QuizResult and ChallengeResult objects
+    
+    def renewSubscription():
+        pass
+
+    def viewCompletedActivities():
+        pass
+
+    def viewProficiencyGraph():
+        pass
+
+    def viewAchievements():
+        pass
+
+    def getRecommendedActivities():
+        pass
+
+    def submitChallengeAttempt(c):
+        pass
+
+    def submitQuizAttepnt(q):
+        pass
+
+    def exportStudentData():
+        pass
