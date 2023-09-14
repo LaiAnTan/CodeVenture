@@ -1,6 +1,11 @@
 import pygments as pyg
+from pygments.lexers import PythonLexer
+from pygments.formatters import ImageFormatter
+
 import customtkinter as ctk
+
 from PIL import Image
+from PIL.ImageOps import invert
 
 from app import App
 from module import Module
@@ -14,8 +19,65 @@ class ModuleWindow():
 		width, height = image.size
 		if width > max_width:
 			height = ( height * max_width ) / width
-			width = width
+			width = max_width
 		return width, height
+	
+	def ImageHandler(self, content, max_img_width, attach_frame):
+		if self.module.img.get(content):
+			image = Image.open(self.module.ModulePath + self.module.img[content])
+			size = self.image_resizer(image, max_img_width - 50)
+
+			ret_widget = ctk.CTkLabel(
+				attach_frame,
+				image= ctk.CTkImage(
+						light_image=image,
+						size=size
+					),
+				text=""
+			)
+		else:
+			ret_widget = ctk.CTkLabel(
+				attach_frame,
+				text=f"Error displaying image {content}",
+				width=max_img_width,
+				wraplength=max_img_width - 10,
+			)
+		return ret_widget
+	
+	def CodeHandler(self, content, max_img_width, attach_frame):
+		if self.module.code.get(content):
+			code_content = []
+			with open(self.module.ModulePath + self.module.code[content]) as file:
+				for line in file:
+					code_content.append(line)
+			code_content = "".join(code_content)
+
+			pyg.highlight(code_content,
+				PythonLexer(),
+				ImageFormatter(),
+				outfile=f"{self.module.ModulePath}temp.png"
+			)
+
+			image = Image.open(self.module.ModulePath + "temp.png")
+			size = self.image_resizer(image, max_img_width - 50)
+
+			ret_widget = ctk.CTkLabel(
+				attach_frame,
+				image=ctk.CTkImage(
+					light_image=image,
+					dark_image=invert(image),
+					size=size
+				),
+				text=""
+			)
+		else:
+			ret_widget = ctk.CTkLabel(
+				attach_frame,
+				text=f"Error displaying code {content}",
+				width=max_img_width,
+				wraplength=max_img_width - 10,
+			)
+		return ret_widget
 	
 	def FillFrames(self, attach: App):
 
@@ -90,35 +152,17 @@ class ModuleWindow():
 					)
 
 				case Module.Content_Type.Image:
-					if self.module.img.get(content[1]):
-						image = Image.open(self.module.ModulePath + self.module.img[content[1]])
-						size = self.image_resizer(image, main_content_frame_width - 50)
-
-						paragraph = ctk.CTkLabel(
-							paragraph_frame,
-							image= ctk.CTkImage(
-									light_image=image,
-									size=size
-								),
-							text=""
-						)
-					else:
-						paragraph = ctk.CTkLabel(
-							paragraph_frame,
-							text=f"Error displaying image {content[1]}",
-							width=main_content_frame_width,
-							wraplength=main_content_frame_width - 10,
-						)
+					paragraph = self.ImageHandler(
+						content[1],
+						main_content_frame_width,
+						paragraph_frame
+					)
 
 				case Module.Content_Type.Code:
-
-					paragraph = ctk.CTkLabel(
-						paragraph_frame,
-						text="will display a image of a poorly formatted code here",
-						width=main_content_frame_width,
-						wraplength=main_content_frame_width - 10,
-						anchor="w",
-						justify="left"
+					paragraph = self.CodeHandler(
+						content[1],
+						main_content_frame_width,
+						paragraph_frame
 					)
 
 			paragraph.grid(
