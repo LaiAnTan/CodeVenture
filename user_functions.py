@@ -2,7 +2,7 @@ from database.database_user import UserDB
 from database.database_student import StudentDB
 # from database_educator import EducatorDB
 
-def import_users_from_csv(filename) -> list[tuple]:
+def import_data_from_csv(filename) -> list[tuple]:
     """
     Reads from a csv file containing user data
     and converts it into a list of tuples for database insertion

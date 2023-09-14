@@ -14,10 +14,19 @@ class ProfilePage:
             column=0
         )
 
+        header_height = 20
+        full_width = 450
+        half_width = full_width / 2
+        full_content_height = 460 - header_height
+        half_content_height = full_content_height / 2
+
+
         ## header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
-            attach.main_frame
+            attach.main_frame,
+            width=full_width,
+            height=header_height
         )
 
         profile_title = ctk.CTkLabel(
@@ -54,10 +63,12 @@ class ProfilePage:
 
         ## header details end --------------------------------------------
 
-        ## content frame
+        ## main content frame
 
         content_frame = ctk.CTkFrame(
-            attach.main_frame
+            attach.main_frame,
+            width=full_width,
+            height=full_content_height
         )
 
         content_frame.grid(
@@ -68,20 +79,75 @@ class ProfilePage:
         ## user details
 
         user_details_frame = ctk.CTkFrame(
-            content_frame
+            content_frame,
+            width=half_width,
+            height=half_content_height
         )
 
         user_details_frame.grid(
             row=0,
-            column=0
+            column=0,
+            sticky="nsew"
+        )
+
+        # user_details_frame.rowconfigure(0, weight=1)
+
+        # user details header
+
+        user_details_header_frame = ctk.CTkFrame(
+            user_details_frame,
+            width=half_width,
+            height=header_height
+        )
+
+        user_details_header_frame.pack(
+            padx=5,
+            pady=5,
+            fill=ctk.BOTH,
+            expand=True
+        )
+
+        user_details_header_frame.grid(
+            row=0,
+            column=0,
+            sticky="we"
+        )
+
+        user_details_title = ctk.CTkLabel(
+            user_details_header_frame,
+            justify="left",
+            text="User Details"
+        )
+
+        user_details_title.pack(
+            side=ctk.LEFT,
+            padx=5,
+            pady=5,
+        )
+        
+        # user details content
+
+        user_details_content_frame = ctk.CTkFrame(
+            user_details_frame,
+            width=half_width,
+            height=half_content_height - header_height
+        )
+
+        user_details_content_frame.grid(
+            row=1,
+            column=0,
+            sticky="nsew"
         )
 
         user_details_label = ctk.CTkLabel(
-            user_details_frame,
-            text=f"""Username: {self.student.username}
-Subscription: Active
+            user_details_content_frame,
+            justify="left",
+            wraplength=210,
+            text=f"""Name: placeholder
 Date of birth: 20/10/2020
-"""
+Email: tanlaian2004@gmail.com adadadas
+Subscription: Active
+""",
         )
 
         user_details_label.pack(
@@ -89,41 +155,191 @@ Date of birth: 20/10/2020
             pady=5,
             padx=5,
             fill=ctk.BOTH,
-            expand=True
+            expand=True,
         )
 
         ## graph
 
         graph_frame = ctk.CTkFrame(
-            content_frame
+            content_frame,
+            width=half_width,
+            height=half_content_height
         )
 
-        ## completion stats
+        graph_frame.grid(
+            row=1,
+            column=0,
+            sticky="nsew"
+        )
+
+        ## graph header
+
+        graph_header_frame = ctk.CTkFrame(
+            graph_frame,
+            width=half_width,
+            height=header_height
+        )
+
+        graph_header_frame.pack(
+            padx=5,
+            pady=5,
+            fill=ctk.BOTH,
+            expand=True
+        )
+
+        graph_header_frame.grid(
+            row=0,
+            column=0,
+            sticky="we"
+        )
+
+        graph_title = ctk.CTkLabel(
+            graph_header_frame,
+            justify="left",
+            text="Skills Graph"
+        )
+
+        graph_title.pack(
+            side=ctk.LEFT,
+            padx=5,
+            pady=5,
+        )
+
+        ## graph content
+
+        graph_content_frame = ctk.CTkFrame(
+            graph_frame,
+            width=half_width,
+            height=half_content_height - header_height
+        )
+
+        graph_content_frame.grid(
+            row=1,
+            column=0,
+            sticky="nsew"
+        )
+
+        ## completion stats frame
 
         completion_frame = ctk.CTkFrame(
-            content_frame
+            content_frame,
+            width=half_width,
+            height=half_content_height
+        )
+
+        completion_frame.grid(
+            row=0,
+            column=1
+        )
+
+        # completion header
+
+        completion_header_frame = ctk.CTkFrame(
+            completion_frame,
+            width=half_width,
+            height=header_height
+        )
+
+        completion_header_frame.pack(
+            padx=5,
+            pady=5,
+            fill=ctk.BOTH,
+            expand=True
+        )
+
+        completion_header_frame.grid(
+            row=0,
+            column=0,
+            sticky="we"
+        )
+
+        completion_title = ctk.CTkLabel(
+            completion_header_frame,
+            justify="left",
+            text="Completed Activities"
+        )
+
+        completion_title.pack(
+            side=ctk.LEFT,
+            padx=5,
+            pady=5,
+        )
+
+        # completion content
+
+        completion_content_frame = ctk.CTkScrollableFrame(
+            completion_frame,
+            width=half_width,
+            height=half_content_height - header_height
+        )
+
+        completion_content_frame.grid(
+            row=1,
+            column=0
         )
 
         ## achievements
 
         achievement_frame = ctk.CTkFrame(
-            content_frame
-        )
-
-        graph_frame.grid(
-            row=0,
-            column=1
-        )
-
-        completion_frame.grid(
-            row=1,
-            column=0
+            content_frame,
+            width=half_width,
+            height=half_content_height
         )
 
         achievement_frame.grid(
             row=1,
             column=1
         )
+
+        # achievement header
+
+        achievment_header_frame = ctk.CTkFrame(
+            achievement_frame,
+            width=half_width,
+            height=header_height
+        )
+
+        achievment_header_frame.pack(
+            padx=5,
+            pady=5,
+            fill=ctk.BOTH,
+            expand=True
+        )
+
+        achievment_header_frame.grid(
+            row=0,
+            column=0,
+            sticky="we"
+        )
+
+        achievment_title = ctk.CTkLabel(
+            achievment_header_frame,
+            justify="left",
+            text="Achievements"
+        )
+
+        achievment_title.pack(
+            side=ctk.LEFT,
+            padx=5,
+            pady=5,
+        )
+
+        # achievement content
+
+        achievment_content_frame = ctk.CTkScrollableFrame(
+            achievement_frame,
+            width=half_width,
+            height=half_content_height - header_height
+        )
+
+        achievment_content_frame.grid(
+            row=1,
+            column=0
+        )
+
+
+
+
 
 if __name__ == "__main__":
     test = App()

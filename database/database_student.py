@@ -6,8 +6,8 @@ class StudentDB(db.DBBase):
     Singleton class that handles student database operations
 
     Notes:
-    completed_quiz and completed_challenge are comma-seperated strings
-    containing names of activities a student has completed.
+    c_quiz, c_challenge, c_achievements are comma-seperated strings
+    containing names of stuff a student has completed.
     """
 
     @classmethod
@@ -20,8 +20,9 @@ class StudentDB(db.DBBase):
             email text,
             subscription integer,
             date_of_birth text,
-            completed_quiz text,
-            completed_challenge text
+            c_quiz text,
+            c_challenge text
+            c_achievements text
             """
             )
 
