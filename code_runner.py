@@ -5,50 +5,170 @@ from pygments.formatters import ImageFormatter
 from PIL import Image
 from PIL.ImageOps import invert
 
+import os
+import sys
+
 import customtkinter as ctk
 
+import subprocess
+
 class CodeRunner():
-	@classmethod
-	def image_resizer(cls, image, max_width):
+	def __init__(self, max_img_width, attach_frame, code_name, root_path) -> None:
+		self.max_width = max_img_width
+		self.attach_frame = attach_frame
+		self.code_name = code_name
+		self.root_path = root_path
+
+		self.CodeRunnerFrame = ctk.CTkFrame(
+			self.attach_frame
+		)
+
+		self.HeaderFrame = ctk.CTkFrame(
+			self.CodeRunnerFrame
+		)
+
+		self.RunButtonFrame = ctk.CTkFrame(
+			self.CodeRunnerFrame
+		)
+
+		self.RunButtonFrame.columnconfigure(
+			0,
+			weight=1
+		)
+
+		self.CodeFrame = ctk.CTkFrame(
+			self.CodeRunnerFrame
+		)
+
+	def image_resizer(self, image):
 		width, height = image.size
-		if width > max_width:
-			height = ( height * max_width ) / width
-			width = max_width
+		if width > self.max_width:
+			height = ( height * self.max_width ) / width
+			width = self.max_width
 		return width, height
 
-	@classmethod
-	def	DisplayCodeline(cls, dictionary: dict, root_dir, content, max_img_width, attach_frame):
-		if dictionary.get(content):
-			code_content = []
-			with open(root_dir + dictionary[content]) as file:
-				for line in file:
-					code_content.append(line)
-			code_content = "".join(code_content)
+	def	DisplayCodeline_FromFile(self):
+		code_content = []
+		with open(self.root_path + self.code_name) as file:
+			for line in file:
+				code_content.append(line)
+		code_content = "".join(code_content)
 
-			pyg.highlight(code_content,
-				PythonLexer(),
-				ImageFormatter(),
-				outfile=f"{root_dir}temp.png"
-			)
+		pyg.highlight(code_content,
+			PythonLexer(),
+			ImageFormatter(),
+			outfile=f"{self.root_path}temp"
+		)
 
-			image = Image.open(root_dir + "temp.png")
-			size = cls.image_resizer(image, max_img_width - 50)
+		image = Image.open(self.root_path + "temp")
+		size = self.image_resizer(image)
 
-			ret_widget = ctk.CTkLabel(
-				attach_frame,
-				image=ctk.CTkImage(
-					light_image=image,
-					dark_image=invert(image),
-					size=size
-				),
-				text=""
-			)
-		else:
-			ret_widget = ctk.CTkLabel(
-				attach_frame,
-				text=f"Error displaying code {content}",
-				width=max_img_width,
-				wraplength=max_img_width - 10,
-			)
+		## imagine if this is system24, LETS GO
+		os.remove(f"{self.root_path}temp")
+
+		ret_widget = ctk.CTkLabel(
+			self.CodeFrame,
+			image=ctk.CTkImage(
+				light_image=image,
+				dark_image=invert(image),
+				size=size
+			),
+			text=""
+		)
 
 		return ret_widget
+
+	def	setUpFrame(self):
+		title = ctk.CTkLabel(
+			self.HeaderFrame,
+			text=self.code_name
+		)
+
+		title.grid(
+			row=0,
+			column=0,
+			padx=5
+		)
+
+		RunButton = ctk.CTkButton(
+			self.RunButtonFrame,
+			text="Run",
+			command=self.RunCode,
+			height=10
+		)
+
+		RunButton.grid(
+			row=0,
+			column=0,
+			padx=5,
+			pady=5,
+			sticky="ew"
+		)
+
+		CodeContent = self.DisplayCodeline_FromFile()
+
+		CodeContent.grid(
+			row=0,
+			column=0,
+			padx=5,
+			pady=5
+		)
+
+		self.HeaderFrame.grid(
+			row=0,
+			column=0,
+			padx=5,
+			pady=5,
+			sticky="w"
+		)
+
+		self.CodeFrame.grid(
+			row=1,
+			column=0,
+			padx=5,
+			pady=5,
+		)
+
+		self.RunButtonFrame.grid(
+			row=2,
+			column=0,
+			sticky="ew",
+			padx=5,
+			pady=5
+		)
+
+		return self.CodeRunnerFrame
+
+	def RunCode(self):
+		print("Running Code. BzzZt")
+
+		outputFrame = ctk.CTkFrame(
+			self.CodeRunnerFrame
+		)
+
+		proc = subprocess.Popen([sys.executable, f"{self.root_path}{self.code_name}"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+		code_output = proc.communicate()[0].decode()
+
+		placeholder = ctk.CTkLabel(
+			outputFrame,
+			text=code_output,
+			width=self.max_width,
+			wraplength=self.max_width - 10,
+			anchor="w",
+			justify="left",
+			font=ctk.CTkFont("Noto Sans Mono", size=10)
+		)
+
+		placeholder.grid(
+			row=0,
+			column=0,
+			padx=5,
+			pady=5
+		)
+
+		outputFrame.grid(
+			row=3,
+			column=0,
+			padx=5,
+			pady=5
+		)

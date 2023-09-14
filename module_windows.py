@@ -11,6 +11,8 @@ from app import App
 from module import Module
 from window_gen import selection_screen
 
+from code_runner import CodeRunner
+
 class ModuleWindow():
 	def	__init__(self, module: Module):
 		self.module = module
@@ -46,30 +48,11 @@ class ModuleWindow():
 	
 	def CodeHandler(self, content, max_img_width, attach_frame):
 		if self.module.code.get(content):
-			code_content = []
-			with open(self.module.ModulePath + self.module.code[content]) as file:
-				for line in file:
-					code_content.append(line)
-			code_content = "".join(code_content)
-
-			pyg.highlight(code_content,
-				PythonLexer(),
-				ImageFormatter(),
-				outfile=f"{self.module.ModulePath}temp.png"
-			)
-
-			image = Image.open(self.module.ModulePath + "temp.png")
-			size = self.image_resizer(image, max_img_width - 50)
-
-			ret_widget = ctk.CTkLabel(
-				attach_frame,
-				image=ctk.CTkImage(
-					light_image=image,
-					dark_image=invert(image),
-					size=size
-				),
-				text=""
-			)
+			ret_widget = CodeRunner(max_img_width - 50,
+							attach_frame,
+							self.module.code[content],
+							self.module.ModulePath
+							).setUpFrame()
 		else:
 			ret_widget = ctk.CTkLabel(
 				attach_frame,
