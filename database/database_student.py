@@ -16,7 +16,8 @@ class StudentDB(db.DBBase):
             "students",
             """
             username text,
-            id text,
+            name text,
+            email text,
             subscription integer,
             date_of_birth text,
             completed_quiz text,
