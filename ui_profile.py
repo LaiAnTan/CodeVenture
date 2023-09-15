@@ -90,8 +90,6 @@ class ProfilePage:
             sticky="nsew"
         )
 
-        # user_details_frame.rowconfigure(0, weight=1)
-
         # user details header
 
         user_details_header_frame = ctk.CTkFrame(
@@ -148,14 +146,13 @@ Date of birth: 20/10/2020
 Email: tanlaian2004@gmail.com adadadas
 Subscription: Active
 """,
+            width=half_width,
+            height=half_content_height - header_height,
         )
 
-        user_details_label.pack(
-            side=ctk.LEFT,
-            pady=5,
-            padx=5,
-            fill=ctk.BOTH,
-            expand=True,
+        user_details_label.grid(
+            row=0,
+            column=0
         )
 
         ## graph
@@ -180,13 +177,6 @@ Subscription: Active
             height=header_height
         )
 
-        graph_header_frame.pack(
-            padx=5,
-            pady=5,
-            fill=ctk.BOTH,
-            expand=True
-        )
-
         graph_header_frame.grid(
             row=0,
             column=0,
@@ -197,6 +187,11 @@ Subscription: Active
             graph_header_frame,
             justify="left",
             text="Skills Graph"
+        )
+
+        graph_title.grid(
+            row=0,
+            column=0,
         )
 
         graph_title.pack(
@@ -240,13 +235,6 @@ Subscription: Active
             height=header_height
         )
 
-        completion_header_frame.pack(
-            padx=5,
-            pady=5,
-            fill=ctk.BOTH,
-            expand=True
-        )
-
         completion_header_frame.grid(
             row=0,
             column=0,
@@ -257,6 +245,12 @@ Subscription: Active
             completion_header_frame,
             justify="left",
             text="Completed Activities"
+        )
+        
+        completion_title.grid(
+            row=0,
+            column=0,
+            sticky="we"
         )
 
         completion_title.pack(
@@ -317,6 +311,11 @@ Subscription: Active
             justify="left",
             text="Achievements"
         )
+        
+        achievment_title.grid(
+            row=0,
+            column=0
+        )
 
         achievment_title.pack(
             side=ctk.LEFT,
@@ -336,10 +335,6 @@ Subscription: Active
             row=1,
             column=0
         )
-
-
-
-
 
 if __name__ == "__main__":
     test = App()
