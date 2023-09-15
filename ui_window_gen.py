@@ -1,19 +1,16 @@
-
-
-
 from App import App
 
-from ui_login import LoginWindow
-
 def loginPage(a: App):
+    from ui_login import LoginWindow
     a.clean_frame()
     login_win = LoginWindow()
     login_win.FillFrames(a)
 
-# from ui_register import RegisterWindow
-
 def registerPage(a: App):
-    pass
+    from ui_register import RegisterWindow
+    a.clean_frame()
+    register_win = RegisterWindow()
+    register_win.FillFrames(a)
 
 from ui_student_menu import StudentMenuWindow
 from user.user_student import Student

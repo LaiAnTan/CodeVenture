@@ -1,6 +1,10 @@
 import customtkinter as ctk
+
 from App import App
+
+from ui_window_gen import studentMenuPage, registerPage
 from user.user_base import User
+from user.user_student import Student
 
 class LoginWindow():
 
@@ -42,12 +46,12 @@ class LoginWindow():
 		title_frame.rowconfigure((0,1), weight=1)
 		title_frame.columnconfigure(0, weight=1)
 
-		title_label = ctk.CTkLabel(
-			title_frame,
-			text="CodeVenture",
-			font=("Helvetica Bold", 30),
-			anchor=ctk.CENTER,
-		)
+        title_label = ctk.CTkLabel(
+            title_frame,
+            text="CodeVenture",
+            font=("Helvetica Bold", 30),
+            anchor=ctk.CENTER,
+        )
 
 		title_label.grid(
 			row=0,
