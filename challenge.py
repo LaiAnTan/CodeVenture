@@ -1,11 +1,27 @@
 import activity as ac
 
-class Challange(ac.Activity):
+class Hints(ac.Activity):
+
 	def __init__(self, filename: str) -> None:
 		super().__init__(filename, ac.Activity.AType["Challenge"])
+		self.data_file = "hints"
+
 		self.read_mf_read()
 		self.ParseContent()
 		self.ParseSources()
+
+	def RunActivity(self):
+		pass
+
+class Challange(ac.Activity):
+	def __init__(self, filename: str) -> None:
+		super().__init__(filename, ac.Activity.AType["Challenge"])
+
+		self.read_mf_read()
+		self.ParseContent()
+		self.ParseSources()
+
+		self.hints = Hints(filename)
 
 	def __str__(self):
 		description_msg = ''.join([x[1] for x in self.content])

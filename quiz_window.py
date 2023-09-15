@@ -69,16 +69,18 @@ class QuizWindow():
 
 		self.user_answer = [None for _ in self.quiz.questions]
 
+		question_block_width = qna_frame_width - 30
 		for index, questions in enumerate(self.quiz.questions):
 			placeholder_frame = ctk.CTkFrame(
 				qna_frame,
+				width=question_block_width
 			)
 
 			le_prompt = ctk.CTkLabel(
 				placeholder_frame,
 				text=questions.get_Prompt(),
-				width=qna_frame_width,
-				wraplength=qna_frame_width,
+				width=question_block_width,
+				wraplength=question_block_width - 10,
 				anchor="w",
 				justify="left",
 			)
@@ -96,7 +98,7 @@ class QuizWindow():
 								command=lambda : self.__beep_boop(self.user_answer),
 								variable=self.user_answer[index],
 								value=index2,
-								width=qna_frame_width
+								width=question_block_width
 							)
 				
 				radio_button.grid(
@@ -143,6 +145,9 @@ class QuizWindow():
 			width=sidebar_width
 		)
 
+		content_frame.rowconfigure(0, weight=1)
+		content_frame.columnconfigure(1, weight=1)
+
 		some_label = ctk.CTkLabel(
 			sidebar_frame,
 			text="Insert Some Revelant Text here, or some hyperlinks, idk go wild",
@@ -175,7 +180,8 @@ class QuizWindow():
 			row=0,
 			column=1,
 			padx=5,
-			pady=5
+			pady=5,
+			sticky="ns"
 		)
 		
 		## some optional side bar end ----------------------------

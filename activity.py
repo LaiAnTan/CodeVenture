@@ -10,8 +10,6 @@ class Activity(ABC):
 		Image = 1
 		Code = 2
 
-	data_file = "data.ilovemen"
-
 	class AType(Enum):
 		Module = 1
 		Challenge = 2
@@ -24,6 +22,7 @@ class Activity(ABC):
 		self.type = ac_type
 		self.img = {}
 		self.code = {}
+		self.data_file = "data.ilovemen"
 
 		## header values
 		self.id = "null"
@@ -106,7 +105,7 @@ class Activity(ABC):
 			self.footer.append(line)
 
 	def read_mf_read(self):
-		with open(self.ModulePath + Activity.data_file) as file:
+		with open(self.ModulePath + self.data_file) as file:
 			for line in file:
 				line = line.strip('\n')
 				match line:

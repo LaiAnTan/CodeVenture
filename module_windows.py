@@ -37,7 +37,7 @@ class ModuleWindow():
 	
 	def CodeHandler(self, content, max_img_width, attach_frame):
 		if self.module.code.get(content):
-			ret_widget = CodeRunner(max_img_width - 50,
+			ret_widget = CodeRunner(max_img_width - 30,
 							attach_frame,
 							self.module.code[content],
 							self.module.ModulePath
@@ -107,6 +107,8 @@ class ModuleWindow():
 			height=460
 		)
 
+		paragraph_frame_width = main_content_frame_width - 20
+
 		for index, content in enumerate(self.module.content):
 			paragraph_frame = ctk.CTkFrame(
 				main_content_frame
@@ -117,8 +119,8 @@ class ModuleWindow():
 					paragraph = ctk.CTkLabel(
 						paragraph_frame,
 						text=content[1],
-						width=main_content_frame_width,
-						wraplength=main_content_frame_width - 10,
+						width=paragraph_frame_width,
+						wraplength=paragraph_frame_width - 10,
 						anchor="w",
 						justify="left"
 					)
@@ -126,14 +128,14 @@ class ModuleWindow():
 				case Module.Content_Type.Image:
 					paragraph = self.ImageHandler(
 						content[1],
-						main_content_frame_width,
+						paragraph_frame_width,
 						paragraph_frame
 					)
 
 				case Module.Content_Type.Code:
 					paragraph = self.CodeHandler(
 						content[1],
-						main_content_frame_width,
+						paragraph_frame_width,
 						paragraph_frame
 					)
 
@@ -186,7 +188,8 @@ class ModuleWindow():
 			row=0,
 			column=1,
 			padx=5,
-			pady=5
+			pady=5,
+			sticky="ns"
 		)
 		
 		## some optional side bar end ----------------------------
@@ -231,4 +234,4 @@ class ModuleWindow():
 		print("Value has changed = ", [x.get() for x in var])
 
 	def __beep_boop_button(self):
-		print("yeah yeah yeah setting it to completed... TRUST, WDYM IM NOT?")
+		print("yeah yeah yeah setting it to completed...")

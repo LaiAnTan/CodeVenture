@@ -10,15 +10,19 @@ from ide import IDE
 
 from imagelabel import ImageLabelGen
 
+from code_runner import CodeRunner
+
 class ChallangeWindow():
 	def __init__(self, challenge: Challange):
 		self.attempted_count = 0
 		self.challenge = challenge
+		self.main_showcontent_frame = None
+		self.shittyIDE = None
 
-	def ImageHandler(self, content, max_img_width, attach_frame):
-		if self.challenge.img.get(content):
+	def ImageHandler(self, source, content, max_img_width, attach_frame):
+		if source.img.get(content):
 			ret_widget = ImageLabelGen(
-				self.challenge.ModulePath + self.challenge.img[content],
+				source.ModulePath + source.img[content],
 				max_img_width - 50,
 				attach_frame
 			).ImageLabelGen()
@@ -30,6 +34,161 @@ class ChallangeWindow():
 				wraplength=max_img_width - 10,
 			)
 		return ret_widget
+
+	def QuestionFrames(self, frame_width):
+		for widget in self.main_showcontent_frame.winfo_children():
+			widget.destroy()
+		self.main_showcontent_frame.forget()
+
+		for index, content in enumerate(self.challenge.content):
+			paragraph_frame = ctk.CTkFrame(
+				self.main_showcontent_frame
+			)
+
+			match content[0]:
+				case Challange.Content_Type.Paragraph:
+					paragraph = ctk.CTkLabel(
+						paragraph_frame,
+						text=content[1],
+						width=frame_width - 10,
+						wraplength=frame_width - 20,
+						anchor="w",
+						justify="left"
+					)
+
+				case Challange.Content_Type.Image:
+					paragraph = self.ImageHandler(
+						self.challenge,
+						content[1],
+						frame_width,
+						paragraph_frame
+					)
+			
+			paragraph.grid(
+				row=0,
+				column=0,
+				padx=5,
+				pady=5
+			)
+
+			paragraph_frame.grid(
+				row=index,
+				column=0,
+				pady=5
+			)
+
+	def	SolutionFrames(self, frame_width):
+		for widget in self.main_showcontent_frame.winfo_children():
+			widget.destroy()
+		self.main_showcontent_frame.forget()
+
+		if self.attempted_count > 5:
+			solution_widget = CodeRunner(
+				frame_width - 30,
+				self.main_showcontent_frame,
+				"solution.py",
+				self.challenge.ModulePath
+			).setUpFrame()
+		else:
+			solution_widget = ctk.CTkLabel(
+						self.main_showcontent_frame,
+						text="ERROR: Attempt More Times to Unlock the Solution!",
+						width=frame_width - 10,
+						wraplength=frame_width - 20,
+						anchor="w",
+						justify="left",
+						text_color="red",
+					)
+
+		solution_widget.grid(
+			row=0,
+			column=0,
+			padx=5,
+			pady=5
+		)
+
+	def HintFrames(self, frame_width):
+		for widget in self.main_showcontent_frame.winfo_children():
+			widget.destroy()
+
+		for index, content in enumerate(self.challenge.hints.content):
+			paragraph_frame = ctk.CTkFrame(
+				self.main_showcontent_frame
+			)
+
+			match content[0]:
+				case Challange.Content_Type.Paragraph:
+					paragraph = ctk.CTkLabel(
+						paragraph_frame,
+						text=content[1],
+						width=frame_width - 10,
+						height=10,
+						wraplength=frame_width - 20,
+						anchor="w",
+						justify="left"
+					)
+
+				case Challange.Content_Type.Image:
+					paragraph = self.ImageHandler(
+						self.challenge.hints,
+						content[1],
+						frame_width,
+						paragraph_frame
+					)
+			
+			paragraph.grid(
+				row=0,
+				column=0,
+			)
+
+			paragraph_frame.grid(
+				row=index,
+				column=0,
+				pady=5
+			)
+
+	def RunTestCases(self):
+		own_code = self.shittyIDE.RunTestCases("test.in")
+		test_code = CodeRunner(None, None, "solution.py", self.challenge.ModulePath).RunTestCases("test.in")
+		if own_code == test_code:
+			return True, own_code, test_code
+		else:
+			return False, own_code, test_code
+
+	def RunTestCases_GenFrame(self, frame_width):
+		self.attempted_count += 1
+		result, usr_out, sys_out = self.RunTestCases()
+
+		for widget in self.main_showcontent_frame.winfo_children():
+			widget.destroy()
+
+		if result == True:
+			result = ctk.CTkLabel(
+				self.main_showcontent_frame,
+				text="OK!",
+				text_color="limegreen",
+				font=ctk.CTkFont(
+					"Noto Sans Mono",
+					size=25
+				)
+			)
+		else:
+			result = ctk.CTkLabel(
+				self.main_showcontent_frame,
+				text="KO!",
+				text_color="red",
+				font=ctk.CTkFont(
+					"Noto Sans Mono",
+					size=25
+				)
+			)
+
+		result.grid(
+			row=0,
+			column=0,
+			padx=5,
+			pady=5
+		)
 
 	def	FillFrames(self, attach: App):
 		## header details -------------------------------------------
@@ -90,31 +249,39 @@ class ChallangeWindow():
 		main_content_options_frame = ctk.CTkFrame(
 			main_content_frame,
 			width=content_frame_width + 20,
-			height=25,
+			height=95,
 		)
 
 		question_button = ctk.CTkButton(
 			main_content_options_frame,
-			width=110,
+			width=85,
 			height=25,
 			text="Question",
-			command=self.__beep_hoop_change_button
+			command=lambda : self.QuestionFrames(content_frame_width)
 		)
 
 		hint_button = ctk.CTkButton(
 			main_content_options_frame,
-			width=110,
+			width=85,
 			height=25,
 			text="Hints",
-			command=self.__beep_hoop_change_button
+			command=lambda : self.HintFrames(content_frame_width)
 		)
 
 		solution_button = ctk.CTkButton(
 			main_content_options_frame,
-			width=110,
+			width=85,
 			height=25,
 			text="Solution",
-			command=self.__beep_hoop_change_button
+			command=lambda : self.SolutionFrames(content_frame_width)
+		)
+
+		mark_button = ctk.CTkButton(
+			main_content_options_frame,
+			width=85,
+			height=25,
+			text="Run Tests",
+			command=lambda : self.RunTestCases_GenFrame(content_frame_width)
 		)
 
 		question_button.grid(
@@ -138,6 +305,13 @@ class ChallangeWindow():
 			pady=5
 		)
 
+		mark_button.grid(
+			row=0,
+			column=3,
+			padx=5,
+			pady=5
+		)
+
 		main_content_options_frame.grid(
 			row=0,
 			column=0,
@@ -147,49 +321,15 @@ class ChallangeWindow():
 
 		## main question frame
 
-		main_showcontent_frame = ctk.CTkScrollableFrame(
+		self.main_showcontent_frame = ctk.CTkScrollableFrame(
 			main_content_frame,
 			width=content_frame_width,
 			height=content_frame_height - 40
 		)
 
-		for index, content in enumerate(self.challenge.content):
-			paragraph_frame = ctk.CTkFrame(
-				main_showcontent_frame
-			)
+		self.QuestionFrames(content_frame_width)
 
-			match content[0]:
-				case Challange.Content_Type.Paragraph:
-					paragraph = ctk.CTkLabel(
-						paragraph_frame,
-						text=content[1],
-						width=content_frame_width - 10,
-						wraplength=content_frame_width - 20,
-						anchor="w",
-						justify="left"
-					)
-
-				case Challange.Content_Type.Image:
-					paragraph = self.ImageHandler(
-						content[1],
-						content_frame_width,
-						paragraph_frame
-					)
-			
-			paragraph.grid(
-				row=0,
-				column=0,
-				padx=5,
-				pady=5
-			)
-
-			paragraph_frame.grid(
-				row=index,
-				column=0,
-				pady=5
-			)
-		
-		main_showcontent_frame.grid(
+		self.main_showcontent_frame.grid(
 			row=1,
 			column=0,
 			padx=5,
@@ -214,7 +354,7 @@ class ChallangeWindow():
 			height=460
 		)
 
-		a_shitty_ide = IDE(
+		self.shittyIDE = IDE(
 			sidebar_width,
 			sidebar_frame,
 			self.challenge.id.lower(),
@@ -222,7 +362,7 @@ class ChallangeWindow():
 			self.challenge.ModulePath
 		)
 
-		a_shitty_ide_frame = a_shitty_ide.setUpFrame()
+		a_shitty_ide_frame = self.shittyIDE.setUpFrame()
 
 		a_shitty_ide_frame.grid(
 			row=0,
@@ -257,7 +397,7 @@ class ChallangeWindow():
 			footer_frame,
 			text="Mark",
 			width=150,
-			command= lambda : self.__beep_boop_button(a_shitty_ide.getContents())
+			command= lambda : self.__beep_boop_button(self.shittyIDE.getContents())
 		)
 
 		submit_button.grid(
@@ -280,7 +420,6 @@ class ChallangeWindow():
 		print("Checking answer...")
 		print("Wee wOO wEE wOO Wee wOO")
 		print(f"This was in codecontet = {codecontent}")
-		self.attempted_count += 1
 
 	def __beep_hoop_change_button(self):
 		print("Not Implemented!")

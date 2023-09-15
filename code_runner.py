@@ -52,7 +52,10 @@ class CodeRunner():
 			pyg.highlight(
 				file.read(),
 				PythonLexer(),
-				ImageFormatter(),
+				ImageFormatter(
+					font_name="Noto Sans Mono",
+					font_size=12
+				),
 				outfile=f"{self.root_path}temp"
 			)
 
@@ -127,6 +130,18 @@ class CodeRunner():
 		)
 
 		return self.CodeRunnerFrame
+
+	def RunTestCases(self, testcases):
+		cmd = f"{sys.executable} {self.root_path}{self.code_name}"
+		testcase_in = open(f"{self.root_path}{testcases}")
+		try:
+			code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in,stderr=subprocess.STDOUT, shell=True).decode()
+		except subprocess.CalledProcessError as errxc:
+			code_output = errxc.output
+		except subprocess.TimeoutExpired:
+			code_output = "Timeout After Running For 10 seconds"
+
+		return code_output
 
 	def RunCode(self):
 		for widget in self.outputFrame.winfo_children():

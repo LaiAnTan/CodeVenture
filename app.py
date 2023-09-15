@@ -9,10 +9,10 @@ class App():
 	main = ctk.CTk()
 
 	main_frame = ctk.CTkFrame(
-			main,
-			width=width,
-			height=height
-		)
+		main,
+		width=width,
+		height=height,
+	)
 
 	main.rowconfigure(0, weight=1)
 	main.columnconfigure(0, weight=1)

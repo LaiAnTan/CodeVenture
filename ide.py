@@ -101,6 +101,29 @@ class IDE():
 	def getContents(self):
 		return self.IDETextBox.get("0.0", "end")
 
+	def RunTestCases(self, testcases):
+		## open file and dump all data inside
+		text = self.IDETextBox.get("0.0", "end")
+		testcase_in = open(f"{self.root_path}{testcases}")
+
+		with open(f"{self.root_path}{self.code_name}", "w") as file:
+			file.write(text)
+
+		cmd = f"{sys.executable} {self.root_path}{self.code_name}"
+		try:
+			code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
+		except subprocess.CalledProcessError as errxc:
+			code_output = errxc.output
+		except subprocess.TimeoutExpired:
+			code_output = "Timeout After Running For 10 seconds"
+
+		## remove the file
+		os.remove(f"{self.root_path}{self.code_name}")
+
+		## Returns the output
+		## if error, return the raw error output
+		return code_output
+
 	def RunCode(self):
 		for widget in self.outputFrame.winfo_children():
 			widget.destroy()
@@ -116,7 +139,7 @@ class IDE():
 		cmd = f"{sys.executable} {self.root_path}{self.code_name}"
 		font_color = "white"
 		try:
-			code_output = subprocess.check_output(cmd, timeout=10, stderr=subprocess.STDOUT, shell=True).decode()
+			code_output = subprocess.check_output(cmd, timeout=10, stderr=subprocess.STDOUT, shell=True)
 		except subprocess.CalledProcessError as errxc:
 			code_output = errxc.output
 			font_color = "red"
@@ -126,6 +149,7 @@ class IDE():
 
 		## remove the file
 		os.remove(f"{self.root_path}{self.code_name}")
+		code_output.decode()
 
 		placeholder = ctk.CTkLabel(
 			self.outputFrame,
