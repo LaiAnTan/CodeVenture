@@ -22,53 +22,99 @@ class LoginWindow():
             column=0
         )
 
-        label1 = ctk.CTkLabel(
-            attach.main_frame,
-            text="CodeVenture",
-            font=("Helvetica Bold", 30)
-            )
+        full_width = 450
+        half_width = full_width / 2
 
-        label1.pack(
-            padx=10,
-            pady=10
-            )
+        # title frame
 
-        label2 = ctk.CTkLabel(
+        title_frame = ctk.CTkFrame(
             attach.main_frame,
-            text="LOGIN",
-            font=("Helvetica", 18, "bold")
-            )
+            width=full_width,
+            height=40,
+        )
+
+        title_frame.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+
+        title_frame.rowconfigure(0, weight=1)
+
+        title_label = ctk.CTkLabel(
+        title_frame,
+        text="CodeVenture",
+        font=("Helvetica Bold", 30),
+        anchor=ctk.CENTER,
+        )
+
+        title_label.grid(
+        row=0,
+        column=0,
+        padx=10,
+        pady=10,
+        columnspan=2
+        )
+
+        login_label = ctk.CTkLabel(
+        title_frame,
+        text="LOGIN",
+        font=("Helvetica", 18, "bold"),
+        justify=ctk.CENTER
+        )
         
-        label2.pack(
-                padx=10,
-                pady=20
-                )
+        login_label.grid(
+        row=1,
+        column=0,
+        padx=10,
+        pady=20
+        )
+        
+        # entry frame
+
+        entry_frame = ctk.CTkFrame(
+            attach.main_frame,
+            width=full_width,
+            height=100,
+        )
+
+        entry_frame.grid(
+            row=1,
+            column=0,
+            sticky="nsew"
+        )
 
         username1 = ctk.CTkEntry(
-            attach.main_frame,
-            width=160,
-            height=20,
-            placeholder_text="Username", 
-            font=("Helvetica", 14)
-            )
+        entry_frame,
+        height=20,
+        placeholder_text="Username", 
+        font=("Helvetica", 14)
+        )
 
-        username1.pack(
-                    padx=10,
-                    pady=10
-                    )
+        username1.grid(
+        row=0,
+        column=0,
+        padx=10,
+        pady=10
+        )
 
         password1 = ctk.CTkEntry(
-            attach.main_frame,
-            width=160,
-            height=20,
-            placeholder_text="Password",
-            show="•",
-            font=("Helvetica", 14)
-            )
-        password1.pack(
-                    padx=10,
-                    pady=10
-                    )
+        entry_frame,
+        height=20,
+        placeholder_text="Password",
+        show="•",
+        font=("Helvetica", 14),
+        justify=ctk.CENTER
+        )
+
+        password1.grid(
+        row=1,
+        column=0,
+        padx=10,
+        pady=10
+        )
+
+        # show password checkbox
 
         checkbox1_status = ctk.IntVar(value=0)
 
@@ -80,19 +126,43 @@ class LoginWindow():
             password1.update()
 
         checkbox1 = ctk.CTkCheckBox(
-            attach.main_frame,
-            text="Show password",
-            font=("Helvetica", 14),
-            variable=checkbox1_status,
-            onvalue=1,
-            offvalue=0,
-            command= lambda: eventShowPassword()
-            )
+        entry_frame,
+        text="Show password",
+        font=("Helvetica", 14),
+        variable=checkbox1_status,
+        onvalue=1,
+        offvalue=0,
+        command= lambda: eventShowPassword()
+        )
 
-        checkbox1.pack(
-            padx=10,
-            pady=20
-            )
+        checkbox1.grid(
+        row=2,
+        column=0,
+        padx=10,
+        pady=20
+        )
+
+        wrong_password_label = ctk.CTkLabel(
+            entry_frame,
+            text="Invalid username or password, Try again.",
+            font=("Helvetica", 14),
+            text_color="#FF0000",
+            anchor=ctk.CENTER
+        )
+
+        # buttons frame
+
+        button_frame = ctk.CTkFrame(
+            attach.main_frame,
+            width=full_width,
+            height=20
+        )
+
+        button_frame.grid(
+            row=3,
+            column=0,
+            sticky="ew"
+        )
 
         def loginButtonEvent():
             """
@@ -120,10 +190,15 @@ class LoginWindow():
             else:
                 pass
                 print("Login failed, Incorrect username or password")
-                # show login failed
+                wrong_password_label.grid(
+                    row=3,
+                    column=0,
+                    padx=5,
+                    pady=5
+                )
 
         login_button = ctk.CTkButton(
-            attach.main_frame,
+            button_frame,
             text="Login",
             font=("Helvetica", 14),
             width=120,
@@ -131,27 +206,31 @@ class LoginWindow():
             command=lambda: loginButtonEvent()
             )
 
-        login_button.pack(
-            padx=30,
-            pady=45
-            )
+        login_button.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=20
+        )
 
         def registerButtonEvent():
             exit()
 
-
         register_button = ctk.CTkButton(
-            attach.main_frame,
+            button_frame,
             text="Register",
             font=("Helvetica", 14),
             width=120, height=50,
             command=lambda: registerButtonEvent()
             )
 
-        register_button.pack(
-            padx=30,
-            pady=5
-            )
+        register_button.grid(
+            row=0,
+            column=1,
+            padx=20,
+            pady=20
+        )
+
 
 if __name__ == "__main__":
     test = App()
