@@ -1,4 +1,4 @@
-import database as db
+import database.database_base as db
 
 class UserDB(db.DBBase):
 
@@ -22,4 +22,4 @@ class UserDB(db.DBBase):
 			)
 
 if __name__ == "__main__":
-	pass
+    pass
