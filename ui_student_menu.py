@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+from ui_window_gen import loginPage
 from App import App
 from user.user_student import Student
 
@@ -35,10 +36,13 @@ class StudentMenuWindow():
             text=f"Logged in as: {self.student.username}"
         )
 
-        back_button = ctk.CTkButton(
+        def logoutButtonEvent():
+            loginPage(attach)
+
+        logout_button = ctk.CTkButton(
             header_frame,
             text="Log Out",
-            command=lambda : exit(),
+            command=lambda : logoutButtonEvent(),
             width=20
         )
 
@@ -48,7 +52,7 @@ class StudentMenuWindow():
             pady=5
         )
 
-        back_button.pack(
+        logout_button.pack(
             side=ctk.RIGHT,
             padx=5,
             pady=5

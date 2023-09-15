@@ -1,6 +1,24 @@
 import customtkinter as ctk
 from App import App
 import ui_window_gen as wingen
+from database.database_user import UserDB
+
+def registerHandler(username: str, password: str, confirm_pw: str, user_type: str):
+    """
+    Handles registration of new user.
+
+    returns a 2-tuple with the first value being a boolean and the second value being the message to display.
+    """
+    db = UserDB()
+
+    if password != confirm_pw:
+        return (False, "Register failed, passwords do not match")
+
+    if db.fetch_attr("username", username) != None:
+        return (False, "Register failed, username already taken")
+    
+    db.add_entry((username, password, user_type))
+    return (True, "Register Sucessful")
 
 class RegisterWindow:
 
@@ -11,81 +29,137 @@ class RegisterWindow:
                     column=0
                 )
 
-        label1 = ctk.CTkLabel(
-        attach.main_frame,
-        text="CodeVenture",
-        font=("Helvetica Bold", 20)
-        )
+        full_width = 450
+        half_width = full_width / 2
 
-        label1.pack(
-        padx=10,
-        pady=10
-        )
+        #title frame
 
-        label2 = ctk.CTkLabel(
+        title_frame = ctk.CTkFrame(
             attach.main_frame,
-            text="REGISTER",
-            font=("Helvetica", 18)
+            width=full_width,
+            height=40,
         )
 
-        label2.pack(
+        title_frame.grid(
+            row=0,
+            column=0,
+            sticky="ew"
+        )
+
+        title_frame.rowconfigure((0,1), weight=1)
+        title_frame.columnconfigure(0, weight=1)
+
+        title_label = ctk.CTkLabel(
+            title_frame,
+            text="CodeVenture",
+            font=("Helvetica Bold", 30),
+            anchor=ctk.CENTER,
+        )
+
+        title_label.grid(
+            row=0,
+            column=0,
             padx=10,
-            pady=5
+            pady=10,
+            sticky=""
         )
 
-        username = ctk.CTkEntry(
+        register_label = ctk.CTkLabel(
+            title_frame,
+            text="REGISTER",
+            font=("Helvetica", 18, "bold"),
+            justify=ctk.CENTER,
+        )
+        
+        register_label.grid(
+            row=1,
+            column=0,
+            padx=10,
+            pady=20,
+            sticky=""
+        )
+
+        # entry frame
+
+        entry_frame = ctk.CTkFrame(
             attach.main_frame,
-            width=160,
-            height=20,
-            placeholder_text = "New Username",
-            font=("Helvetica", 14)
+            width=full_width,
+            height=100,
         )
 
-        username.pack(
+        entry_frame.grid(
+            row=1,
+            column=0,
+            sticky="nsew"
+        )
+
+        entry_frame.rowconfigure((0, 1, 2), weight=1)
+        entry_frame.columnconfigure(0, weight=1)
+
+        new_username = ctk.CTkEntry(
+            entry_frame,
+            height=20,
+            placeholder_text="New Username", 
+            font=("Helvetica", 14),
+            justify=ctk.CENTER
+        )
+
+        new_username.grid(
+            row=0,
+            column=0,
             padx=10,
             pady=10
         )
-        
-        checkbox1_status = ctk.IntVar(value=0)
 
-        def show_password():
-            print(checkbox1_status.get())
-            if checkbox1_status.get() == 1:
-                password.configure(show="")
-                confirm_password.configure(show="")
-            else:
-                password.configure(show="•")
-                confirm_password.configure(show="•")
-            password.update()
-            confirm_password.update()
-
-        password = ctk.CTkEntry(
-            attach.main_frame,
-            width=160,
+        new_password = ctk.CTkEntry(
+            entry_frame,
             height=20,
-            placeholder_text = "New Password",
-            show = "•" ,
-            font=("Helvetica", 14)
+            placeholder_text="Password",
+            show="•",
+            font=("Helvetica", 14),
+            justify=ctk.CENTER
         )
 
-        password.pack(
+        new_password.grid(
+            row=1,
+            column=0,
             padx=10,
             pady=10
         )
 
         confirm_password = ctk.CTkEntry(
-            attach.main_frame,
-            width=160,
+            entry_frame,
             height=20,
-            placeholder_text = "Confirm Password",
-            show = "•" ,
-            font=("Helvetica", 14)
+            placeholder_text="Confirm Password",
+            show="•",
+            font=("Helvetica", 14),
+            justify=ctk.CENTER
         )
 
-        confirm_password.pack(padx=10, pady=10)
+        confirm_password.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=10
+        )
 
-        checkbox1 = ctk.CTkCheckBox(
-            attach.main_frame,
+        # show password checkbox
+
+        checkbox1_status = ctk.IntVar(value=0)
+
+        def show_password():
+            print(checkbox1_status.get())
+            if checkbox1_status.get() == 1:
+                new_password.configure(show="")
+                confirm_password.configure(show="")
+            else:
+                new_password.configure(show="•")
+                confirm_password.configure(show="•")
+            new_password.update()
+            confirm_password.update()
+
+        toggle_show_pw = ctk.CTkCheckBox(
+            entry_frame,
             text="Show password",
             font=("Helvetica", 14),
             variable=checkbox1_status,
@@ -94,39 +168,81 @@ class RegisterWindow:
             command= lambda: show_password()
         )
 
-        checkbox1.pack(
-                    padx=10,
-                    pady=20
-                    )
+        toggle_show_pw.grid(
+            row=3,
+            column=0,
+            padx=10,
+            pady=20
+        )
+
+        register_failed_label = ctk.CTkLabel(
+            entry_frame,
+            text="",
+            font=("Helvetica", 14),
+            text_color="#FF0000",
+            anchor=ctk.CENTER
+        )
+
+        # buttons frame
+
+        button_frame = ctk.CTkFrame(
+            attach.main_frame,
+            width=full_width,
+            height=20
+        )
+
+        button_frame.grid(
+            row=3,
+            column=0,
+            sticky="ew"
+        )
 
         def registerButtonEvent():
-            pass
+            ret = registerHandler(new_username.get(), new_password.get(), confirm_password.get(), "student")
+            if ret[0] == True:
+                register_failed_label.configure(text=ret[1], text_color="#00FF00")
+
+            elif ret[0] == False:
+                register_failed_label.configure(text=ret[1], text_color="#FF0000")
+            
+            register_failed_label.grid(
+                row=4,
+                column=0,
+                padx=5,
+                pady=5
+            )
 
         register_button = ctk.CTkButton(
-            attach.main_frame,
+            button_frame,
             text="Register",
             font=("Helvetica", 14),
             width=120,
             height=50,
-            command=lambda: exit()
+            command=lambda: registerButtonEvent()
         )
-        register_button.pack(
-                            padx=30,
-                            pady=45
-                            )
-        
+
+        register_button.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=20
+        )
+
         def loginButtonEvent():
             wingen.loginPage(attach)
 
         login_button = ctk.CTkButton(
-            attach.main_frame, 
-            text="Already have an account? Login Instead!",
+            button_frame, 
+            text="Back to Login",
             font=("Helvetica", 14),
             width=120, height=50,
             command=lambda: loginButtonEvent()
         )
         
-        login_button.pack(
-            padx=30,
-            pady=10
+        login_button.grid(
+            row=0,
+            column=1,
+            padx=20,
+            pady=20
         )
+
