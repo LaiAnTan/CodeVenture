@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from App import App
-import ui_window_gen as wingen
+from ui_window_gen import loginPage
 from database.database_user import UserDB
 
 def registerHandler(username: str, password: str, confirm_pw: str, user_type: str):
@@ -10,6 +10,9 @@ def registerHandler(username: str, password: str, confirm_pw: str, user_type: st
     returns a 2-tuple with the first value being a boolean and the second value being the message to display.
     """
     db = UserDB()
+
+    if password == "" or confirm_pw == "" or username == "":
+        return (False, "Register failed, one or more fields empty")
 
     if password != confirm_pw:
         return (False, "Register failed, passwords do not match")
@@ -38,6 +41,7 @@ class RegisterWindow:
             attach.main_frame,
             width=full_width,
             height=40,
+            fg_color="transparent"
         )
 
         title_frame.grid(
@@ -85,6 +89,7 @@ class RegisterWindow:
             attach.main_frame,
             width=full_width,
             height=100,
+            fg_color="transparent"
         )
 
         entry_frame.grid(
@@ -107,6 +112,7 @@ class RegisterWindow:
         new_username.grid(
             row=0,
             column=0,
+            columnspan=2,
             padx=10,
             pady=10
         )
@@ -123,6 +129,7 @@ class RegisterWindow:
         new_password.grid(
             row=1,
             column=0,
+            columnspan=2,
             padx=10,
             pady=10
         )
@@ -139,6 +146,7 @@ class RegisterWindow:
         confirm_password.grid(
             row=2,
             column=0,
+            columnspan=2,
             padx=10,
             pady=10
         )
@@ -171,6 +179,32 @@ class RegisterWindow:
         toggle_show_pw.grid(
             row=3,
             column=0,
+            columnspan=2,
+            padx=10,
+            pady=10,
+        )
+
+        user_type_label = ctk.CTkLabel(
+            entry_frame,
+            text="My role is: ",
+            font=("Helvetica", 14),
+        )
+
+        user_type_label.grid(
+            row=4,
+            column=0,
+            padx=10,
+            pady=20
+        )
+
+        register_user_type = ctk.CTkOptionMenu(
+            entry_frame,
+            values=["student", "educator"]
+        )
+
+        register_user_type.grid(
+            row=4,
+            column=1,
             padx=10,
             pady=20
         )
@@ -188,7 +222,8 @@ class RegisterWindow:
         button_frame = ctk.CTkFrame(
             attach.main_frame,
             width=full_width,
-            height=20
+            height=20,
+            fg_color="transparent"
         )
 
         button_frame.grid(
@@ -198,7 +233,7 @@ class RegisterWindow:
         )
 
         def registerButtonEvent():
-            ret = registerHandler(new_username.get(), new_password.get(), confirm_password.get(), "student")
+            ret = registerHandler(new_username.get(), new_password.get(), confirm_password.get(), register_user_type.get())
             if ret[0] == True:
                 register_failed_label.configure(text=ret[1], text_color="#00FF00")
 
@@ -206,8 +241,9 @@ class RegisterWindow:
                 register_failed_label.configure(text=ret[1], text_color="#FF0000")
             
             register_failed_label.grid(
-                row=4,
+                row=5,
                 column=0,
+                columnspan=2,
                 padx=5,
                 pady=5
             )
@@ -225,11 +261,11 @@ class RegisterWindow:
             row=0,
             column=0,
             padx=20,
-            pady=20
+            pady=30
         )
 
         def loginButtonEvent():
-            wingen.loginPage(attach)
+            loginPage(attach)
 
         login_button = ctk.CTkButton(
             button_frame, 
@@ -243,6 +279,6 @@ class RegisterWindow:
             row=0,
             column=1,
             padx=20,
-            pady=20
+            pady=30
         )
 

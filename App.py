@@ -11,7 +11,8 @@ class App():
 	main_frame = ctk.CTkFrame(
 			main,
 			width=width,
-			height=height
+			height=height,
+			fg_color="transparent"
 		)
 
 	main.rowconfigure(0, weight=1)

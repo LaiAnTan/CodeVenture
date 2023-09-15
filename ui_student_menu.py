@@ -1,10 +1,10 @@
 import customtkinter as ctk
 
-from ui_window_gen import loginPage
+from ui_window_gen import loginPage, profilePage, settingsPage
 from App import App
 from user.user_student import Student
 
-class StudentMenuWindow():
+class StudentMenuWindow:
 
     def __init__(self, student: Student):
             self.student = student
@@ -36,6 +36,12 @@ class StudentMenuWindow():
             text=f"Logged in as: {self.student.username}"
         )
 
+        profile_title.pack(
+            side=ctk.LEFT,
+            padx=5,
+            pady=5
+        )
+
         def logoutButtonEvent():
             loginPage(attach)
 
@@ -46,13 +52,39 @@ class StudentMenuWindow():
             width=20
         )
 
-        profile_title.pack(
-            side=ctk.LEFT,
+        logout_button.pack(
+            side=ctk.RIGHT,
             padx=5,
             pady=5
         )
 
-        logout_button.pack(
+        def settingsButtonEvent():
+            settingsPage(attach, self.student)
+
+        settings_button = ctk.CTkButton(
+            header_frame,
+            text="Settings",
+            command=lambda : settingsButtonEvent(),
+            width=20
+        )
+
+        settings_button.pack(
+            side=ctk.RIGHT,
+            padx=5,
+            pady=5
+        )
+
+        def profileButtonEvent():
+            profilePage(attach, self.student)
+
+        profile_button = ctk.CTkButton(
+            header_frame,
+            text="Profile",
+            command=lambda : profileButtonEvent(),
+            width=20
+        )
+
+        profile_button.pack(
             side=ctk.RIGHT,
             padx=5,
             pady=5
@@ -80,3 +112,9 @@ class StudentMenuWindow():
             row=1,
             column=0
         )
+
+        ## search bar
+
+        ## recommended
+
+        ## buttons
