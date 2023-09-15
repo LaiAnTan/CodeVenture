@@ -38,3 +38,44 @@ def create_new_user(username: str, password: str, user_type: str, details=None) 
         case _: # should never happen
             pass
     return True
+
+def populate_databases():
+    """
+    Populate databases with test data
+    """
+
+    # change test data filenames here
+    test_users_filename = "test_data/test_users.txt"
+    test_students_filename = "test_data/test_students.txt"
+    test_educators_filename = "test_data/test_educators.txt"
+    test_admins_filename = "test_data/test_admins.txt"
+
+    # init databases
+    db = UserDB()
+    sdb = StudentDB()
+    # edb = EducatorDB()
+    # adb = AdminDB()
+
+    database_list = [db, sdb] # add more as time goes on
+
+
+    users = import_data_from_csv(test_users_filename)
+    students = import_data_from_csv(test_students_filename)
+
+    entries_list = [users, students] # add more as time goes on (corespond to database_list)
+
+    # init .db files
+    for database in database_list:
+        if database.db_exists() == False:
+            database.new_db()
+
+    # populate
+    for i in range(2):
+        database = database_list[i]
+        for entry in entries_list[i]:
+            try:
+                database.add_entry(entry)
+            except database.DuplicateEntryException:
+                continue
+
+    print("Populated databases")

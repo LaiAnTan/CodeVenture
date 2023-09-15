@@ -13,17 +13,22 @@ class User(ABC):
         """
         self.username = username
         self.login_status = False
+        self.user_type = None
     
     """
     Getters
     """
-    def get_username(self) -> str:
+    def getUsername(self) -> str:
         return self.username
     
+    def getUserType(self):
+        return self.user_type
+
     """
     Setters
     """
-    def set_username(self, username: str) -> None:
+
+    def setUsername(self, username: str) -> None:
         self.username = username
     
     """
@@ -34,11 +39,13 @@ class User(ABC):
         Tries to match pw_input with password from db
         """
         db = UserDB()
-        user_pw = db.fetch_attr("password", self.get_username())
+        user_pw = db.fetch_attr("password", self.getUsername())
         if user_pw == None: # user not in database
             return False
         elif user_pw[0] == pw_input: # login success
             self.login_status = True
+            self.user_type = db.fetch_attr("user_type", self.getUsername())[0]
+            print(self.user_type)
             return True
         else: # login failed
             return False

@@ -2,7 +2,7 @@ import customtkinter as ctk
 from App import App
 from user.user_student import Student
 
-class ProfilePage:
+class ProfileWindow:
 
     def __init__(self, student: Student):
         self.student = student
