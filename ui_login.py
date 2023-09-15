@@ -1,6 +1,10 @@
 import customtkinter as ctk
+
 from App import App
+
+from ui_window_gen import studentMenuPage, registerPage
 from user.user_base import User
+from user.user_student import Student
 
 class LoginWindow():
 
@@ -42,32 +46,32 @@ class LoginWindow():
         title_frame.rowconfigure(0, weight=1)
 
         title_label = ctk.CTkLabel(
-        title_frame,
-        text="CodeVenture",
-        font=("Helvetica Bold", 30),
-        anchor=ctk.CENTER,
+            title_frame,
+            text="CodeVenture",
+            font=("Helvetica Bold", 30),
+            anchor=ctk.CENTER,
         )
 
         title_label.grid(
-        row=0,
-        column=0,
-        padx=10,
-        pady=10,
-        columnspan=2
+            row=0,
+            column=0,
+            padx=10,
+            pady=10,
+            columnspan=2
         )
 
         login_label = ctk.CTkLabel(
-        title_frame,
-        text="LOGIN",
-        font=("Helvetica", 18, "bold"),
-        justify=ctk.CENTER
+            title_frame,
+            text="LOGIN",
+            font=("Helvetica", 18, "bold"),
+            justify=ctk.CENTER
         )
         
         login_label.grid(
-        row=1,
-        column=0,
-        padx=10,
-        pady=20
+            row=1,
+            column=0,
+            padx=10,
+            pady=20
         )
         
         # entry frame
@@ -85,33 +89,33 @@ class LoginWindow():
         )
 
         username1 = ctk.CTkEntry(
-        entry_frame,
-        height=20,
-        placeholder_text="Username", 
-        font=("Helvetica", 14)
+            entry_frame,
+            height=20,
+            placeholder_text="Username", 
+            font=("Helvetica", 14)
         )
 
         username1.grid(
-        row=0,
-        column=0,
-        padx=10,
-        pady=10
+            row=0,
+            column=0,
+            padx=10,
+            pady=10
         )
 
         password1 = ctk.CTkEntry(
-        entry_frame,
-        height=20,
-        placeholder_text="Password",
-        show="•",
-        font=("Helvetica", 14),
-        justify=ctk.CENTER
+            entry_frame,
+            height=20,
+            placeholder_text="Password",
+            show="•",
+            font=("Helvetica", 14),
+            justify=ctk.CENTER
         )
 
         password1.grid(
-        row=1,
-        column=0,
-        padx=10,
-        pady=10
+            row=1,
+            column=0,
+            padx=10,
+            pady=10
         )
 
         # show password checkbox
@@ -126,20 +130,20 @@ class LoginWindow():
             password1.update()
 
         checkbox1 = ctk.CTkCheckBox(
-        entry_frame,
-        text="Show password",
-        font=("Helvetica", 14),
-        variable=checkbox1_status,
-        onvalue=1,
-        offvalue=0,
-        command= lambda: eventShowPassword()
+            entry_frame,
+            text="Show password",
+            font=("Helvetica", 14),
+            variable=checkbox1_status,
+            onvalue=1,
+            offvalue=0,
+            command= lambda: eventShowPassword()
         )
 
         checkbox1.grid(
-        row=2,
-        column=0,
-        padx=10,
-        pady=20
+            row=2,
+            column=0,
+            padx=10,
+            pady=20
         )
 
         wrong_password_label = ctk.CTkLabel(
@@ -173,13 +177,10 @@ class LoginWindow():
             if self.user.login(password1.get()) == True:
                 print(f"Logged in {self.username}")
 
-                import ui_window_gen as wingen
-                from user.user_student import Student
-
                 match self.user.getUserType():
                     
                     case "student":
-                        wingen.studentMenuPage(attach, Student(self.user.getUsername()))
+                        studentMenuPage(attach, Student(self.user.getUsername()))
                     case "educator":
                         return
                     case "admin":
@@ -204,7 +205,7 @@ class LoginWindow():
             width=120,
             height=50,
             command=lambda: loginButtonEvent()
-            )
+        )
 
         login_button.grid(
             row=0,
@@ -214,7 +215,7 @@ class LoginWindow():
         )
 
         def registerButtonEvent():
-            exit()
+            registerPage(attach)
 
         register_button = ctk.CTkButton(
             button_frame,
@@ -222,7 +223,7 @@ class LoginWindow():
             font=("Helvetica", 14),
             width=120, height=50,
             command=lambda: registerButtonEvent()
-            )
+        )
 
         register_button.grid(
             row=0,

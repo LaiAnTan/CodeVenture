@@ -19,6 +19,7 @@ class StudentDB(db.DBBase):
             name text,
             email text,
             subscription integer,
+            subscription_end text,
             date_of_birth text,
             c_quiz text,
             c_challenge text

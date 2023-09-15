@@ -18,7 +18,7 @@ class App():
 	main.columnconfigure(0, weight=1)
 
 	main.geometry(f"{width}x{height}")
-	main.title("Fuck You")
+	main.title("CodeVenture")
 
 	ctk.set_appearance_mode("dark")
 	ctk.set_default_color_theme("dark-blue")
