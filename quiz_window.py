@@ -101,7 +101,8 @@ class QuizWindow():
 				
 				radio_button.grid(
 					row=index2,
-					column=0
+					column=0,
+					pady=2
 				)
 
 			le_prompt.grid(

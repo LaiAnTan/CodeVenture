@@ -13,30 +13,19 @@ from window_gen import selection_screen
 
 from code_runner import CodeRunner
 
+from imagelabel import ImageLabelGen
+
 class ModuleWindow():
 	def	__init__(self, module: Module):
 		self.module = module
-
-	def image_resizer(self, image, max_width):
-		width, height = image.size
-		if width > max_width:
-			height = ( height * max_width ) / width
-			width = max_width
-		return width, height
 	
 	def ImageHandler(self, content, max_img_width, attach_frame):
 		if self.module.img.get(content):
-			image = Image.open(self.module.ModulePath + self.module.img[content])
-			size = self.image_resizer(image, max_img_width - 50)
-
-			ret_widget = ctk.CTkLabel(
-				attach_frame,
-				image= ctk.CTkImage(
-						light_image=image,
-						size=size
-					),
-				text=""
-			)
+			ret_widget = ImageLabelGen(
+				self.module.ModulePath + self.module.img[content],
+				max_img_width - 50,
+				attach_frame
+			).ImageLabelGen()
 		else:
 			ret_widget = ctk.CTkLabel(
 				attach_frame,

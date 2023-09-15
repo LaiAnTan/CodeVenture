@@ -9,4 +9,11 @@ HEADER-END
 
 CONTENT-START
 Produce a Python Program that prints out "i honestly dont know..."
+Example Output:
+<IMG-CONT>IMG001
 CONTENT-END
+
+SOURCES-START
+IMG-CONT-START
+IMG001-amongus.png
+IMG-CONT-END

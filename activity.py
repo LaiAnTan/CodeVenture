@@ -4,6 +4,12 @@ from enum import Enum
 from abc import ABC, abstractmethod
 
 class Activity(ABC):
+
+	class Content_Type(Enum):
+		Paragraph = 0
+		Image = 1
+		Code = 2
+
 	data_file = "data.ilovemen"
 
 	class AType(Enum):
@@ -16,6 +22,8 @@ class Activity(ABC):
 		self.content: list[str] = []
 		self.footer: list[str] = []
 		self.type = ac_type
+		self.img = {}
+		self.code = {}
 
 		## header values
 		self.id = "null"
@@ -24,6 +32,43 @@ class Activity(ABC):
 		self.tag = []
 		self.achievement = []
 		self.up_level = []
+
+	def SourcesExtractor(self, from_where: list[str], to_where: dict, stop: str, delimiter: str='-') -> None:
+		"""
+		Extracts sources
+		Expects a list with 2 values, each seperated by the delimiter
+		"""
+		while len(self.footer):
+			contents = self.footer.pop(0)
+			if contents == stop:
+				break
+			values = contents.split(delimiter)
+			to_where[values[0]] = values[1]
+
+	def ParseSources(self) -> None:
+		while len(self.footer):
+			contents = self.footer.pop(0)
+			match contents:
+				case "IMG-CONT-START":
+					self.SourcesExtractor(self.footer, self.img, "IMG-CONT-END")
+				case "CODE-CONT-START":
+					self.SourcesExtractor(self.footer, self.code, "CODE-CONT-END")
+
+		# self.img = { x.split('-')[0] : Image.open(self.ModulePath + x.split('-')[1]) for x in self.img_src }
+		# self.code = { x.split('-')[0] : x.split('-')[1] for x in self.img_src }
+
+	def ParseContent(self):
+		for index, content in enumerate(self.content):
+			if content.find("<IMG-CONT>") == 0:
+				content = content.removeprefix("<IMG-CONT>")
+				self.content[index] = (Activity.Content_Type.Image, content)
+			elif content.find("<CODE-CONT>") == 0:
+				content = content.removeprefix("<CODE-CONT>")
+				self.content[index] = (Activity.Content_Type.Code, content)
+			else:
+				self.content[index] = (Activity.Content_Type.Paragraph, content)
+
+		# print(self.content)
 
 	def	__get_Headers(self, file):
 		for line in file:
