@@ -12,16 +12,19 @@ def registerHandler(username: str, password: str, confirm_pw: str, user_type: st
     db = UserDB()
 
     if password == "" or confirm_pw == "" or username == "":
-        return (False, "Register failed, one or more fields empty")
-
+        return (False, "One or more fields empty")
+    
     if password != confirm_pw:
-        return (False, "Register failed, passwords do not match")
+        return (False, "Passwords do not match")
 
     if db.fetch_attr("username", username) != None:
-        return (False, "Register failed, username already taken")
+        return (False, "Username already taken")
+    
+    if username == password:
+        return (False, "Username cannot be password")
     
     db.add_entry((username, password, user_type))
-    return (True, "Register Sucessful")
+    return (True, "Register Successful")
 
 class RegisterWindow:
 

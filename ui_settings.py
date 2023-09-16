@@ -3,6 +3,34 @@ import customtkinter as ctk
 from ui_window_gen import studentMenuPage
 from App import App
 from user.user_student import Student
+from database.database_user import UserDB
+
+def changePasswordHandler(student: Student, old_password: str, new_password: str, confirm_password: str):
+    """
+    Handles password change of a user.
+
+    returns a 2-tuple with the first value being a boolean and the second value being the message to display.
+    """
+    db = UserDB()
+
+    current_pw = db.fetch_attr("password", student.getUsername())
+
+    if old_password == "" or new_password == "" or confirm_password == "":
+        return (False, "One or more fields empty")
+
+    if old_password == new_password:
+        return (False, "Old password same as new password")
+    
+    if new_password != confirm_password:
+        return (False, "Passwords do not match")
+    
+    if current_pw != old_password:
+        return (False, "Wrong password")
+    
+    db.update_attr("password", student.getUsername(), new_password)
+    return (True, "Password Change Successful")
+
+
 
 class SettingsWindow:
 
@@ -17,7 +45,7 @@ class SettingsWindow:
         )
 
         header_height = 20
-        full_width = 450
+        full_width = 600
         half_width = full_width / 2
         full_content_height = 460 - header_height
         half_content_height = full_content_height / 2
@@ -72,7 +100,8 @@ class SettingsWindow:
         content_frame = ctk.CTkFrame(
             attach.main_frame,
             width=full_width,
-            height=full_content_height
+            height=full_content_height,
+            fg_color="transparent"
         )
 
         content_frame.grid(
@@ -80,7 +109,7 @@ class SettingsWindow:
             column=0
         )
 
-        ## change mode
+        ## change appearance mode
 
         toggle_appearance_mode_frame = ctk.CTkFrame(
             content_frame,
@@ -101,10 +130,11 @@ class SettingsWindow:
             text=f"Toggle light mode"
         )
 
-        toggle_appearance_mode_title.pack(
-            side=ctk.LEFT,
-            padx=5,
-            pady=5
+        toggle_appearance_mode_title.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=10,
         )
 
         appearance_toggler_status = ctk.IntVar(value=0)
@@ -135,19 +165,139 @@ class SettingsWindow:
             print("lightmode enabled")
             appearance_toggler.select()
 
-        appearance_toggler.pack(
-            side=ctk.RIGHT,
+        appearance_toggler.grid(
+            row=0,
+            column=2,
             padx=5,
             pady=5
         )
+
         toggle_appearance_mode_left_text = ctk.CTkLabel(
             toggle_appearance_mode_frame,
             text="Dark"
         )
 
-        toggle_appearance_mode_left_text.pack(
-            side=ctk.RIGHT,
+        toggle_appearance_mode_left_text.grid(
+            row=0,
+            column=1,
             padx=5,
             pady=5
         )
 
+        ## change password
+
+        change_password_frame = ctk.CTkFrame(
+            content_frame,
+            width=full_width,
+        )
+
+        change_password_frame.grid(
+            row=1,
+            column=0,
+            sticky="we",
+            padx=5,
+            pady=5,
+        )
+
+        change_password_frame.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+        change_password_frame.columnconfigure((0), weight=1)
+
+        change_password_label = ctk.CTkLabel(
+            change_password_frame,
+            text="Change Password",
+            font=("Helvetica", 14),
+        )
+
+        change_password_label.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5
+        )
+
+        old_password = ctk.CTkEntry(
+            change_password_frame,
+            height=20,
+            placeholder_text="Old password", 
+            font=("Helvetica", 14),
+            justify=ctk.CENTER,
+            show="•",
+        )
+
+        old_password.grid(
+            row=1,
+            column=0,
+            padx=10,
+            pady=10
+        )
+
+        new_password = ctk.CTkEntry(
+            change_password_frame,
+            height=20,
+            placeholder_text="New password", 
+            font=("Helvetica", 14),
+            justify=ctk.CENTER,
+            show="•",
+        )
+
+        new_password.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=10
+        )
+
+        confirm_password = ctk.CTkEntry(
+            change_password_frame,
+            height=20,
+            placeholder_text="Confirm password", 
+            font=("Helvetica", 14),
+            justify=ctk.CENTER,
+            show="•",
+        )
+
+        confirm_password.grid(
+            row=3,
+            column=0,
+            padx=10,
+            pady=10
+        )
+
+        password_msg_label = ctk.CTkLabel(
+            change_password_frame,
+            text="",
+            font=("Helvetica", 14),
+            text_color="#FF0000",
+            anchor=ctk.CENTER
+        )
+
+        def changePasswordButtonEvent():
+            ret = changePasswordHandler(self.student, old_password.get(), new_password.get(), confirm_password.get())
+            if ret[0] == True:
+                password_msg_label.configure(text=ret[1], text_color="#00FF00")
+
+            elif ret[0] == False:
+                password_msg_label.configure(text=ret[1], text_color="#FF0000")
+            
+            password_msg_label.grid(
+                row=4,
+                column=0,
+                padx=5,
+                pady=5
+            )
+
+        update_password_button = ctk.CTkButton(
+            change_password_frame,
+            text="Update Password",
+            font=("Helvetica", 14),
+            width=100,
+            height=40,
+            command=lambda: changePasswordButtonEvent()
+        )
+
+        update_password_button.grid(
+            row=5,
+            column=0,
+            padx=5,
+            pady=5
+        )
