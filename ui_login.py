@@ -37,6 +37,7 @@ class LoginWindow():
             attach.main_frame,
             width=full_width,
             height=40,
+            fg_color="transparent"
         )
 
         title_frame.grid(
@@ -84,6 +85,7 @@ class LoginWindow():
             attach.main_frame,
             width=full_width,
             height=100,
+            fg_color="transparent"
         )
 
         entry_frame.grid(
@@ -167,7 +169,8 @@ class LoginWindow():
         button_frame = ctk.CTkFrame(
             attach.main_frame,
             width=full_width,
-            height=20
+            height=20,
+            fg_color="transparent"
         )
 
         button_frame.grid(

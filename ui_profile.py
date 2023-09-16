@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from App import App
 from user.user_student import Student
+from ui_window_gen import studentMenuPage
 
 class ProfileWindow:
 
@@ -34,10 +35,13 @@ class ProfileWindow:
             text=f"Dashboard: {self.student.username}'s profile"
         )
 
+        def backButtonEvent():
+            studentMenuPage(attach, self.student)
+
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : exit(),
+            command=lambda : backButtonEvent(),
             width=20
         )
 
