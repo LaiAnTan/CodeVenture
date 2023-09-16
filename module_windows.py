@@ -235,3 +235,4 @@ class ModuleWindow():
 
     def __beep_boop_button(self):
         print("yeah yeah yeah setting it to completed...")
+        return True

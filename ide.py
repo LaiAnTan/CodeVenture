@@ -164,6 +164,7 @@ class IDE():
         except subprocess.TimeoutExpired:
             code_output = "Timeout After Running For 10 seconds"
 
+
         ## remove the file
         os.remove(f"{self.root_path}{self.code_name}")
 
@@ -197,27 +198,8 @@ class IDE():
             code_output = code_runner.stdout
             error_output = code_runner.stderr
         except subprocess.TimeoutExpired:
-            code_output = ""
-            error_output = "Timeout After Running For 10 seconds"
-
-        # ## all these pain in the ass just to make input possible
-        # ## i want to cry
-        
-        # ## it is not possible to pass in input while the subprocess is running
-        
-        # killed = False
-        # proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # timer = Timer(self.timeout_period, proc.kill)
-        # try:
-        #     timer.start()
-        #     code_output, error_output = proc.communicate()
-        # finally:
-        #     killed = timer.finished.is_set()
-        #     timer.cancel()
-
-        # if killed:
-        #     code_output = bytes("", "utf-8")
-        #     error_output = bytes(f"Code Timeout after running for {self.timeout_period} seconds", "utf-8")
+            code_output = bytes("", "utf-8")
+            error_output = bytes("Timeout After Running For 10 seconds", "utf-8")
 
         ## remove the file
         os.remove(f"{self.root_path}{self.code_name}")

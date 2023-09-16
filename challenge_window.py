@@ -16,6 +16,8 @@ from code_runner import CodeRunner
 class ChallangeWindow():
     def __init__(self, challenge: Challange):
         self.attempted_count = 0
+        self.suceeded = False
+        self.percentage = 0
         self.challenge = challenge
         self.main_showcontent_frame = None
         self.shittyIDE = None
@@ -83,7 +85,7 @@ class ChallangeWindow():
             widget.destroy()
         self.main_showcontent_frame.forget()
 
-        if self.attempted_count > 5:
+        if self.attempted_count > 5 or self.suceeded:
             solution_widget = CodeRunner(
                 frame_width - 30,
                 self.main_showcontent_frame,
@@ -201,6 +203,9 @@ class ChallangeWindow():
                 padx=5,
                 pady=5
             )
+
+        self.suceeded = (correct_cases == cases)
+        self.percentage = correct_cases / cases
 
         result = ctk.CTkLabel(
             self.main_showcontent_frame,
@@ -429,7 +434,7 @@ class ChallangeWindow():
             footer_frame,
             text="Mark",
             width=150,
-            command= lambda : self.__beep_boop_button(self.shittyIDE.getContents())
+            command= lambda : self.end(self.shittyIDE.getContents())
         )
 
         submit_button.grid(
@@ -448,10 +453,7 @@ class ChallangeWindow():
 
         ## footer end ------------------------------------------
 
-    def __beep_boop_button(self, codecontent):
+    def end(self, codecontent):
         print("Checking answer...")
         print("Wee wOO wEE wOO Wee wOO")
-        print(f"This was in codecontet = {codecontent}")
-
-    def __beep_hoop_change_button(self):
-        print("Not Implemented!")
+        return codecontent, self.percentage

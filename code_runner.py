@@ -151,9 +151,11 @@ class CodeRunner():
         print("Running Code. BzzZt")
 
         cmd = f"{sys.executable} {self.root_path}{self.code_name}"
+        code_input = open(f"{self.root_path}{self.code_name}.input")
+        
         font_color = "white"
         try:
-            code_output = subprocess.check_output(cmd, timeout=10, stderr=subprocess.STDOUT, shell=True).decode()
+            code_output = subprocess.check_output(cmd, timeout=10, stdin=code_input, stderr=subprocess.STDOUT, shell=True).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
             font_color = "red"

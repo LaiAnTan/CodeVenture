@@ -203,7 +203,7 @@ class QuizWindow():
             footer_frame,
             text="Submit",
             width=150,
-            command= self.__beep_boop_button
+            command= self.end
         )
 
         submit_button.grid(
@@ -225,6 +225,7 @@ class QuizWindow():
     def __beep_boop(self, var):
         print("Value has changed = ", [x.get() for x in var])
 
-    def __beep_boop_button(self):
+    def end(self):
         print("imagine it has submitted, HAH, defo implemented this... (fuck)")
+        return self.user_answer
 
