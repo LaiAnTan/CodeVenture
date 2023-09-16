@@ -11,9 +11,7 @@ import sys
 import customtkinter as ctk
 
 import subprocess
-from threading import Timer
-
-import pexpect
+import select
 
 class IDE():
     def __init__(self, max_img_width, attach_frame, code_name, id, root_path) -> None:
@@ -42,14 +40,9 @@ class IDE():
             self.CodeIDEFrame,
         )
 
-        self.InputFrame = ctk.CTkFrame(
-            self.CodeIDEFrame
-        )
-
         self.outputFrame = ctk.CTkFrame(
             self.CodeIDEFrame
         )
-
 
     def setUpIDEWindow(self):
         font = ctk.CTkFont(
@@ -76,31 +69,6 @@ class IDE():
         return self.IDETextBox
 
 
-    def setupInputFrame(self):
-        font = ctk.CTkFont(
-            "Noto Sans Mono",
-            size=12,
-        )
-
-        self.input_textbox = ctk.CTkTextbox(
-            self.InputFrame,
-            width=320,
-            height=120,
-            font=font,
-            tabs=font.measure("    "),
-            wrap=ctk.WORD
-        )
-
-        self.input_textbox.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
-        
-        return self.input_textbox
-
-
     def	setUpFrame(self):
         RunButton = ctk.CTkButton(
             self.RunButtonFrame,
@@ -119,20 +87,11 @@ class IDE():
 
         self.setUpIDEWindow()
 
-        self.setupInputFrame()
-
         self.IDEFrame.grid(
             row=0,
             column=0,
             padx=5,
             pady=5,
-        )
-
-        self.InputFrame.grid(
-            row=1,
-            column=0,
-            padx=5,
-            pady=5
         )
 
         self.RunButtonFrame.grid(
@@ -171,6 +130,55 @@ class IDE():
         ## if error, return the raw error output
         return code_output
 
+    def this_shitting_thing(self, input_frame, terminal_width):
+        cmd = [sys.executable, f"{self.root_path}{self.code_name}"]
+
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        os.set_blocking(proc.stdout.fileno(), False)
+        os.set_blocking(proc.stderr.fileno(), False)
+
+        ## time to snort cocain
+        def remove_and_send(eventfo):
+            out = input_frame.get()
+            input_frame.delete(0, ctk.END)
+            try:
+                proc.communicate(input=bytes(out.strip(), "utf-8"))
+            except ValueError:
+                print("I spent too much time on this...")
+            
+            ## https://stackoverflow.com/questions/65874314/how-to-remove-blank-line-at-end-of-tkinter-textbox  fasinating
+            return "break"
+
+        input_frame.bind(
+            "<KeyPress-Return>",
+            command=remove_and_send
+        )
+
+        # i am epic distorting
+
+        # frame_count = 1
+        # while True:
+        #     output = proc.stdout.readline()
+        #     error = proc.stderr.readline()
+
+        #     if proc.poll() is not None and not output and not error:
+        #         break
+
+        #     if output or error:
+        #         print(f"output = {output}, error = {error}")
+
+        #     if output:
+        #         code_output_label = self.create_label(output, terminal_width, "white")
+        #         code_output_label.grid( row=frame_count, column=0 )
+        #         frame_count += 1
+        #     if error:
+        #         error_label = self.create_label(error, terminal_width, "red")
+        #         error_label.grid( row=frame_count, column=0 )
+        #         frame_count += 1
+
+        ## remove the file
+        os.remove(f"{self.root_path}{self.code_name}")
+
     def RunCode(self):
         for widget in self.outputFrame.winfo_children():
             widget.destroy()
@@ -178,98 +186,10 @@ class IDE():
 
         terminal_width = (self.max_width - 50)
 
-        print("Running Code. BzzZt")
-
         ## open file and dump all data inside
         text = self.IDETextBox.get("0.0", "end")
         with open(f"{self.root_path}{self.code_name}", "w") as file:
             file.write(text)
-
-        cmd = f"{sys.executable} {self.root_path}{self.code_name}"
-        code_output = ""
-        error_output = ""
-
-        user_input = self.input_textbox.get("0.0", "end")
-        user_input = bytes(user_input, "utf-8")
-
-        try:
-            code_runner = subprocess.run(cmd, timeout=10, input=user_input, capture_output=True, shell=True)
-            code_output = code_runner.stdout
-            error_output = code_runner.stderr
-        except subprocess.TimeoutExpired:
-            code_output = ""
-            error_output = "Timeout After Running For 10 seconds"
-
-        # ## all these pain in the ass just to make input possible
-        # ## i want to cry
-        
-        # ## it is not possible to pass in input while the subprocess is running
-        
-        # killed = False
-        # proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # timer = Timer(self.timeout_period, proc.kill)
-        # try:
-        #     timer.start()
-        #     code_output, error_output = proc.communicate()
-        # finally:
-        #     killed = timer.finished.is_set()
-        #     timer.cancel()
-
-        # if killed:
-        #     code_output = bytes("", "utf-8")
-        #     error_output = bytes(f"Code Timeout after running for {self.timeout_period} seconds", "utf-8")
-
-        ## remove the file
-        os.remove(f"{self.root_path}{self.code_name}")
-        code_output.decode()
-
-        code_output_frame = ctk.CTkFrame(
-            self.outputFrame,
-            width=terminal_width
-        )
-
-        code_output_label = ctk.CTkLabel(
-            code_output_frame,
-            text=code_output,
-            width=terminal_width,
-            wraplength=terminal_width - 20,
-            anchor="w",
-            justify="left",
-            font=ctk.CTkFont("Noto Sans Mono", size=11),
-            bg_color="black",
-            text_color="white"
-        )
-
-        code_output_label.grid(
-            row=0,
-            column=0,
-            sticky="ns"
-        )
-        
-        error_label = ctk.CTkLabel(
-            code_output_frame,
-            text=error_output,
-            width=terminal_width,
-            wraplength=terminal_width - 20,
-            anchor="w",
-            justify="left",
-            font=ctk.CTkFont("Noto Sans Mono", size=11),
-            bg_color="black",
-            text_color="red"
-        )
-
-        error_label.grid(
-            row=1,
-            column=0,
-            sticky="ns"
-        )
-
-        code_output_frame.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
 
         self.outputFrame.grid(
             row=3,
@@ -277,3 +197,33 @@ class IDE():
             padx=5,
             pady=5
         )
+
+        input_frame = ctk.CTkEntry(
+            self.outputFrame,
+            placeholder_text="Input Goes here"
+        )
+
+        input_frame.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5
+        )
+
+        self.this_shitting_thing(input_frame, terminal_width)
+
+    def create_label(self, content, max_width, color):
+        ret = ctk.CTkLabel(
+            self.outputFrame,
+            text=content,
+            width=max_width,
+            wraplength=max_width - 20,
+            height=15,
+            anchor="w",
+            justify="left",
+            font=ctk.CTkFont("Noto Sans Mono", size=11),
+            bg_color="black",
+            text_color=color
+        )
+        
+        return ret
