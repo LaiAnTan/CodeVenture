@@ -1,5 +1,7 @@
 import customtkinter as ctk
 
+from settings import Settings
+
 class App():
 	_instance = None
 
@@ -21,11 +23,17 @@ class App():
 	main.geometry(f"{width}x{height}")
 	main.title("CodeVenture")
 
-	ctk.set_appearance_mode("dark")
-	ctk.set_default_color_theme("dark-blue")
-
 	main.minsize(width, height)
 	main.maxsize(width, height)
+
+	settings = Settings("settings.conf")
+
+	if settings.getSettingValue("lightmode").lower() == "false":
+		ctk.set_appearance_mode("dark")
+		ctk.set_default_color_theme("dark-blue")
+	elif settings.getSettingValue("lightmode").lower() == "true":
+		ctk.set_appearance_mode("light")
+		ctk.set_default_color_theme("blue")
 
 	@classmethod
 	def clean_frame(cls):

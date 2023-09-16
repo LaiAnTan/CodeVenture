@@ -14,7 +14,6 @@ class User(ABC):
         self.username = username
         self.login_status = False
         self.user_type = None
-        self.settings = Settings()
     
     """
     Getters

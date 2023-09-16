@@ -113,10 +113,13 @@ class SettingsWindow:
             if appearance_toggler_status.get() == 1:
                 ctk.set_appearance_mode("light")
                 ctk.set_default_color_theme("blue")
+                attach.settings.updateSetting("lightmode", "true")
+
             else:
                 ctk.set_appearance_mode("dark")
                 ctk.set_default_color_theme("dark-blue")
-            self.student.settings.swapAppearanceMode()
+                attach.settings.updateSetting("lightmode", "false")
+
             attach.main.update_idletasks()
 
         appearance_toggler = ctk.CTkSwitch(
@@ -128,7 +131,8 @@ class SettingsWindow:
             command=lambda : appearanceTogglerEvent(),
         )
 
-        if self.student.settings.getAppearanceMode() == "light":
+        if attach.settings.getSettingValue("lightmode").lower() == "true":
+            print("lightmode enabled")
             appearance_toggler.select()
 
         appearance_toggler.pack(
