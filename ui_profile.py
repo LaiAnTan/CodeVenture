@@ -145,10 +145,12 @@ class ProfileWindow:
             user_details_content_frame,
             justify="left",
             wraplength=210,
-            text=f"""Name: placeholder
-Date of birth: 20/10/2020
-Email: tanlaian2004@gmail.com adadadas
-Subscription: Active
+            text=
+f"""Name: {self.student.getName()}
+Date of birth: {self.student.getDateOfBirth()}
+Email: {self.student.getEmail()}
+Subscription: {self.student.getSubscriptionStatus()}
+Subscription End Date: {self.student.getSubscriptionEndDate()}
 """,
             width=half_width,
             height=half_content_height - header_height,

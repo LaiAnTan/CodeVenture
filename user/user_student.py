@@ -62,8 +62,20 @@ date of birth: {self.dob}
     def getUsername(self):
         return self.username
 
-    def isSubscribed(self):
-        return True if self.subscription_status == 1 else False
+    def getName(self):
+        return self.name
+    
+    def getEmail(self):
+        return self.email
+    
+    def getSubscriptionStatus(self):
+        return "Active" if self.subscription_status == 1 else "Inactive"
+    
+    def getSubscriptionEndDate(self):
+        return self.subscription_end_date
+
+    def getDateOfBirth(self):
+        return self.dob
 
     """
     Setters
@@ -75,8 +87,11 @@ date of birth: {self.dob}
         pass
 
     """
-    Class Methods
+    Methods
     """
+
+    def isSubscribed(self):
+        return True if self.subscription_status == 1 else False
 
     def CSSToList(self, c_sep_str):
         """
