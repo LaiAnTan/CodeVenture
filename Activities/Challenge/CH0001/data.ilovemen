@@ -1,0 +1,19 @@
+HEADER-START
+A_ID|CH0001
+TITLE|Sample Of A Multi-TestCase Module
+DIFFICULTY|******************************
+TAG|py003,py002
+UP_LEVEL|0.1,0.1
+HEADER-END
+
+CONTENT-START
+Produce a python program that gets two values input, and add them together, and then output them
+You do not need to handle errors
+Example Output:
+<IMG-CONT>IMG001
+CONTENT-END
+
+SOURCES-START
+IMG-CONT-START
+IMG001-amongus.png
+IMG-CONT-END

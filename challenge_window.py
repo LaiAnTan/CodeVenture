@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import os
 
 from app import App
 from challenge import Challange
@@ -147,9 +148,9 @@ class ChallangeWindow():
                 pady=5
             )
 
-    def RunTestCases(self):
-        own_code = self.shittyIDE.RunTestCases("test.in")
-        test_code = CodeRunner(None, None, "solution.py", self.challenge.ModulePath).RunTestCases("test.in")
+    def RunTestCases(self, test_input):
+        own_code = self.shittyIDE.RunTestCases(test_input)
+        test_code = CodeRunner(None, None, "solution.py", self.challenge.ModulePath).RunTestCases(test_input)
         if own_code == test_code:
             return True, own_code, test_code
         else:
@@ -157,34 +158,65 @@ class ChallangeWindow():
 
     def RunTestCases_GenFrame(self, frame_width):
         self.attempted_count += 1
-        result, usr_out, sys_out = self.RunTestCases()
-
         for widget in self.main_showcontent_frame.winfo_children():
             widget.destroy()
 
-        if result == True:
-            result = ctk.CTkLabel(
-                self.main_showcontent_frame,
-                text="OK!",
-                text_color="limegreen",
-                font=ctk.CTkFont(
-                    "Noto Sans Mono",
-                    size=25
+        test_cases = os.listdir(f"{self.challenge.ModulePath}/testcase")
+        cases = len(test_cases)
+        correct_cases = 0
+
+        for index, test_case in enumerate(test_cases):
+            result, usr_out, sys_out = self.RunTestCases(f"testcase/{test_case}")
+            if result == True:
+                result = ctk.CTkLabel(
+                    self.main_showcontent_frame,
+                    text=f"Test {index} -- OK!",
+                    text_color="limegreen",
+                    font=ctk.CTkFont(
+                        "Noto Sans Mono",
+                        size=20
+                    ),
+                    width=frame_width - 10,
+                    justify="left",
+                    anchor="w"
                 )
-            )
-        else:
-            result = ctk.CTkLabel(
-                self.main_showcontent_frame,
-                text="KO!",
-                text_color="red",
-                font=ctk.CTkFont(
-                    "Noto Sans Mono",
-                    size=25
+                correct_cases += 1
+            else:
+                result = ctk.CTkLabel(
+                    self.main_showcontent_frame,
+                    text=f"Test {index} -- KO!",
+                    text_color="red",
+                    font=ctk.CTkFont(
+                        "Noto Sans Mono",
+                        size=20
+                    ),
+                    width=frame_width - 10,
+                    justify="left",
+                    anchor="w"
                 )
+
+            result.grid(
+                row=index,
+                column=0,
+                padx=5,
+                pady=5
             )
 
+        result = ctk.CTkLabel(
+            self.main_showcontent_frame,
+            text=f"Test {correct_cases}/{cases} passed!",
+            text_color="yellow",
+            font=ctk.CTkFont(
+                "Noto Sans Mono",
+                size=20
+            ),
+            width=frame_width - 10,
+            justify="left",
+            anchor="w"
+        )
+        
         result.grid(
-            row=0,
+            row=cases,
             column=0,
             padx=5,
             pady=5

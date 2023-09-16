@@ -135,7 +135,7 @@ class CodeRunner():
         cmd = f"{sys.executable} {self.root_path}{self.code_name}"
         testcase_in = open(f"{self.root_path}{testcases}")
         try:
-            code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in,stderr=subprocess.STDOUT, shell=True).decode()
+            code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
         except subprocess.TimeoutExpired:

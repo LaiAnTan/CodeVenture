@@ -63,7 +63,7 @@ class SelectionScreen():
         challange_button = ctk.CTkButton(
             attach.main_frame,
             text="Challange Example",
-            command=lambda : challange_screen(Challange("CH0000"), attach)
+            command=lambda : challange_screen(Challange("CH0001"), attach)
         )
 
         challange_button.grid(
