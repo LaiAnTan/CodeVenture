@@ -2,7 +2,7 @@ import customtkinter as ctk
 
 from App import App
 
-from ui_window_gen import registerPage, studentMenuPage
+from ui_window_gen import registerPage, studentMenuPage, subscribePage
 
 from ui_window_gen import studentMenuPage, registerPage
 from user.user_base import User
@@ -190,10 +190,16 @@ class LoginWindow():
 
                 from user.user_student import Student
 
+                print(f"Type: {self.user.getUserType()}")
+                
                 match self.user.getUserType():
-                    
                     case "student":
-                        studentMenuPage(attach, Student(self.user.getUsername()))
+                        s = Student(self.user.getUsername())
+                        print(s)
+                        if s.isSubscribed() == True:
+                            studentMenuPage(attach, s)
+                        else:
+                            subscribePage(attach, s)
                     case "educator":
                         return
                     case "admin":

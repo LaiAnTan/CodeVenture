@@ -1,3 +1,3 @@
 
 class ActivityTile:
-    
+    pass

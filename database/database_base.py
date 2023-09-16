@@ -46,7 +46,7 @@ class DBBase(object):
 		cls.db_fields = fields
 		
 		# note: id_field is the first field in the database
-        # it is used for as a primary key (unique identifier for each entry)
+		# it is used for as a primary key (unique identifier for each entry)
 		cls.db_idfield = fields.split(",")[0].split()[0]
 
 		# placeholder for field
@@ -113,7 +113,11 @@ class DBBase(object):
 		"""
 		# fetches the required attribute with the data that matches it
 		# returns None if user not found
-		return cls.cursor.execute(f"SELECT {field} from {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {cls.db_idfield: data_id}).fetchone()
+		value = cls.cursor.execute(f"SELECT {field} from {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {cls.db_idfield: data_id}).fetchone()
+		if value == None:
+			return None
+		else:
+			return value[0]
 
 	@classmethod
 	def update_attr(cls, field, data_id, new_value):

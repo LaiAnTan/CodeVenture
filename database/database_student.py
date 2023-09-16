@@ -22,8 +22,8 @@ class StudentDB(db.DBBase):
             subscription_end text,
             date_of_birth text,
             c_quiz text,
-            c_challenge text
-            c_achievements text
+            c_challenge text,
+            c_achievement text
             """
             )
 

@@ -42,9 +42,9 @@ class User(ABC):
         user_pw = db.fetch_attr("password", self.getUsername())
         if user_pw == None: # user not in database
             return False
-        elif user_pw[0] == pw_input: # login success
+        elif user_pw == pw_input: # login success
             self.login_status = True
-            self.user_type = db.fetch_attr("user_type", self.getUsername())[0]
+            self.user_type = db.fetch_attr("user_type", self.getUsername())
             print(self.user_type)
             return True
         else: # login failed

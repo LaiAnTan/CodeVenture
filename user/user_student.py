@@ -16,39 +16,54 @@ class Student(User):
         
         # query from student db
         db = StudentDB()
-        # self.name = db.fetch_attr("name", self.username)
-        # self.email = db.fetch_attr("email", self.username)
-        # self.subciption_status = db.fetch_attr("subscription", self.username)
-        # self.dob = db.fetch_attr("date_of_birth", self.username)
-        # self.c_quiz = None
-        # self.c_challenge = None
-        # self.c_achievement = None
+        self.name = db.fetch_attr("name", self.username)
+        self.email = db.fetch_attr("email", self.username)
+        self.subscription_status = db.fetch_attr("subscription", self.username)
+        self.subscription_end_date = db.fetch_attr("subscription_end", self.username)
+        self.dob = db.fetch_attr("date_of_birth", self.username)
+        self.c_quiz = None
+        self.c_challenge = None
+        self.c_achievement = None
 
-        # # convert comma seperated string to values
-        # c_quiz_str = db.fetch_attr("c_quiz", self.username)
-        # if c_quiz_str:
-        #     self.c_quiz = self.CSSToList(c_quiz_str)
+        # convert comma seperated string to values
+        c_quiz_str = db.fetch_attr("c_quiz", self.username)
+        if c_quiz_str:
+            self.c_quiz = self.CSSToList(c_quiz_str)
         
-        # self.c_challenge_str = db.fetch_attr("c_challenge", self.username)
-        # if c_challenge_str:
-        #     self.c_challenge = self.CSSToList(c_challenge_str)
+        c_challenge_str = db.fetch_attr("c_challenge", self.username)
+        if c_challenge_str:
+            self.c_challenge = self.CSSToList(c_challenge_str)
 
-        # self.c_achievement_str = db.fetch_attr("c_achievement", self.username)
-        # if c_achievement_str:
-        #     self.c_achievement = self.CSSToList(c_achievement_str)
+        c_achievement_str = db.fetch_attr("c_achievement", self.username)
+        if c_achievement_str:
+            self.c_achievement = self.CSSToList(c_achievement_str)
         
         # query graph from statistics db
 
 
 
         # convert completed_quiz & completed_challenge values into dicts of QuizResult and ChallengeResult objects
+    
+    def __str__(self):
+        return f"""
+--Student details--
+username: {self.username}
+name: {self.name}
+email: {self.email}
+subscription:  {self.subscription_status}
+subscription end date: {self.subscription_end_date}
+date of birth: {self.dob}
+"""
 
     """
     Getters
     """
 
-    def get_username():
+    def getUsername(self):
         return self.username
+
+    def isSubscribed(self):
+        return True if self.subscription_status == 1 else False
 
     """
     Setters
