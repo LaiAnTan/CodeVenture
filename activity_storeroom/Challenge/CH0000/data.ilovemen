@@ -1,0 +1,19 @@
+HEADER-START
+A_ID|CH0000
+TITLE|This is A Test Challange
+DIFFICULTY|**********
+TAG|py001,py002
+ACHIEVEMENT|ac001
+UP_LEVEL|0.5,0.2
+HEADER-END
+
+CONTENT-START
+Produce a Python Program that prints out "i honestly dont know..."
+Example Output:
+<IMG-CONT>IMG001
+CONTENT-END
+
+SOURCES-START
+IMG-CONT-START
+IMG001-amongus.png
+IMG-CONT-END

@@ -1,5 +1,8 @@
 from database.database_user import UserDB
 from database.database_student import StudentDB
+from database.database_activity import ActivityDB
+
+import csv
 # from database_educator import EducatorDB
 
 def import_data_from_csv(filename) -> list[tuple]:
@@ -7,15 +10,10 @@ def import_data_from_csv(filename) -> list[tuple]:
     Reads from a csv file containing user data
     and converts it into a list of tuples for database insertion
     """
-    l = list()
-    with open(filename, "r") as f:
-        for line in f:
-            line = line.rstrip('\n')
-            if line == "" or line[0] == "#":
-                continue
-            values = line.split(",")
-            l.append((values))
-    return l
+    with open(filename, newline='') as csvfile:
+        csv_reader = csv.reader(csvfile)
+        ret = [row for row in csv_reader]
+    return ret
 
 def create_new_user(username: str, password: str, user_type: str, details=None) -> bool:
     if details:
@@ -53,6 +51,7 @@ def populate_databases():
     # init databases
     db = UserDB()
     sdb = StudentDB()
+    adb = ActivityDB()
     # edb = EducatorDB()
     # adb = AdminDB()
 
@@ -62,7 +61,7 @@ def populate_databases():
     users = import_data_from_csv(test_users_filename)
     students = import_data_from_csv(test_students_filename)
 
-    entries_list = [users, students] # add more as time goes on (corespond to database_list)
+    entries_list = [users, students, adb] # add more as time goes on (corespond to database_list)
 
     # init .db files
     for database in database_list:
@@ -70,8 +69,7 @@ def populate_databases():
             database.new_db()
 
     # populate
-    for i in range(2):
-        database = database_list[i]
+    for i, database in enumerate(database_list):
         for entry in entries_list[i]:
             try:
                 database.add_entry(entry)

@@ -1,0 +1,14 @@
+CONTENT-START
+Hint 1:
+Have you tried using print?
+Hint 2:
+Have you tried changing the parameters?
+Hint 3:
+<IMG-CONT>IMG000
+CONTENT-END
+
+SOURCES-START
+IMG-CONT-START
+IMG000-thesolution.png
+IMG-CONT-END
+SOURCES-END
