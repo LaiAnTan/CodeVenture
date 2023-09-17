@@ -20,6 +20,7 @@ class CodeRunner():
         self.attach_frame = attach_frame
         self.code_name = code_name
         self.root_path = root_path
+        self.fullfolderpath = f"{self.root_path}/{self.code_name}"
 
         self.CodeRunnerFrame = ctk.CTkFrame(self.attach_frame)
 
@@ -37,7 +38,7 @@ class CodeRunner():
 
     def	DisplayCodeline_FromFile(self):
         code_content = []
-        with open(self.root_path + self.code_name) as file:
+        with open(f"{self.fullfolderpath}/main.py") as file:
             pyg.highlight(
                 file.read(),
                 PythonLexer(),
@@ -45,17 +46,17 @@ class CodeRunner():
                     font_name="Noto Sans Mono",
                     font_size=12
                 ),
-                outfile=f"{self.root_path}temp"
+                outfile=f"{self.root_path}/temp"
             )
 
         ret_widget = ImageLabelGen(
-            self.root_path + "temp",
+            f"{self.root_path}/temp",
             self.max_width,
             self.CodeFrame
         ).ImageLabelGen(True)
 
         ## imagine if this is system24, LETS GO
-        os.remove(f"{self.root_path}temp")
+        os.remove(f"{self.root_path}/temp")
 
         return ret_widget
 
@@ -80,8 +81,8 @@ class CodeRunner():
         return self.CodeRunnerFrame
 
     def RunTestCases(self, testcases):
-        cmd = f"{sys.executable} {self.root_path}{self.code_name}"
-        testcase_in = open(f"{self.root_path}{testcases}")
+        cmd = f"{sys.executable} {self.fullfolderpath}/main.py"
+        testcase_in = open(testcases)
         try:
             code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
         except subprocess.CalledProcessError as errxc:
@@ -98,8 +99,8 @@ class CodeRunner():
 
         print("Running Code. BzzZt")
 
-        cmd = f"{sys.executable} {self.root_path}{self.code_name}"
-        code_input = open(f"{self.root_path}{self.code_name}.input")
+        cmd = f"{sys.executable} {self.fullfolderpath}/main.py"
+        code_input = open(f"{self.fullfolderpath}/input")
         
         font_color = "white"
         try:

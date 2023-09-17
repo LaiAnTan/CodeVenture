@@ -16,7 +16,7 @@ class Activity(ABC):
         Quiz = 3
 
     def	__init__(self, filename: str, ac_type: AType) -> None:
-        self.ModulePath = os.getcwd() + f"/Activities/{ac_type.name}/" + filename + "/"
+        self.ModulePath = os.getcwd() + f"/Activities/{ac_type.name}/" + filename
         self.content: list[str] = []
         self.footer: list[str] = []
         self.type = ac_type
@@ -105,7 +105,7 @@ class Activity(ABC):
             self.footer.append(line)
 
     def read_mf_read(self):
-        with open(self.ModulePath + self.data_file) as file:
+        with open(f"{self.ModulePath}/{self.data_file}") as file:
             for line in file:
                 line = line.strip('\n')
                 match line:

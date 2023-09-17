@@ -137,12 +137,12 @@ class IDE():
     def RunTestCases(self, testcases):
         ## open file and dump all data inside
         text = self.IDETextBox.get("0.0", "end")
-        testcase_in = open(f"{self.root_path}{testcases}")
+        testcase_in = open(f"{self.root_path}/{testcases}")
 
-        with open(f"{self.root_path}{self.code_name}", "w") as file:
+        with open(f"{self.root_path}/{self.code_name}", "w") as file:
             file.write(text)
 
-        cmd = f"{sys.executable} {self.root_path}{self.code_name}"
+        cmd = f"{sys.executable} {self.root_path}/{self.code_name}"
         try:
             code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
         except subprocess.CalledProcessError as errxc:
@@ -151,7 +151,7 @@ class IDE():
             code_output = "Timeout After Running For 10 seconds"
 
         ## remove the file
-        os.remove(f"{self.root_path}{self.code_name}")
+        os.remove(f"{self.root_path}/{self.code_name}")
 
         ## Returns the output
         ## if error, return the raw error output
@@ -183,10 +183,10 @@ class IDE():
 
         ## open file and dump all data inside
         text = self.IDETextBox.get("0.0", "end")
-        with open(f"{self.root_path}{self.code_name}", "w") as file:
+        with open(f"{self.root_path}/{self.code_name}", "w") as file:
             file.write(text)
 
-        cmd = f"{sys.executable} {self.root_path}{self.code_name}"
+        cmd = f"{sys.executable} {self.root_path}/{self.code_name}"
 
         user_input = self.InputTextBox.get("0.0", "end")
         user_input = bytes(user_input, "utf-8")
@@ -199,7 +199,7 @@ class IDE():
             error_output = bytes("Timeout After Running For 10 seconds", "utf-8")
 
         ## remove the file
-        os.remove(f"{self.root_path}{self.code_name}")
+        os.remove(f"{self.root_path}/{self.code_name}")
 
         if code_output or error_output:
             code_output_frame = ctk.CTkFrame(self.outputFrame)

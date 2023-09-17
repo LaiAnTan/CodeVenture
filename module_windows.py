@@ -22,7 +22,7 @@ class ModuleWindow():
     def ImageHandler(self, content, max_img_width, attach_frame):
         if self.module.img.get(content):
             ret_widget = ImageLabelGen(
-                self.module.ModulePath + self.module.img[content],
+                f"{self.module.ModulePath}/{self.module.img[content]}",
                 max_img_width - 50,
                 attach_frame
             ).ImageLabelGen()

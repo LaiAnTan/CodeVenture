@@ -59,7 +59,7 @@ class Quiz(ac.Activity):
         self.__getAnswers()
 
     def __getAnswers(self) -> None:
-        with open(self.ModulePath + Quiz.answer_sheet) as file:
+        with open(f"{self.ModulePath}/{Quiz.answer_sheet}") as file:
             for count, line in enumerate(file):
                 self.answers[count] = line.strip('\n')
 

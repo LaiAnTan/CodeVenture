@@ -25,7 +25,7 @@ class ChallangeWindow():
     def ImageHandler(self, source, content, max_img_width, attach_frame):
         if source.img.get(content):
             ret_widget = ImageLabelGen(
-                source.ModulePath + source.img[content],
+                f"{source.ModulePath}/{source.img[content]}",
                 max_img_width - 50,
                 attach_frame
             ).ImageLabelGen()
@@ -79,7 +79,7 @@ class ChallangeWindow():
             solution_widget = CodeRunner(
                 frame_width - 30,
                 self.main_showcontent_frame,
-                "solution.py",
+                "solution",
                 self.challenge.ModulePath
             ).setUpFrame()
         else:
@@ -129,7 +129,7 @@ class ChallangeWindow():
 
     def RunTestCases(self, test_input):
         own_code = self.shittyIDE.RunTestCases(test_input)
-        test_code = CodeRunner(None, None, "solution.py", self.challenge.ModulePath).RunTestCases(test_input)
+        test_code = CodeRunner(None, None, "solution", self.challenge.ModulePath).RunTestCases(f"{self.challenge.ModulePath}/{test_input}")
         if own_code == test_code:
             return True, own_code, test_code
         else:
