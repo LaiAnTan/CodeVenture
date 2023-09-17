@@ -2,7 +2,7 @@ import customtkinter as ctk
 
 from app import App
 from activity import Activity
-import activity_database as ab
+import database.database_activity as ab
 
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter

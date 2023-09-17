@@ -4,6 +4,7 @@ from enum import Enum
 from abc import ABC, abstractmethod
 
 class Activity(ABC):
+    activity_base = "activity_storeroom"
 
     class Content_Type(Enum):
         Paragraph = 0
@@ -16,7 +17,7 @@ class Activity(ABC):
         Quiz = 3
 
     def	__init__(self, filename: str, ac_type: AType) -> None:
-        self.ModulePath = os.getcwd() + f"/Activities/{ac_type.name}/" + filename
+        self.ModulePath = os.getcwd() + f"/{self.activity_base}/{ac_type.name}/" + filename
         self.content: list[str] = []
         self.footer: list[str] = []
         self.type = ac_type
