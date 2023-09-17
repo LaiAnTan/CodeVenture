@@ -31,6 +31,12 @@ def settingsPage(a: App, student: Student):
     settings_win = SettingsWindow(student)
     settings_win.FillFrames(a)
 
+def loadingPage(a: App, student: Student, redirect: str, message: list = []):
+    from ui_loading import LoadingMenu
+    a.clean_frame()
+    loading_win = LoadingMenu(student)
+    loading_win.FillFrames(a, redirect, message)
+
 # def modulePage(a: App, module: Module):
 #     pass
 

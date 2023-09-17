@@ -341,7 +341,8 @@ Subscription: Active
         )
 
 if __name__ == "__main__":
-    test = App()
-    p = ProfilePage(Student("tlai-an"))
-    p.FillFrames(test)
-    test.mainloop()
+    # test = App()
+    # p = ProfilePage(Student("tlai-an"))
+    # p.FillFrames(test)
+    # test.mainloop()
+    pass

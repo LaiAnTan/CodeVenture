@@ -4,7 +4,7 @@ from App import App
 
 from ui_window_gen import registerPage, studentMenuPage
 
-from ui_window_gen import studentMenuPage, registerPage
+from ui_window_gen import studentMenuPage, registerPage, loadingPage
 from user.user_base import User
 from user.user_student import Student
 
@@ -193,7 +193,7 @@ class LoginWindow():
                 match self.user.getUserType():
                     
                     case "student":
-                        studentMenuPage(attach, Student(self.user.getUsername()))
+                        loadingPage(attach, Student(self.user.getUsername()), "studentMenuPage")
                     case "educator":
                         return
                     case "admin":

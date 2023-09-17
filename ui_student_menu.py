@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from ui_window_gen import loginPage, profilePage, settingsPage
+from ui_window_gen import loginPage, profilePage, settingsPage, loadingPage
 from App import App
 from user.user_student import Student
 
@@ -43,7 +43,7 @@ class StudentMenuWindow:
         )
 
         def logoutButtonEvent():
-            loginPage(attach)
+            loadingPage(attach, Student(None), "loginPage", ["Logging out...", "Clearing session coookies..", "Nuking search history and bookmarks!"])
 
         logout_button = ctk.CTkButton(
             header_frame,
@@ -59,7 +59,7 @@ class StudentMenuWindow:
         )
 
         def settingsButtonEvent():
-            settingsPage(attach, self.student)
+            loadingPage(attach, self.student, "settingsPage", ["Loading settings page...", "Loading settings page..", "Loading settings page."])
 
         settings_button = ctk.CTkButton(
             header_frame,
@@ -75,7 +75,7 @@ class StudentMenuWindow:
         )
 
         def profileButtonEvent():
-            profilePage(attach, self.student)
+            loadingPage(attach, self.student, "profilePage", ["Fetching profile details...", "Fetching profile details..", "Fetching profile details."])
 
         profile_button = ctk.CTkButton(
             header_frame,
