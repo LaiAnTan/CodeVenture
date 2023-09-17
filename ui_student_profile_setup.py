@@ -1,13 +1,13 @@
 import customtkinter as ctk
 from App import App
-from ui_window_gen import studentMenuPage, datePickerTopLevelPage
+from ui_window_gen import subscribePage, datePickerTopLevelPage
 from database.database_student import StudentDB
 from user.user_student import Student
 
 import shutil
 import os
 
-def profileSetupHandler(full_name: str, email: str, dob: str, profile_pic_path: bool):
+def profileSetupHandler(student: Student, full_name: str, email: str, dob: str, profile_pic_path: bool):
     """
     Handles first time profile setup of a new student
 
@@ -15,11 +15,13 @@ def profileSetupHandler(full_name: str, email: str, dob: str, profile_pic_path: 
     """
 
     sdb = StudentDB()
+    print(full_name, email, dob, profile_pic_path)
 
     if full_name == "" or email == "" or dob == "" or profile_pic_path == "":
         return (False, "One or more fields incomplete")
     
-    sdb.add_entry()
+    sdb.add_entry((student.getUsername(), full_name, email, 0, "none", dob, "none", "none", "none"))
+    student = Student(student.getUsername())
 
     return (True, "Profile setup sucessful")
 
@@ -273,10 +275,12 @@ class StudentProfileSetupWindow:
         )
 
         def doneButtonEvent():
-            ret = profileSetupHandler(self.full_name, self.email, self.dob, self.profile_pic_path)
+            self.full_name = name.get()
+            self.email = email.get()
+            ret = profileSetupHandler(self.student, self.full_name, self.email, self.dob, self.profile_pic_path)
             if ret[0] == True:
                 attach.main.protocol("", "")
-                studentMenuPage(attach, self.student)
+                subscribePage(attach, self.student)
             else:
                 profile_setup_failed_label.configure(text=ret[1], text_color="#FF0000")
                 profile_setup_failed_label.grid(
