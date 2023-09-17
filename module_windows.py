@@ -50,14 +50,12 @@ class ModuleWindow():
                 wraplength=max_img_width - 10,
             )
         return ret_widget
-    
+
     def FillFrames(self, attach: App):
 
         ## header details -------------------------------------------
 
-        header_frame = ctk.CTkFrame(
-            attach.main_frame
-        )
+        header_frame = ctk.CTkFrame(attach.main_frame)
 
         quiz_name = ctk.CTkLabel(
             header_frame,
@@ -71,31 +69,14 @@ class ModuleWindow():
             width=20
         )
 
-        quiz_name.pack(
-            side=ctk.LEFT,
-            padx=5,
-            pady=5
-        )
+        quiz_name.pack(side=ctk.LEFT, padx=5, pady=5)
+        back_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
-        back_button.pack(
-            side=ctk.RIGHT,
-            padx=5,
-            pady=5
-        )
-
-        header_frame.grid(
-            row=0,
-            column=0,
-            sticky="we",
-            padx=5,
-            pady=5
-        )
+        header_frame.grid(row=0, column=0, sticky="we", padx=5, pady=5)
 
         ## header details end --------------------------------------------
 
-        content_frame = ctk.CTkFrame(
-            attach.main_frame,
-        )
+        content_frame = ctk.CTkFrame(attach.main_frame)
 
         ## main_content frame ----------------------------
 
@@ -139,26 +120,10 @@ class ModuleWindow():
                         paragraph_frame
                     )
 
-            paragraph.grid(
-                row=0,
-                column=0,
-                padx=5,
-                pady=5
-            )
+            paragraph.grid(row=0, column=0, padx=5, pady=5)
+            paragraph_frame.grid(row=index, column=0, padx=5, pady=10)
 
-            paragraph_frame.grid(
-                row=index,
-                column=0,
-                padx=5,
-                pady=10
-            )
-
-        main_content_frame.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        main_content_frame.grid(row=0, column=0, padx=5, pady=5)
 
         ## qna frame end -------------------------------
 
@@ -177,29 +142,13 @@ class ModuleWindow():
             wraplength=sidebar_width,
         )
 
-        some_label.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        some_label.grid(row=0, column=0, padx=5, pady=5)
 
-        sidebar_frame.grid(
-            row=0,
-            column=1,
-            padx=5,
-            pady=5,
-            sticky="ns"
-        )
-        
+        sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
+
         ## some optional side bar end ----------------------------
-        
-        content_frame.grid(
-            row=1,
-            column=0,
-            padx=5,
-            pady=5,
-        )
+
+        content_frame.grid(row=1, column=0, padx=5, pady=5,)
 
         ## footer ---------------------------------------------
 
@@ -214,24 +163,11 @@ class ModuleWindow():
             command= self.__beep_boop_button
         )
 
-        submit_button.grid(
-            row=0,
-            column=0,
-            padx=0,
-            pady=0
-        )
+        submit_button.grid(row=0, column=0, padx=0, pady=0)
 
-        footer_frame.grid(
-            row=2,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        footer_frame.grid(row=2, column=0, padx=5, pady=5)
 
         ## footer end ------------------------------------------
-
-    def __beep_boop(self, var):
-        print("Value has changed = ", [x.get() for x in var])
 
     def __beep_boop_button(self):
         print("yeah yeah yeah setting it to completed...")

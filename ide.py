@@ -22,15 +22,19 @@ class IDE():
         self.code_name = f"{code_name}-{id}"
         self.root_path = root_path
         self.max_output_size = 68750
+
         ## please change this to a reasonable timeout period
         self.timeout_period = 10
 
-        self.CodeIDEFrame = ctk.CTkFrame(
-            self.attach_frame
-        )
+        self.CodeIDEFrame = ctk.CTkFrame(self.attach_frame)
+        self.RunButtonFrame = ctk.CTkFrame(self.CodeIDEFrame)
 
-        self.RunButtonFrame = ctk.CTkFrame(
-            self.CodeIDEFrame
+        self.RunButtonFrame.grid(
+            row=2,
+            column=0,
+            sticky="ew",
+            padx=5,
+            pady=5
         )
 
         self.RunButtonFrame.columnconfigure(
@@ -38,17 +42,13 @@ class IDE():
             weight=1
         )
 
-        self.IDEFrame = ctk.CTkFrame(
-            self.CodeIDEFrame,
-        )
+        self.IDEFrame = ctk.CTkFrame(self.CodeIDEFrame)
+        self.IDEFrame.grid(row=0, column=0, padx=5, pady=5)
 
-        self.InputFrame = ctk.CTkFrame(
-            self.CodeIDEFrame
-        )
+        self.InputFrame = ctk.CTkFrame(self.CodeIDEFrame)
+        self.InputFrame.grid(row=1, column=0, padx=5, pady=5)
 
-        self.outputFrame = ctk.CTkFrame(
-            self.CodeIDEFrame
-        )
+        self.outputFrame = ctk.CTkFrame(self.CodeIDEFrame)
 
 
     def setUpIDEWindow(self):
@@ -118,30 +118,7 @@ class IDE():
         )
 
         self.setUpIDEWindow()
-
         self.setupInputFrame()
-
-        self.IDEFrame.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5,
-        )
-
-        self.InputFrame.grid(
-            row=1,
-            column=0,
-            padx=5,
-            pady=5
-        )
-
-        self.RunButtonFrame.grid(
-            row=2,
-            column=0,
-            sticky="ew",
-            padx=5,
-            pady=5
-        )
 
         return self.CodeIDEFrame
 
@@ -163,7 +140,6 @@ class IDE():
             code_output = errxc.output
         except subprocess.TimeoutExpired:
             code_output = "Timeout After Running For 10 seconds"
-
 
         ## remove the file
         os.remove(f"{self.root_path}{self.code_name}")
@@ -203,59 +179,31 @@ class IDE():
 
         ## remove the file
         os.remove(f"{self.root_path}{self.code_name}")
-        code_output.decode()
 
-        code_output_frame = ctk.CTkFrame(
-            self.outputFrame,
-            width=terminal_width
-        )
+        if code_output or error_output:
+            code_output_frame = ctk.CTkFrame(self.outputFrame)
+            code_output_frame.grid(row=0, column=0, padx=5, pady=5)
+            self.outputFrame.grid(row=3, column=0, padx=5, pady=5)
 
-        code_output_label = ctk.CTkLabel(
-            code_output_frame,
-            text=code_output,
-            width=terminal_width,
-            wraplength=terminal_width - 20,
+        if code_output:
+            code_output_label = self.terminalOutput_Gen(code_output, code_output_frame, terminal_width, "white")
+            code_output_label.grid(row=0, column=0, sticky="ns")
+
+        if error_output:
+            error_label = self.terminalOutput_Gen(error_output, code_output_frame, terminal_width, "red")
+            error_label.grid(row=1, column=0, sticky="ns")
+
+    def terminalOutput_Gen(self, output, attach_to, max_width, word_color):
+        output = output[:self.max_output_size]
+        output_label = ctk.CTkLabel(
+            attach_to,
+            text=output,
+            width=max_width,
+            wraplength=max_width - 20,
             anchor="w",
             justify="left",
             font=ctk.CTkFont("Noto Sans Mono", size=11),
             bg_color="black",
-            text_color="white"
+            text_color=word_color
         )
-
-        code_output_label.grid(
-            row=0,
-            column=0,
-            sticky="ns"
-        )
-        
-        error_label = ctk.CTkLabel(
-            code_output_frame,
-            text=error_output,
-            width=terminal_width,
-            wraplength=terminal_width - 20,
-            anchor="w",
-            justify="left",
-            font=ctk.CTkFont("Noto Sans Mono", size=11),
-            bg_color="black",
-            text_color="red"
-        )
-
-        error_label.grid(
-            row=1,
-            column=0,
-            sticky="ns"
-        )
-
-        code_output_frame.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
-
-        self.outputFrame.grid(
-            row=3,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        return output_label

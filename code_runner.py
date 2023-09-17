@@ -21,30 +21,23 @@ class CodeRunner():
         self.code_name = code_name
         self.root_path = root_path
 
-        self.CodeRunnerFrame = ctk.CTkFrame(
-            self.attach_frame
-        )
+        self.CodeRunnerFrame = ctk.CTkFrame(self.attach_frame)
 
-        self.HeaderFrame = ctk.CTkFrame(
-            self.CodeRunnerFrame
-        )
+        self.HeaderFrame = ctk.CTkFrame(self.CodeRunnerFrame)
+        self.HeaderFrame.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
-        self.RunButtonFrame = ctk.CTkFrame(
-            self.CodeRunnerFrame
-        )
+        self.CodeFrame = ctk.CTkFrame(self.CodeRunnerFrame)
+        self.CodeFrame.grid(row=1, column=0, padx=5, pady=5,)
+
+        self.RunButtonFrame = ctk.CTkFrame(self.CodeRunnerFrame)
+        self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
 
         self.RunButtonFrame.columnconfigure(
             0,
             weight=1
         )
 
-        self.CodeFrame = ctk.CTkFrame(
-            self.CodeRunnerFrame
-        )
-
-        self.outputFrame = ctk.CTkFrame(
-            self.CodeRunnerFrame
-        )
+        self.outputFrame = ctk.CTkFrame(self.CodeRunnerFrame)
 
     def	DisplayCodeline_FromFile(self):
         code_content = []
@@ -75,12 +68,7 @@ class CodeRunner():
             self.HeaderFrame,
             text=self.code_name
         )
-
-        title.grid(
-            row=0,
-            column=0,
-            padx=5
-        )
+        title.grid(row=0, column=0, padx=5)
 
         RunButton = ctk.CTkButton(
             self.RunButtonFrame,
@@ -88,46 +76,10 @@ class CodeRunner():
             command=self.RunCode,
             height=10
         )
-
-        RunButton.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5,
-            sticky="ew"
-        )
+        RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         CodeContent = self.DisplayCodeline_FromFile()
-
-        CodeContent.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
-
-        self.HeaderFrame.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5,
-            sticky="w"
-        )
-
-        self.CodeFrame.grid(
-            row=1,
-            column=0,
-            padx=5,
-            pady=5,
-        )
-
-        self.RunButtonFrame.grid(
-            row=2,
-            column=0,
-            sticky="ew",
-            padx=5,
-            pady=5
-        )
+        CodeContent.grid(row=0, column=0, padx=5, pady=5)
 
         return self.CodeRunnerFrame
 
@@ -174,17 +126,6 @@ class CodeRunner():
             bg_color="black",
             text_color=font_color
         )
+        placeholder.grid(row=0, column=0, padx=5, pady=5)
 
-        placeholder.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
-
-        self.outputFrame.grid(
-            row=3,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        self.outputFrame.grid(row=3, column=0, padx=5, pady=5)

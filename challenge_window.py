@@ -67,18 +67,8 @@ class ChallangeWindow():
                         paragraph_frame
                     )
             
-            paragraph.grid(
-                row=0,
-                column=0,
-                padx=5,
-                pady=5
-            )
-
-            paragraph_frame.grid(
-                row=index,
-                column=0,
-                pady=5
-            )
+            paragraph.grid(row=0, column=0, padx=5, pady=5)
+            paragraph_frame.grid(row=index, column=0, pady=5)
 
     def	SolutionFrames(self, frame_width):
         for widget in self.main_showcontent_frame.winfo_children():
@@ -103,12 +93,7 @@ class ChallangeWindow():
                         text_color="red",
                     )
 
-        solution_widget.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        solution_widget.grid(row=0, column=0, padx=5, pady=5)
 
     def HintFrames(self, frame_width):
         for widget in self.main_showcontent_frame.winfo_children():
@@ -139,16 +124,8 @@ class ChallangeWindow():
                         paragraph_frame
                     )
             
-            paragraph.grid(
-                row=0,
-                column=0,
-            )
-
-            paragraph_frame.grid(
-                row=index,
-                column=0,
-                pady=5
-            )
+            paragraph.grid(row=0, column=0,)
+            paragraph_frame.grid(row=index, column=0, pady=5)
 
     def RunTestCases(self, test_input):
         own_code = self.shittyIDE.RunTestCases(test_input)
@@ -197,12 +174,7 @@ class ChallangeWindow():
                     anchor="w"
                 )
 
-            result.grid(
-                row=index,
-                column=0,
-                padx=5,
-                pady=5
-            )
+            result.grid(row=index, column=0, padx=5, pady=5)
 
         self.suceeded = (correct_cases == cases)
         self.percentage = correct_cases / cases
@@ -220,19 +192,12 @@ class ChallangeWindow():
             anchor="w"
         )
         
-        result.grid(
-            row=cases,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        result.grid(row=cases, column=0, padx=5, pady=5)
 
     def	FillFrames(self, attach: App):
         ## header details -------------------------------------------
 
-        header_frame = ctk.CTkFrame(
-            attach.main_frame
-        )
+        header_frame = ctk.CTkFrame(attach.main_frame)
 
         challange_name = ctk.CTkLabel(
             header_frame,
@@ -246,40 +211,20 @@ class ChallangeWindow():
             width=20
         )
 
-        challange_name.pack(
-            side=ctk.LEFT,
-            padx=5,
-            pady=5
-        )
-
-        back_button.pack(
-            side=ctk.RIGHT,
-            padx=5,
-            pady=5
-        )
-
-        header_frame.grid(
-            row=0,
-            column=0,
-            sticky="we",
-            padx=5,
-            pady=5
-        )
+        challange_name.pack(side=ctk.LEFT, padx=5, pady=5)
+        back_button.pack(side=ctk.RIGHT, padx=5, pady=5)
+        header_frame.grid(row=0, column=0, sticky="we", padx=5, pady=5)
 
         ## header details end --------------------------------------------
 
-        content_frame = ctk.CTkFrame(
-            attach.main_frame,
-        )
+        content_frame = ctk.CTkFrame(attach.main_frame)
 
         content_frame_height = 460
         content_frame_width = 350
 
         ## left side of the frame
 
-        main_content_frame = ctk.CTkFrame(
-            content_frame,
-        )
+        main_content_frame = ctk.CTkFrame( content_frame )
 
         ## buttons to switch between 3 frames, question, hint 
 
@@ -321,40 +266,12 @@ class ChallangeWindow():
             command=lambda : self.RunTestCases_GenFrame(content_frame_width)
         )
 
-        question_button.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        question_button.grid(row=0, column=0, padx=5, pady=5)
+        hint_button.grid(row=0, column=1, padx=5, pady=5)
+        solution_button.grid(row=0, column=2, padx=5, pady=5)
+        mark_button.grid(row=0, column=3, padx=5, pady=5)
 
-        hint_button.grid(
-            row=0,
-            column=1,
-            padx=5,
-            pady=5
-        )
-
-        solution_button.grid(
-            row=0,
-            column=2,
-            padx=5,
-            pady=5
-        )
-
-        mark_button.grid(
-            row=0,
-            column=3,
-            padx=5,
-            pady=5
-        )
-
-        main_content_options_frame.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        main_content_options_frame.grid(row=0, column=0, padx=5, pady=5)
 
         ## main question frame
 
@@ -401,28 +318,12 @@ class ChallangeWindow():
 
         a_shitty_ide_frame = self.shittyIDE.setUpFrame()
 
-        a_shitty_ide_frame.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
-
-        sidebar_frame.grid(
-            row=0,
-            column=1,
-            padx=5,
-            pady=5
-        )
+        a_shitty_ide_frame.grid(row=0, column=0, padx=5, pady=5)
+        sidebar_frame.grid(row=0, column=1, padx=5, pady=5)
         
         ## some optional side bar end ----------------------------
-        
-        content_frame.grid(
-            row=1,
-            column=0,
-            padx=5,
-            pady=5,
-        )
+
+        content_frame.grid(row=1, column=0, padx=5, pady=5,)
 
         ## footer ---------------------------------------------
 
@@ -437,19 +338,9 @@ class ChallangeWindow():
             command= lambda : self.end(self.shittyIDE.getContents())
         )
 
-        submit_button.grid(
-            row=0,
-            column=0,
-            padx=0,
-            pady=0
-        )
+        submit_button.grid(row=0, column=0, padx=0, pady=0)
 
-        footer_frame.grid(
-            row=2,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        footer_frame.grid(row=2, column=0, padx=5, pady=5)
 
         ## footer end ------------------------------------------
 
