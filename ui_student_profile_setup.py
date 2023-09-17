@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from App import App
-from ui_window_gen import studentMenuPage
+from ui_window_gen import studentMenuPage, datePickerTopLevelPage
 from database.database_student import StudentDB
 from user.user_student import Student
 
@@ -143,8 +143,11 @@ class StudentProfileSetupWindow:
             pady=10
         )
 
+        date_picker = None
+
         def dateOfBirthButtonEvent():
-            pass
+            date = datePickerTopLevelPage(attach)
+            print(date)
 
         date_of_birth_button = ctk.CTkButton(
             details_frame,
