@@ -2,6 +2,7 @@ import customtkinter as ctk
 from App import App
 from ui_window_gen import loginPage
 from database.database_user import UserDB
+from database.database_student import StudentDB
 
 def registerHandler(username: str, password: str, confirm_pw: str, user_type: str):
     """
@@ -24,6 +25,19 @@ def registerHandler(username: str, password: str, confirm_pw: str, user_type: st
         return (False, "Username cannot be password")
     
     db.add_entry((username, password, user_type))
+
+    # match user_type:
+
+    #     case "student":
+    #         sdb = StudentDB()
+    #         sdb.add_entry((username, "none", "none", 0, "none", "none", "none", "none", "none"))
+    #     case "educator":
+    #         pass
+    #     case "admin":
+    #         pass
+    #     case _:
+    #         raise AssertionError("Unknown user type")
+
     return (True, "Register Successful")
 
 class RegisterWindow:

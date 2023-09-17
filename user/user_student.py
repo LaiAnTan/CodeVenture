@@ -16,6 +16,12 @@ class Student(User):
         
         # query from student db
         db = StudentDB()
+
+        if db.fetch_attr("username", self.username) == None:
+            self.profile_setup = True
+            return
+        
+        self.profile_setup = False
         self.name = db.fetch_attr("name", self.username)
         self.email = db.fetch_attr("email", self.username)
         self.subscription_status = db.fetch_attr("subscription", self.username)
@@ -76,6 +82,12 @@ date of birth: {self.dob}
 
     def getDateOfBirth(self):
         return self.dob
+    
+    def getProfileSetupStatus(self):
+        """
+        Returns true if profile is not setup
+        """
+        return self.profile_setup
 
     """
     Setters

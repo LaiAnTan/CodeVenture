@@ -37,6 +37,12 @@ def subscribePage(a: App, student: Student):
     sub_win = SubscribeWindow(student)
     sub_win.FillFrames(a)
 
+def studentProfileSetupPage(a: App, student: Student):
+    from ui_student_profile_setup import StudentProfileSetupWindow
+    a.clean_frame()
+    stud_profile_setup_win = StudentProfileSetupWindow(student)
+    stud_profile_setup_win.FillFrames(a)
+
 # def modulePage(a: App, module: Module):
 #     pass
 

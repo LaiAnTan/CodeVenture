@@ -4,7 +4,7 @@ from App import App
 
 from ui_window_gen import registerPage, studentMenuPage, subscribePage
 
-from ui_window_gen import studentMenuPage, registerPage
+from ui_window_gen import studentMenuPage, registerPage, studentProfileSetupPage
 from user.user_base import User
 from user.user_student import Student
 
@@ -193,13 +193,19 @@ class LoginWindow():
                 print(f"Type: {self.user.getUserType()}")
                 
                 match self.user.getUserType():
+
                     case "student":
+                        
                         s = Student(self.user.getUsername())
-                        print(s)
-                        if s.isSubscribed() == True:
-                            studentMenuPage(attach, s)
-                        else:
+
+                        if s.getProfileSetupStatus() == True:
+                            print("hehe")
+                            studentProfileSetupPage(attach, s)
+                        elif s.isSubscribed() == False:
                             subscribePage(attach, s)
+                        else:
+                            studentMenuPage(attach, s)
+
                     case "educator":
                         return
                     case "admin":
