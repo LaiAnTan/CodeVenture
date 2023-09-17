@@ -4,13 +4,48 @@ from ui_window_gen import studentMenuPage, datePickerTopLevelPage
 from database.database_student import StudentDB
 from user.user_student import Student
 
+import shutil
+import os
+
+def profileSetupHandler(full_name: str, email: str, dob: str, profile_pic_path: bool):
+    """
+    Handles first time profile setup of a new student
+
+    returns a 2-tuple with the first value being a boolean and the second value being the message to display.
+    """
+
+    sdb = StudentDB()
+
+    if full_name == "" or email == "" or dob == "" or profile_pic_path == "":
+        return (False, "One or more fields incomplete")
+    
+    sdb.add_entry()
+
+    return (True, "Profile setup sucessful")
+
+
+
 class StudentProfileSetupWindow:
+
+    profile_pic_dir_path = "pfp"
 
     def __init__(self, student: Student):
         self.student = student
-        self.date = None
+        self.full_name = ""
+        self.email = ""
+        self.dob = ""
+        self.profile_pic_path = ""
 
     def	FillFrames(self, attach: App):
+
+        def deleteProfilePic():
+            try:
+                os.remove(self.profile_pic_path)
+            except FileNotFoundError:
+                pass
+            attach.main.destroy()
+
+        attach.main.protocol("WM_DELETE_WINDOW", lambda: deleteProfilePic())
 
         attach.main_frame.grid(
                     row=0,
@@ -118,7 +153,6 @@ class StudentProfileSetupWindow:
             details_frame,
             height=20,
             placeholder_text="Email",
-            show="•",
             font=("Helvetica", 14),
             justify=ctk.CENTER
         )
@@ -133,7 +167,7 @@ class StudentProfileSetupWindow:
         date_of_birth_label = ctk.CTkLabel(
             details_frame,
             height=20,
-            text="Date of Birth",
+            text="Date of Birth:",
             font=("Helvetica", 14),
         )
 
@@ -148,7 +182,7 @@ class StudentProfileSetupWindow:
 
         def dateOfBirthButtonEvent():
             date = datePickerTopLevelPage(attach)
-            self.date = date
+            self.dob = date
             date_of_birth_button.configure(
                 text=date
             )
@@ -164,6 +198,52 @@ class StudentProfileSetupWindow:
 
         date_of_birth_button.grid(
             row=2,
+            column=1,
+            padx=10,
+            pady=10
+        )
+
+        profile_pic_label = ctk.CTkLabel(
+            details_frame,
+            height=20,
+            text="Profile picture:",
+            font=("Helvetica", 14),
+        )
+
+        profile_pic_label.grid(
+            row=3,
+            column=0,
+            padx=10,
+            pady=10
+        )
+
+        def profilePicButtonEvent():
+            profile_pic_filepath = ctk.filedialog.askopenfilename()
+            if profile_pic_filepath == ():
+                return
+            pfp_format = profile_pic_filepath.split(".")[-1]
+            if pfp_format not in ["jpeg", "png"]:
+                print("Invalid file format")
+                profile_pic_button.configure(text="Invalid file format")
+                return
+            profile_pic_button.configure(text=f"{profile_pic_filepath.split('/')[-1]}")
+            profile_pic_dirpath = "/".join(profile_pic_filepath.split("/")[:-1])
+            self.profile_pic_path = self.profile_pic_dir_path + "/" + self.student.getUsername() + "." + pfp_format
+            os.rename(profile_pic_filepath, self.profile_pic_path)
+            shutil.copyfile(self.profile_pic_path, profile_pic_filepath)
+
+        
+        profile_pic_button = ctk.CTkButton(
+            details_frame,
+            text="Select Profile Picture",
+            font=("Helvetica", 14),
+            width=80,
+            height=30,
+            command=lambda: profilePicButtonEvent()
+        )
+
+        profile_pic_button.grid(
+            row=3,
             column=1,
             padx=10,
             pady=10
@@ -193,15 +273,20 @@ class StudentProfileSetupWindow:
         )
 
         def doneButtonEvent():
-            pass
-            
-            profile_setup_failed_label.grid(
-                row=5,
-                column=0,
-                columnspan=2,
-                padx=5,
-                pady=5
-            )
+            ret = profileSetupHandler(self.full_name, self.email, self.dob, self.profile_pic_path)
+            if ret[0] == True:
+                attach.main.protocol("", "")
+                studentMenuPage(attach, self.student)
+            else:
+                profile_setup_failed_label.configure(text=ret[1], text_color="#FF0000")
+                profile_setup_failed_label.grid(
+                    row=4,
+                    column=0,
+                    columnspan=2,
+                    padx=5,
+                    pady=5
+                )
+        
 
         done_button = ctk.CTkButton(
             button_frame,

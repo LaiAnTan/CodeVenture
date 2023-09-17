@@ -1,5 +1,4 @@
 import customtkinter as ctk
-
 from ui_window_gen import loginPage, profilePage, settingsPage
 from App import App
 from user.user_student import Student
