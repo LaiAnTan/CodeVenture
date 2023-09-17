@@ -109,13 +109,7 @@ class IDE():
             height=10
         )
 
-        RunButton.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5,
-            sticky="ew"
-        )
+        RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         self.setUpIDEWindow()
         self.setupInputFrame()
@@ -147,6 +141,21 @@ class IDE():
         ## Returns the output
         ## if error, return the raw error output
         return code_output
+
+    def terminalOutput_Gen(self, output, attach_to, max_width, word_color):
+        output = output[:self.max_output_size]
+        output_label = ctk.CTkLabel(
+            attach_to,
+            text=output,
+            width=max_width,
+            wraplength=max_width - 20,
+            anchor="w",
+            justify="left",
+            font=ctk.CTkFont("Noto Sans Mono", size=11),
+            bg_color="black",
+            text_color=word_color
+        )
+        return output_label
 
     def RunCode(self):
         for widget in self.outputFrame.winfo_children():
@@ -192,18 +201,3 @@ class IDE():
         if error_output:
             error_label = self.terminalOutput_Gen(error_output, code_output_frame, terminal_width, "red")
             error_label.grid(row=1, column=0, sticky="ns")
-
-    def terminalOutput_Gen(self, output, attach_to, max_width, word_color):
-        output = output[:self.max_output_size]
-        output_label = ctk.CTkLabel(
-            attach_to,
-            text=output,
-            width=max_width,
-            wraplength=max_width - 20,
-            anchor="w",
-            justify="left",
-            font=ctk.CTkFont("Noto Sans Mono", size=11),
-            bg_color="black",
-            text_color=word_color
-        )
-        return output_label
