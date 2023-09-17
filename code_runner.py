@@ -31,11 +31,7 @@ class CodeRunner():
 
         self.RunButtonFrame = ctk.CTkFrame(self.CodeRunnerFrame)
         self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
-
-        self.RunButtonFrame.columnconfigure(
-            0,
-            weight=1
-        )
+        self.RunButtonFrame.columnconfigure(0, weight=1)
 
         self.outputFrame = ctk.CTkFrame(self.CodeRunnerFrame)
 

@@ -23,6 +23,9 @@ class IDE():
         self.root_path = root_path
         self.max_output_size = 68750
 
+        self.ide_maxwidth = 320
+        self.ide_maxheight = 280
+
         ## please change this to a reasonable timeout period
         self.timeout_period = 10
 
@@ -44,9 +47,12 @@ class IDE():
 
         self.IDEFrame = ctk.CTkFrame(self.CodeIDEFrame)
         self.IDEFrame.grid(row=0, column=0, padx=5, pady=5)
-
-        self.InputFrame = ctk.CTkFrame(self.CodeIDEFrame)
-        self.InputFrame.grid(row=1, column=0, padx=5, pady=5)
+        
+        self.IDEHeader = ctk.CTkFrame(self.IDEFrame)
+        self.IDEHeader.grid(row=0, column=0, padx=5, pady=5)
+        
+        self.IDEContent = ctk.CTkFrame(self.IDEFrame)
+        self.IDEContent.grid(row=1, column=0, padx=5, pady=5)
 
         self.outputFrame = ctk.CTkFrame(self.CodeIDEFrame)
 
@@ -58,19 +64,12 @@ class IDE():
         )
 
         self.IDETextBox = ctk.CTkTextbox(
-            self.IDEFrame,
-            width=320,
-            height=250,
+            self.IDEContent,
+            width=self.ide_maxwidth,
+            height=self.ide_maxheight,
             font=font,
             tabs=font.measure("    "),
             wrap=ctk.WORD
-        )
-
-        self.IDETextBox.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
         )
 
         return self.IDETextBox
@@ -82,24 +81,24 @@ class IDE():
             size=12,
         )
 
-        self.input_textbox = ctk.CTkTextbox(
-            self.InputFrame,
-            width=320,
-            height=120,
+        self.InputTextBox = ctk.CTkTextbox(
+            self.IDEContent,
+            width=self.ide_maxwidth,
+            height=self.ide_maxheight,
             font=font,
             tabs=font.measure("    "),
             wrap=ctk.WORD
         )
 
-        self.input_textbox.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
-        
-        return self.input_textbox
+        return self.InputTextBox
 
+    def setInputFrame(self):
+        self.IDETextBox.grid_forget()
+        self.InputTextBox.grid(row=0, column=0, padx=5, pady=5)
+        
+    def setCodeFrame(self):
+        self.InputTextBox.grid_forget()
+        self.IDETextBox.grid(row=0, column=0, padx=5, pady=5)
 
     def	setUpFrame(self):
         RunButton = ctk.CTkButton(
@@ -111,8 +110,24 @@ class IDE():
 
         RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
+        CodeButton = ctk.CTkButton(
+            self.IDEHeader,
+            text="Code",
+            command=self.setCodeFrame
+        )
+        CodeButton.grid(row=0, column=0, padx=5, pady=5)
+        
+        InputButton = ctk.CTkButton(
+            self.IDEHeader,
+            text="Input",
+            command=self.setInputFrame
+        )
+        InputButton.grid(row=0, column=1, padx=5, pady=5)
+
         self.setUpIDEWindow()
         self.setupInputFrame()
+        
+        self.setCodeFrame()
 
         return self.CodeIDEFrame
 
@@ -172,12 +187,9 @@ class IDE():
             file.write(text)
 
         cmd = f"{sys.executable} {self.root_path}{self.code_name}"
-        code_output = ""
-        error_output = ""
 
-        user_input = self.input_textbox.get("0.0", "end")
+        user_input = self.InputTextBox.get("0.0", "end")
         user_input = bytes(user_input, "utf-8")
-
         try:
             code_runner = subprocess.run(cmd, timeout=10, input=user_input, capture_output=True, shell=True)
             code_output = code_runner.stdout
