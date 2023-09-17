@@ -8,6 +8,7 @@ class StudentProfileSetupWindow:
 
     def __init__(self, student: Student):
         self.student = student
+        self.date = None
 
     def	FillFrames(self, attach: App):
 
@@ -147,7 +148,10 @@ class StudentProfileSetupWindow:
 
         def dateOfBirthButtonEvent():
             date = datePickerTopLevelPage(attach)
-            print(date)
+            self.date = date
+            date_of_birth_button.configure(
+                text=date
+            )
 
         date_of_birth_button = ctk.CTkButton(
             details_frame,

@@ -63,7 +63,8 @@ class DatePickerWindow(ctk.CTkToplevel):
         )
 
         def buttonEvent():
-            self.date = cal.get_date()
+            dt = cal.selection_get()
+            self.date = dt.strftime("%d-%m-%Y")
             self.destroy()
 
         button = ctk.CTkButton(
