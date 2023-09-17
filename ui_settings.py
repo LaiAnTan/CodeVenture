@@ -125,6 +125,9 @@ class SettingsWindow:
             pady=5
         )
 
+        toggle_appearance_mode_frame.rowconfigure((0), weight=1)
+        toggle_appearance_mode_frame.columnconfigure((0,1), weight=1)
+
         toggle_appearance_mode_title = ctk.CTkLabel(
             toggle_appearance_mode_frame,
             text=f"Toggle light mode"
@@ -135,6 +138,7 @@ class SettingsWindow:
             column=0,
             padx=10,
             pady=10,
+            sticky="e"
         )
 
         appearance_toggler_status = ctk.IntVar(value=0)
@@ -156,7 +160,7 @@ class SettingsWindow:
             toggle_appearance_mode_frame,
             onvalue=1,
             offvalue=0,
-            text="Light",
+            text="Light mode on",
             variable=appearance_toggler_status,
             command=lambda : appearanceTogglerEvent(),
         )
@@ -167,21 +171,10 @@ class SettingsWindow:
 
         appearance_toggler.grid(
             row=0,
-            column=2,
-            padx=5,
-            pady=5
-        )
-
-        toggle_appearance_mode_left_text = ctk.CTkLabel(
-            toggle_appearance_mode_frame,
-            text="Dark"
-        )
-
-        toggle_appearance_mode_left_text.grid(
-            row=0,
             column=1,
             padx=5,
-            pady=5
+            pady=5,
+            sticky="w"
         )
 
         ## change password
