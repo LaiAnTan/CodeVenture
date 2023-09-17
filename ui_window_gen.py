@@ -44,7 +44,6 @@ def studentProfileSetupPage(a: App, student: Student):
     stud_profile_setup_win.FillFrames(a)
 
 def datePickerTopLevelPage(a: App):
-
     from ui_date_picker import DatePickerWindow
     date_picker = DatePickerWindow(a, a.main_frame)
     date_picker.FillFrames()

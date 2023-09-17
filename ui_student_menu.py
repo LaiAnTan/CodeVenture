@@ -200,46 +200,19 @@ class StudentMenuWindow:
             sticky="ew"
         )
 
-        all_modules_button = ctk.CTkButton(
+        all_activities = ctk.CTkButton(
             buttons_frame,
             width=40,
-            text="Modules"
+            text="All Activities"
         )
 
-        all_modules_button.grid(
+        all_activities.grid(
             row=0,
             column=0,
             padx=10,
             pady=10
         )
 
-        all_quiz_button = ctk.CTkButton(
-            buttons_frame,
-            width=40,
-            text="Quizzes"
-        )
-
-        all_quiz_button.grid(
-            row=0,
-            column=1,
-            padx=10,
-            pady=10
-        )
-
-        all_challenges_button = ctk.CTkButton(
-            buttons_frame,
-            width=40,
-            text="Challenges"
-        )
-
-        all_challenges_button.grid(
-            row=0,
-            column=2,
-            padx=10,
-            pady=10
-        )
-
         buttons_frame.columnconfigure(0, weight=1)
-        buttons_frame.columnconfigure(1, weight=1)
-        buttons_frame.columnconfigure(2, weight=1)
+
 
