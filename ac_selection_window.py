@@ -1,7 +1,7 @@
 import customtkinter as ctk
 
-from app import App
-from activity import Activity
+from ac_app import App
+from ac_activity import Activity
 import database.database_activity as ab
 
 # u gotta be kidding me
@@ -128,7 +128,7 @@ class DataChunk():
         )
         content_label.grid(row=0, column=0, padx=5, pady=5)
 
-        from window_gen import dispatcher
+        from ac_window_gen import dispatcher
 
         run_button = ctk.CTkButton(
             content_frame,

@@ -1,8 +1,8 @@
 import customtkinter as ctk
 
-from app import App
-from quiz import Quiz
-from window_gen import selection_screen
+from ac_app import App
+from ac_quiz import Quiz
+from ac_window_gen import selection_screen
 
 class QuizWindow():
     def	__init__(self, quiz: Quiz):

@@ -1,12 +1,12 @@
 import customtkinter as ctk
 
-from app import App
+from ac_app import App
 
-from activity import Activity
-from module import Module
-from quiz import Quiz
-from challenge import Challange
-from selection_window import SelectionScreen
+from ac_activity import Activity
+from ac_module import Module
+from ac_quiz import Quiz
+from ac_challenge import Challange
+from ac_selection_window import SelectionScreen
 
 def	selection_screen(a: App):
     a.clean_frame()
@@ -17,9 +17,9 @@ def	selection_screen(a: App):
         column = 0,
     )
 
-from challenge_window import ChallangeWindow
-from quiz_window import QuizWindow
-from module_windows import ModuleWindow
+from ac_challenge_window import ChallangeWindow
+from ac_quiz_window import QuizWindow
+from ac_module_windows import ModuleWindow
 
 def dispatcher(activityID, activityType, a: App):
     a.clean_frame()

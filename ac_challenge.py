@@ -1,4 +1,4 @@
-import activity as ac
+import ac_activity as ac
 
 class Hints(ac.Activity):
 

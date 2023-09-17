@@ -1,17 +1,17 @@
 import customtkinter as ctk
 import os
 
-from app import App
-from challenge import Challange
-from window_gen import selection_screen
+from ac_app import App
+from ac_challenge import Challange
+from ac_window_gen import selection_screen
 
 from PIL import Image
 
-from ide import IDE
+from ac_ide import IDE
 
-from imagelabel import ImageLabelGen
+from ac_imagelabel import ImageLabelGen
 
-from code_runner import CodeRunner
+from ac_code_runner import CodeRunner
 
 class ChallangeWindow():
     def __init__(self, challenge: Challange):

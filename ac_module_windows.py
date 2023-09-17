@@ -7,13 +7,13 @@ import customtkinter as ctk
 from PIL import Image
 from PIL.ImageOps import invert
 
-from app import App
-from module import Module
-from window_gen import selection_screen
+from ac_app import App
+from ac_module import Module
+from ac_window_gen import selection_screen
 
-from code_runner import CodeRunner
+from ac_code_runner import CodeRunner
 
-from imagelabel import ImageLabelGen
+from ac_imagelabel import ImageLabelGen
 
 class ModuleWindow():
     def	__init__(self, module: Module):
