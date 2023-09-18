@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import os
 
-from ac_app import App
+from App import App
 from ac_challenge import Challange
 from ac_window_gen import selection_screen
 

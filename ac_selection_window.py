@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from ac_app import App
+from App import App
 from ac_activity import Activity
 import database.database_activity as ab
 

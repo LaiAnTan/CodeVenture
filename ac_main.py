@@ -1,4 +1,4 @@
-from ac_app import App
+from App import App
 from ac_window_gen import selection_screen
 
 if __name__ == "__main__":

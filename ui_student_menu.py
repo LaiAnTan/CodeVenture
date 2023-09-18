@@ -200,10 +200,13 @@ class StudentMenuWindow:
             sticky="ew"
         )
 
+        from ac_window_gen import selection_screen
+
         all_activities = ctk.CTkButton(
             buttons_frame,
             width=40,
-            text="All Activities"
+            text="All Activities",
+            command=lambda : selection_screen(attach)
         )
 
         all_activities.grid(

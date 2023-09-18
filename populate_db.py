@@ -48,6 +48,8 @@ def populate_databases():
     test_educators_filename = "test_data/test_educators.txt"
     test_admins_filename = "test_data/test_admins.txt"
 
+    test_activities_filename = "test_data/test_activities.txt"
+
     # init databases
     db = UserDB()
     sdb = StudentDB()
@@ -55,13 +57,15 @@ def populate_databases():
     # edb = EducatorDB()
     # adb = AdminDB()
 
-    database_list = [db, sdb] # add more as time goes on
+    database_list = [db, sdb, adb] # add more as time goes on
 
 
     users = import_data_from_csv(test_users_filename)
     students = import_data_from_csv(test_students_filename)
+    activity = import_data_from_csv(test_activities_filename)
+    print(activity)
 
-    entries_list = [users, students, adb] # add more as time goes on (corespond to database_list)
+    entries_list = [users, students, activity] # add more as time goes on (corespond to database_list)
 
     # init .db files
     for database in database_list:

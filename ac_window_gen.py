@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from ac_app import App
+from App import App
 
 from ac_activity import Activity
 from ac_module import Module
@@ -30,5 +30,4 @@ def dispatcher(activityID, activityType, a: App):
             QuizWindow(Quiz(activityID)).FillFrames(a)
         case Activity.AType.Challenge.value:
             ChallangeWindow(Challange(activityID)).FillFrames(a)
-
     a.main_frame.grid(row=0, column=0)

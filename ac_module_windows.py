@@ -7,7 +7,7 @@ import customtkinter as ctk
 from PIL import Image
 from PIL.ImageOps import invert
 
-from ac_app import App
+from App import App
 from ac_module import Module
 from ac_window_gen import selection_screen
 
