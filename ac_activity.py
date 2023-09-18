@@ -1,5 +1,4 @@
 import os
-from PIL import ImageTk, Image
 from enum import Enum
 from abc import ABC, abstractmethod
 

@@ -1,11 +1,4 @@
-import pygments as pyg
-from pygments.lexers import PythonLexer
-from pygments.formatters import ImageFormatter
-
 import customtkinter as ctk
-
-from PIL import Image
-from PIL.ImageOps import invert
 
 from App import App
 from ac_module import Module

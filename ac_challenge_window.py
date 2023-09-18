@@ -5,8 +5,6 @@ from App import App
 from ac_challenge import Challange
 from ac_window_gen import selection_screen
 
-from PIL import Image
-
 from ac_ide import IDE
 
 from ac_imagelabel import ImageLabelGen

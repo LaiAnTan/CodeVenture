@@ -2,9 +2,6 @@ import pygments as pyg
 from pygments.lexers import PythonLexer
 from pygments.formatters import ImageFormatter
 
-from PIL import Image
-from PIL.ImageOps import invert
-
 import os
 import sys
 

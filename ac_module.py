@@ -1,5 +1,4 @@
 import ac_activity as ac
-from enum import Enum
 
 class Module(ac.Activity):
     def __init__(self, filename: str) -> None:

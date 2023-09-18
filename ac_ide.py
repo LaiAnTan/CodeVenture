@@ -1,19 +1,9 @@
-import pygments as pyg
-from pygments.lexers import PythonLexer
-from pygments.formatters import ImageFormatter
-
-from PIL import Image
-from PIL.ImageOps import invert
-
 import os
 import sys
 
 import customtkinter as ctk
 
 import subprocess
-from threading import Timer
-
-import pexpect
 
 class IDE():
     def __init__(self, max_img_width, attach_frame, code_name, id, root_path) -> None:
