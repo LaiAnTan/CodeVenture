@@ -14,13 +14,15 @@ from ac_imagelabel import ImageLabelGen
 from ac_code_runner import CodeRunner
 
 class ChallangeWindow():
-    def __init__(self, challenge: Challange):
+    def __init__(self, challenge: Challange, student):
         self.attempted_count = 0
         self.suceeded = False
         self.percentage = 0
         self.challenge = challenge
         self.main_showcontent_frame = None
         self.shittyIDE = None
+        
+        self.student = student
 
     def ImageHandler(self, source, content, max_img_width, attach_frame):
         if source.img.get(content):
@@ -207,7 +209,7 @@ class ChallangeWindow():
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : selection_screen(attach),
+            command=lambda : selection_screen(attach, self.student),
             width=20
         )
 

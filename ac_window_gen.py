@@ -8,10 +8,10 @@ from ac_quiz import Quiz
 from ac_challenge import Challange
 from ac_selection_window import SelectionScreen
 
-def	selection_screen(a: App):
+from user.user_student import Student
+def	selection_screen(a: App, student: Student):
     a.clean_frame()
-
-    SelectionScreen.attach_elements(a)
+    SelectionScreen(student, a).attach_elements()
     a.main_frame.grid(
         row = 0,
         column = 0,
@@ -21,13 +21,13 @@ from ac_challenge_window import ChallangeWindow
 from ac_quiz_window import QuizWindow
 from ac_module_windows import ModuleWindow
 
-def dispatcher(activityID, activityType, a: App):
+def dispatcher(activityID, activityType, a: App, student: Student):
     a.clean_frame()
     match activityType:
         case Activity.AType.Module.value:
-            ModuleWindow(Module(activityID)).FillFrames(a)
+            ModuleWindow(Module(activityID), student).FillFrames(a)
         case Activity.AType.Quiz.value:
-            QuizWindow(Quiz(activityID)).FillFrames(a)
+            QuizWindow(Quiz(activityID), student).FillFrames(a)
         case Activity.AType.Challenge.value:
-            ChallangeWindow(Challange(activityID)).FillFrames(a)
+            ChallangeWindow(Challange(activityID), student).FillFrames(a)
     a.main_frame.grid(row=0, column=0)

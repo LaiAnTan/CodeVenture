@@ -16,8 +16,9 @@ from ac_code_runner import CodeRunner
 from ac_imagelabel import ImageLabelGen
 
 class ModuleWindow():
-    def	__init__(self, module: Module):
+    def	__init__(self, module: Module, student):
         self.module = module
+        self.student = student
     
     def ImageHandler(self, content, max_img_width, attach_frame):
         if self.module.img.get(content):
@@ -65,7 +66,7 @@ class ModuleWindow():
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : selection_screen(attach),
+            command=lambda : selection_screen(attach, self.student),
             width=20
         )
 

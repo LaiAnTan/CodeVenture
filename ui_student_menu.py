@@ -206,7 +206,7 @@ class StudentMenuWindow:
             buttons_frame,
             width=40,
             text="All Activities",
-            command=lambda : selection_screen(attach)
+            command=lambda : selection_screen(attach, self.student)
         )
 
         all_activities.grid(

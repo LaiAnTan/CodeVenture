@@ -5,9 +5,10 @@ from ac_quiz import Quiz
 from ac_window_gen import selection_screen
 
 class QuizWindow():
-    def	__init__(self, quiz: Quiz):
+    def	__init__(self, quiz: Quiz, student):
         self.quiz = quiz
         self.user_answer = []
+        self.student = student
     
     def	FillFrames(self, attach: App):
 
@@ -25,7 +26,7 @@ class QuizWindow():
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : selection_screen(attach),
+            command=lambda : selection_screen(attach, self.student),
             width=20
         )
 

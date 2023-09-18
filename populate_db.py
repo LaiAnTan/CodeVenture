@@ -63,7 +63,6 @@ def populate_databases():
     users = import_data_from_csv(test_users_filename)
     students = import_data_from_csv(test_students_filename)
     activity = import_data_from_csv(test_activities_filename)
-    print(activity)
 
     entries_list = [users, students, activity] # add more as time goes on (corespond to database_list)
 

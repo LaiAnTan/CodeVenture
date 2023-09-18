@@ -3,23 +3,23 @@ import customtkinter as ctk
 from App import App
 from ac_activity import Activity
 import database.database_activity as ab
+from user.user_student import Student
 
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
 
 class SelectionScreen():
-    activity_database = ab.ActivityDB()
+    def __init__(self, student, attach: App) -> None:
+        self.student = student
+        self.activity_database = ab.ActivityDB()
+        self.root = attach
 
-    @classmethod
-    def back_button_placeholder(cls):
-        print("A Back Button that leads you back")
-        print("In this case, it does nothing")
+    def return_to_studentMenu(self):
+        from ui_window_gen import studentMenuPage
+        studentMenuPage(self.root, self.student)
     
-    @classmethod
-    def attach_elements(cls, attach: App):
-        cls.root = attach
-
-        header = ctk.CTkFrame(attach.main_frame)
+    def attach_elements(self):
+        header = ctk.CTkFrame(self.root.main_frame)
         header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
         
         header_label = ctk.CTkLabel(
@@ -30,13 +30,13 @@ class SelectionScreen():
         back_button = ctk.CTkButton(
             header,
             text="Back",
-            command=cls.back_button_placeholder
+            command=self.return_to_studentMenu
         )
 
         header_label.pack(side="left", padx=5, pady=5)
         back_button.pack(side="right", padx=5, pady=5)
 
-        content = ctk.CTkFrame(attach.main_frame, height=450)
+        content = ctk.CTkFrame(self.root.main_frame, height=450)
         content.grid(row=1, column=0, padx=5, pady=5)
         
         side_selection_bar = ctk.CTkFrame(content)
@@ -46,15 +46,15 @@ class SelectionScreen():
         main_contents_bar = ctk.CTkScrollableFrame(content, height=450, width=content_width)
         main_contents_bar.grid(row=0, column=1, padx=5, pady=5)
 
-        cls.display_all_info(0, content_width, main_contents_bar)
+        self.display_all_info(0, content_width, main_contents_bar)
 
         ## im lazy
         button_labels = ["All", "Module", "Quiz", "Challange"]
         button_functions = [
-            lambda : cls.display_all_info(0, content_width, main_contents_bar),
-            lambda : cls.display_all_info(Activity.AType.Module.value, content_width, main_contents_bar),
-            lambda : cls.display_all_info(Activity.AType.Quiz.value, content_width, main_contents_bar),
-            lambda : cls.display_all_info(Activity.AType.Challenge.value, content_width, main_contents_bar)
+            lambda : self.display_all_info(0, content_width, main_contents_bar),
+            lambda : self.display_all_info(Activity.AType.Module.value, content_width, main_contents_bar),
+            lambda : self.display_all_info(Activity.AType.Quiz.value, content_width, main_contents_bar),
+            lambda : self.display_all_info(Activity.AType.Challenge.value, content_width, main_contents_bar)
         ]
 
         for index, button_label in enumerate(button_labels):
@@ -66,25 +66,24 @@ class SelectionScreen():
             )
             button.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
 
-    @classmethod
-    def display_all_info(cls, type, max_width, attach_to: ctk.CTkScrollableFrame) -> None:
+    def display_all_info(self, type, max_width, attach_to: ctk.CTkScrollableFrame) -> None:
         for widgets in attach_to.winfo_children():
             widgets.destroy()
 
-        result = cls.activity_database.get_list_of_id(type)
+        result = self.activity_database.get_list_of_id(type)
         for index, module in enumerate(result):
-            ret = DataChunk(module, max_width - 30, cls.root).generateChunk(attach_to)
+            ret = DataChunk(module, max_width - 30, self.root, self.student).generateChunk(attach_to)
             ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
 
-    @classmethod
-    def __beep_boop(cls) -> None:
+    def __beep_boop(self) -> None:
         print("Button Pressed!")
 
 class DataChunk():
-    def __init__(self, activity_id, width, root: App):
+    def __init__(self, activity_id, width, root: App, student: Student):
         self.activity = activity_id
         self.widget_width = width
         self.root = root
+        self.student = student
 
     def GetData(self):
         database = ab.ActivityDB()
@@ -134,7 +133,7 @@ class DataChunk():
             content_frame,
             text="Run",
             width=50,
-            command=lambda : dispatcher(self.id, self.type, self.root)
+            command=lambda : dispatcher(self.id, self.type, self.root, self.student)
         )
         run_button.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
 
