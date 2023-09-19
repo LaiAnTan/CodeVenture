@@ -70,7 +70,7 @@ class SelectionScreen():
         for widgets in attach_to.winfo_children():
             widgets.destroy()
 
-        result = self.activity_database.get_list_of_id(type)
+        result = self.activity_database.getListID(type)
         for index, module in enumerate(result):
             ret = DataChunk(module, max_width - 30, self.root, self.student).generateChunk(attach_to)
             ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")

@@ -333,7 +333,7 @@ class ChallangeWindow():
 
         submit_button = ctk.CTkButton(
             footer_frame,
-            text="Mark",
+            text="Submit",
             width=150,
             command= lambda : self.end(self.shittyIDE.getContents())
         )

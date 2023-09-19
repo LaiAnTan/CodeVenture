@@ -50,11 +50,7 @@ def datePickerTopLevelPage(a: App):
     date_picker.wait_window()
     return date_picker.getSelectedDate()
 
+## these are in ac_window_gen
 # def modulePage(a: App, module: Module):
-#     pass
-
 # def quizPage(a: App, quiz: Quiz):
-#     pass
-
 # def challengePage(a: App, challenge: Challenge):
-#     pass
