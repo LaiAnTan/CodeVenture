@@ -345,7 +345,7 @@ class ChallangeWindow():
 
         submit_button = ctk.CTkButton(
             footer_frame,
-            text="Submit",
+            text="Resubmit" if self.alreadydid else "Submit",
             width=150,
             command= lambda : self.end(self.shittyIDE.getContents())
         )
