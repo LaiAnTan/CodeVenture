@@ -35,7 +35,7 @@ class CompletedDB():
             self.connect.commit()
 
     def getStudentEntry(self, student_id):
-        value = self.cursor.execute(f"SELECT * from {self.db_name} WHERE {self.db_idfield}=:{self.db_idfield}",{self.db_idfield: student_id}).fetchone()
+        value = self.cursor.execute(f"SELECT * from {self.db_name} WHERE {self.db_idfield}=(?)",(student_id,)).fetchone()
         return value
 
     def addStudentEntry(self, values: tuple[str]):
@@ -55,6 +55,18 @@ class ChallangeCompleted_DB(CompletedDB):
             code text
             """
         )
+
+    def getStudentCode(self, std_id) -> None:
+        if self.getStudentEntry(std_id) == None:
+            return None
+        data = self.cursor.execute(f"SELECT code from {self.db_name} WHERE {self.db_idfield}=(?)", (std_id,)).fetchone()
+        return data[0]
+
+    def updateStudentCode(self, std_id, completion, new_answer) -> None:
+        if self.getStudentEntry(std_id) == None:
+            return self.addStudentEntry((std_id, completion, new_answer))
+        self.cursor.execute(f"UPDATE {self.db_name} SET code=(?), completion=(?) WHERE {self.db_idfield}=(?)", (new_answer, completion, std_id))
+        self.connect.commit()
 
 class ModuleCompleted_DB(CompletedDB):
     def __init__(self, ac_id) -> None:
@@ -76,6 +88,18 @@ class QuizCompleted_DB(CompletedDB):
             answer text
             """
         )
+
+    def getStudentAnswer(self, std_id) -> None:
+        if self.getStudentEntry(std_id) == None:
+            return None
+        data = self.cursor.execute(f"SELECT answer from {self.db_name} WHERE {self.db_idfield}=(?)", (std_id,)).fetchone()
+        return data[0]
+
+    def updateStudentAnswer(self, std_id, new_answer) -> None:
+        if self.getStudentEntry(std_id) == None:
+            return self.addStudentEntry((std_id, new_answer))
+        self.cursor.execute(f"UPDATE {self.db_name} SET answer='{new_answer}' WHERE {self.db_idfield}=(?)", (std_id,))
+        self.connect.commit()
 
 class ActivityDictionary():
     _instance = None
@@ -108,7 +132,7 @@ class ActivityDictionary():
             cls.dictionary[id[0]] = cls.databaseDispatcher(id[0], id[1])
 
     @classmethod
-    def getDatabase(cls, id) -> CompletedDB:
+    def getDatabase(cls, id) -> ModuleCompleted_DB | ChallangeCompleted_DB | QuizCompleted_DB:
         return cls.dictionary.get(id, None)
 
 if __name__ == "__main__":

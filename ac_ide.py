@@ -47,7 +47,7 @@ class IDE():
         self.outputFrame = ctk.CTkFrame(self.CodeIDEFrame)
 
 
-    def setUpIDEWindow(self):
+    def setUpIDEWindow(self, content):
         font = ctk.CTkFont(
             "Noto Sans Mono",
             size=12,
@@ -61,6 +61,9 @@ class IDE():
             tabs=font.measure("    "),
             wrap=ctk.WORD
         )
+
+        if content is not None:
+            self.IDETextBox.insert("0.0", content)
 
         return self.IDETextBox
 
@@ -90,7 +93,7 @@ class IDE():
         self.InputTextBox.grid_forget()
         self.IDETextBox.grid(row=0, column=0, padx=5, pady=5)
 
-    def	setUpFrame(self):
+    def	setUpFrame(self, previous_content = None):
         RunButton = ctk.CTkButton(
             self.RunButtonFrame,
             text="Run",
@@ -114,7 +117,7 @@ class IDE():
         )
         InputButton.grid(row=0, column=1, padx=5, pady=5)
 
-        self.setUpIDEWindow()
+        self.setUpIDEWindow(previous_content)
         self.setupInputFrame()
         
         self.setCodeFrame()

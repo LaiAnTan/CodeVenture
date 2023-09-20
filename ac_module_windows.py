@@ -3,53 +3,58 @@ import customtkinter as ctk
 from App import App
 from ac_module import Module
 from ac_window_gen import selection_screen
+from db_ac_completed import ActivityDictionary
 
 from ac_code_runner import CodeRunner
-
 from ac_imagelabel import ImageLabelGen
 
+from user.user_student import Student
+
 class ModuleWindow():
-    def	__init__(self, module: Module, student):
+    def	__init__(self, module: Module, student: Student, main_attach: App):
         self.module = module
         self.student = student
-    
-    def ImageHandler(self, content, max_img_width, attach_frame):
+        self.completion_database = ActivityDictionary.getDatabase(self.module.id)
+        self.alreadydid = self.completion_database.getStudentEntry(self.student.username) != None
+        self.root = main_attach
+
+    def ImageHandler(self, content, max_img_width, attach_to):
         if self.module.img.get(content):
             ret_widget = ImageLabelGen(
                 f"{self.module.ModulePath}/{self.module.img[content]}",
                 max_img_width - 50,
-                attach_frame
+                attach_to
             ).ImageLabelGen()
         else:
             ret_widget = ctk.CTkLabel(
-                attach_frame,
+                attach_to,
                 text=f"Error displaying image {content}",
                 width=max_img_width,
                 wraplength=max_img_width - 10,
             )
         return ret_widget
     
-    def CodeHandler(self, content, max_img_width, attach_frame):
+    def CodeHandler(self, content, max_img_width, attach_to):
         if self.module.code.get(content):
             ret_widget = CodeRunner(max_img_width - 30,
-                            attach_frame,
+                            attach_to,
                             self.module.code[content],
                             self.module.ModulePath
                             ).setUpFrame()
         else:
             ret_widget = ctk.CTkLabel(
-                attach_frame,
+                attach_to,
                 text=f"Error displaying code {content}",
                 width=max_img_width,
                 wraplength=max_img_width - 10,
             )
         return ret_widget
 
-    def FillFrames(self, attach: App):
+    def FillFrames(self):
 
         ## header details -------------------------------------------
 
-        header_frame = ctk.CTkFrame(attach.main_frame)
+        header_frame = ctk.CTkFrame(self.root.main_frame)
 
         quiz_name = ctk.CTkLabel(
             header_frame,
@@ -59,7 +64,7 @@ class ModuleWindow():
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : selection_screen(attach, self.student),
+            command=lambda : selection_screen(self.root, self.student),
             width=20
         )
 
@@ -70,7 +75,7 @@ class ModuleWindow():
 
         ## header details end --------------------------------------------
 
-        content_frame = ctk.CTkFrame(attach.main_frame)
+        content_frame = ctk.CTkFrame(self.root.main_frame)
 
         ## main_content frame ----------------------------
 
@@ -147,14 +152,15 @@ class ModuleWindow():
         ## footer ---------------------------------------------
 
         footer_frame = ctk.CTkFrame(
-            attach.main_frame,
+            self.root.main_frame,
         )
 
         submit_button = ctk.CTkButton(
             footer_frame,
             text="Complete",
             width=150,
-            command= self.__beep_boop_button
+            command= self.set_student_as_completed,
+            state="disabled" if self.alreadydid else "normal"
         )
 
         submit_button.grid(row=0, column=0, padx=0, pady=0)
@@ -163,6 +169,7 @@ class ModuleWindow():
 
         ## footer end ------------------------------------------
 
-    def __beep_boop_button(self):
-        print("yeah yeah yeah setting it to completed...")
-        return True
+    def set_student_as_completed(self):
+        print("Adding Student Entry into database...")
+        self.completion_database.addStudentEntry((self.student.username,))
+        selection_screen(self.root, self.student)

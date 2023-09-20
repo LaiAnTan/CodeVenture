@@ -5,6 +5,8 @@ from ac_activity import Activity
 import database.database_activity as ab
 from user.user_student import Student
 
+from db_ac_completed import ActivityDictionary
+
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
 
@@ -13,6 +15,9 @@ class SelectionScreen():
         self.student = student
         self.activity_database = ab.ActivityDB()
         self.root = attach
+
+        ## initializes Activity Database Dictionary (ADD)
+        ActivityDictionary()
 
     def return_to_studentMenu(self):
         from ui_window_gen import studentMenuPage
@@ -129,9 +134,11 @@ class DataChunk():
 
         from ac_window_gen import dispatcher
 
+        student_done = ActivityDictionary.getDatabase(self.activity).getStudentEntry(self.student.username) != None
+
         run_button = ctk.CTkButton(
             content_frame,
-            text="Run",
+            text="Review" if student_done else "Attempt",
             width=50,
             command=lambda : dispatcher(self.id, self.type, self.root, self.student)
         )

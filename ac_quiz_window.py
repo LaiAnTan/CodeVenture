@@ -3,19 +3,36 @@ import customtkinter as ctk
 from App import App
 from ac_quiz import Quiz
 from ac_window_gen import selection_screen
+from db_ac_completed import ActivityDictionary, QuizCompleted_DB
+
+from user.user_student import Student
 
 class QuizWindow():
-    def	__init__(self, quiz: Quiz, student):
+    def	__init__(self, quiz: Quiz, student: Student, main_attach: App):
         self.quiz = quiz
         self.user_answer = []
         self.student = student
-    
-    def	FillFrames(self, attach: App):
+        self.completion_database: QuizCompleted_DB = ActivityDictionary.getDatabase(self.quiz.id)
+
+        self.alreadydid = self.completion_database.getStudentEntry(self.student.username)
+        self.studentanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.student.username))
+
+        self.root = main_attach
+
+    def processAnswer(self, extracted_data: str):
+        ret = []
+        if extracted_data is None:
+            return None
+        for answer in extracted_data.split(','):
+            ret.append(ctk.IntVar(value=(int(answer))))
+        return ret
+
+    def	FillFrames(self):
 
         ## header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
-            attach.main_frame
+            self.root.main_frame
         )
 
         quiz_name = ctk.CTkLabel(
@@ -26,7 +43,7 @@ class QuizWindow():
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : selection_screen(attach, self.student),
+            command=lambda : selection_screen(self.root, self.student),
             width=20
         )
 
@@ -56,7 +73,7 @@ class QuizWindow():
         ## header details end --------------------------------------------
 
         content_frame = ctk.CTkFrame(
-            attach.main_frame,
+            self.root.main_frame,
         )
 
         ## qna frame ----------------------------
@@ -90,13 +107,12 @@ class QuizWindow():
                 placeholder_frame,
             )
 
-            self.user_answer[index] = ctk.IntVar(value=-1)
+            self.user_answer[index] = self.studentanswer[index] if self.alreadydid else ctk.IntVar(value=-1)
 
             for index2, answer in enumerate(questions.get_Options()):
                 radio_button = ctk.CTkRadioButton(
                                 master=radio_button_frame,
                                 text=answer,
-                                command=lambda : self.__beep_boop(self.user_answer),
                                 variable=self.user_answer[index],
                                 value=index2,
                                 width=question_block_width
@@ -197,14 +213,14 @@ class QuizWindow():
         ## footer ---------------------------------------------
 
         footer_frame = ctk.CTkFrame(
-            attach.main_frame,
+            self.root.main_frame,
         )
 
         submit_button = ctk.CTkButton(
             footer_frame,
-            text="Submit",
+            text="Resubmit" if self.alreadydid else "Submit",
             width=150,
-            command= self.end
+            command= lambda : self.end(self.user_answer)
         )
 
         submit_button.grid(
@@ -223,10 +239,18 @@ class QuizWindow():
 
         ## footer end ------------------------------------------
 
-    def __beep_boop(self, var):
-        print("Value has changed = ", [x.get() for x in var])
+    def end(self, tk_input):
+        print("Uploading Student's Answer to Database...")
+        student_answer = ",".join([str(x.get()) for x in tk_input])
+        self.completion_database.updateStudentAnswer(self.student.username, student_answer)
+        print("Final Student Answer", student_answer)
+        selection_screen(self.root, self.student)
 
-    def end(self):
-        print("imagine it has submitted, HAH, defo implemented this... (fuck)")
-        return self.user_answer
+if __name__ == "__main__":
+    from App import App
 
+    ActivityDictionary()
+    main = App()
+    QuizWindow(Quiz("QZ0000"), Student("test_student"), main).FillFrames()
+    main.main_frame.grid(row=0, column=0)
+    main.mainloop()

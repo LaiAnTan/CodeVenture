@@ -11,15 +11,27 @@ from ac_imagelabel import ImageLabelGen
 
 from ac_code_runner import CodeRunner
 
+from db_ac_completed import ActivityDictionary, ChallangeCompleted_DB
+
+from user.user_student import Student
+
 class ChallangeWindow():
-    def __init__(self, challenge: Challange, student):
+    def __init__(self, challenge: Challange, student: Student, a: App):
         self.attempted_count = 0
         self.suceeded = False
         self.percentage = 0
         self.challenge = challenge
+        self.student = student
+        self.root = a
+
+        self.completion_database: ChallangeCompleted_DB = ActivityDictionary.getDatabase(self.challenge.id)
+
+        self.alreadydid = self.completion_database.getStudentEntry(self.student.username)
+        self.codeentry = self.completion_database.getStudentCode(self.student.username)
+
         self.main_showcontent_frame = None
         self.shittyIDE = None
-        
+
         self.student = student
 
     def ImageHandler(self, source, content, max_img_width, attach_frame):
@@ -194,10 +206,10 @@ class ChallangeWindow():
         
         result.grid(row=cases, column=0, padx=5, pady=5)
 
-    def	FillFrames(self, attach: App):
+    def	FillFrames(self):
         ## header details -------------------------------------------
 
-        header_frame = ctk.CTkFrame(attach.main_frame)
+        header_frame = ctk.CTkFrame(self.root.main_frame)
 
         challange_name = ctk.CTkLabel(
             header_frame,
@@ -207,7 +219,7 @@ class ChallangeWindow():
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : selection_screen(attach, self.student),
+            command=lambda : selection_screen(self.root, self.student),
             width=20
         )
 
@@ -217,14 +229,14 @@ class ChallangeWindow():
 
         ## header details end --------------------------------------------
 
-        content_frame = ctk.CTkFrame(attach.main_frame)
+        content_frame = ctk.CTkFrame(self.root.main_frame)
 
         content_frame_height = 460
         content_frame_width = 350
 
         ## left side of the frame
 
-        main_content_frame = ctk.CTkFrame( content_frame )
+        main_content_frame = ctk.CTkFrame(content_frame)
 
         ## buttons to switch between 3 frames, question, hint 
 
@@ -316,7 +328,7 @@ class ChallangeWindow():
             self.challenge.ModulePath
         )
 
-        a_shitty_ide_frame = self.shittyIDE.setUpFrame()
+        a_shitty_ide_frame = self.shittyIDE.setUpFrame(self.codeentry)
 
         a_shitty_ide_frame.grid(row=0, column=0, padx=5, pady=5)
         sidebar_frame.grid(row=0, column=1, padx=5, pady=5)
@@ -328,7 +340,7 @@ class ChallangeWindow():
         ## footer ---------------------------------------------
 
         footer_frame = ctk.CTkFrame(
-            attach.main_frame,
+            self.root.main_frame,
         )
 
         submit_button = ctk.CTkButton(
@@ -345,6 +357,15 @@ class ChallangeWindow():
         ## footer end ------------------------------------------
 
     def end(self, codecontent):
-        print("Checking answer...")
-        print("Wee wOO wEE wOO Wee wOO")
-        return codecontent, self.percentage
+        print("Submitting code attempt")
+        self.completion_database.updateStudentCode(self.student.username, self.percentage, codecontent)
+        selection_screen(self.root, self.student)
+
+if __name__ == "__main__":
+    from App import App
+
+    ActivityDictionary()
+    main = App()
+    ChallangeWindow(Challange("CH0001"), Student("test_student"), main).FillFrames()
+    main.main_frame.grid(row=0, column=0)
+    main.mainloop()
