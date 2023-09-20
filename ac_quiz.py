@@ -50,7 +50,7 @@ class Quiz(ac.Activity):
     answer_sheet = "answer.ans"
 
     def __init__(self, filename: str) -> None:
-        self.answers = {}
+        self.answers = []
         self.questions: list[Question] = []
 
         super().__init__(filename, ac.Activity.AType["Quiz"])
@@ -60,8 +60,8 @@ class Quiz(ac.Activity):
 
     def __getAnswers(self) -> None:
         with open(f"{self.ModulePath}/{Quiz.answer_sheet}") as file:
-            for count, line in enumerate(file):
-                self.answers[count] = line.strip('\n')
+            for line in file:
+                self.answers.append(int(line.strip()))
 
     def	__init_Questions(self) -> None:
         start = 0

@@ -1,16 +1,50 @@
 import customtkinter as ctk
 
 from App import App
-from ac_quiz import Quiz
+from ac_quiz import Quiz, Question
 from ac_window_gen import selection_screen
 from db_ac_completed import ActivityDictionary, QuizCompleted_DB
 
 from user.user_student import Student
 
+class QuestionBlock():
+    def __init__(self, question: Question, max_width, previous_selection, attach_to) -> None:
+        self.question = question
+        self.max_width = max_width
+        self.previous_selection = previous_selection
+        self.frame = attach_to
+
+    def generateFrame(self):
+        return_frame = ctk.CTkFrame(self.frame)
+
+        le_prompt = ctk.CTkLabel(
+            return_frame,
+            text=self.question.get_Prompt(),
+            width=self.max_width,
+            wraplength=self.max_width - 10,
+            anchor="w",
+            justify="left",
+        )
+        le_prompt.grid(row=0, column=0, padx=5, pady=5)
+
+        radio_button_frame = ctk.CTkFrame(return_frame)
+        radio_button_frame.grid(row=1, column=0, padx=5, pady=5)
+
+        for index2, answer in enumerate(self.question.get_Options()):
+            radio_button = ctk.CTkRadioButton(
+                            master=radio_button_frame,
+                            text=answer,
+                            variable=self.previous_selection,
+                            value=index2,
+                            width=self.max_width
+                        )
+            radio_button.grid(row=index2, column=0, pady=2)
+
+        return return_frame
+
 class QuizWindow():
     def	__init__(self, quiz: Quiz, student: Student, main_attach: App):
         self.quiz = quiz
-        self.user_answer = []
         self.student = student
         self.completion_database: QuizCompleted_DB = ActivityDictionary.getDatabase(self.quiz.id)
 
@@ -22,7 +56,7 @@ class QuizWindow():
     def processAnswer(self, extracted_data: str):
         ret = []
         if extracted_data is None:
-            return None
+            return [ctk.IntVar(value=-1) for _ in self.quiz.questions]
         for answer in extracted_data.split(','):
             ret.append(ctk.IntVar(value=(int(answer))))
         return ret
@@ -85,58 +119,9 @@ class QuizWindow():
             height=460
         )
 
-        self.user_answer = [None for _ in self.quiz.questions]
-
         question_block_width = qna_frame_width - 30
         for index, questions in enumerate(self.quiz.questions):
-            placeholder_frame = ctk.CTkFrame(
-                qna_frame,
-                width=question_block_width
-            )
-
-            le_prompt = ctk.CTkLabel(
-                placeholder_frame,
-                text=questions.get_Prompt(),
-                width=question_block_width,
-                wraplength=question_block_width - 10,
-                anchor="w",
-                justify="left",
-            )
-
-            radio_button_frame = ctk.CTkFrame(
-                placeholder_frame,
-            )
-
-            self.user_answer[index] = self.studentanswer[index] if self.alreadydid else ctk.IntVar(value=-1)
-
-            for index2, answer in enumerate(questions.get_Options()):
-                radio_button = ctk.CTkRadioButton(
-                                master=radio_button_frame,
-                                text=answer,
-                                variable=self.user_answer[index],
-                                value=index2,
-                                width=question_block_width
-                            )
-                
-                radio_button.grid(
-                    row=index2,
-                    column=0,
-                    pady=2
-                )
-
-            le_prompt.grid(
-                row=0,
-                column=0,
-                padx=5,
-                pady=5,
-            )
-
-            radio_button_frame.grid(
-                row=1,
-                column=0,
-                padx=5,
-                pady=5
-            )
+            placeholder_frame = QuestionBlock(questions, question_block_width, self.studentanswer[index], qna_frame).generateFrame()
 
             placeholder_frame.grid(
                 row=index,
@@ -220,7 +205,7 @@ class QuizWindow():
             footer_frame,
             text="Resubmit" if self.alreadydid else "Submit",
             width=150,
-            command= lambda : self.end(self.user_answer)
+            command= lambda : self.end(self.studentanswer)
         )
 
         submit_button.grid(

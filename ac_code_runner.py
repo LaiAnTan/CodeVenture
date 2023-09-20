@@ -78,7 +78,7 @@ class CodeRunner():
         return self.CodeRunnerFrame
 
     def RunTestCases(self, testcases):
-        cmd = f"{sys.executable} {self.fullfolderpath}/main.py"
+        cmd = f"{sys.executable} \"{self.fullfolderpath}/main.py\""
         testcase_in = open(testcases)
         try:
             code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
@@ -96,7 +96,7 @@ class CodeRunner():
 
         print("Running Code. BzzZt")
 
-        cmd = f"{sys.executable} {self.fullfolderpath}/main.py"
+        cmd = f"{sys.executable} \"{self.fullfolderpath}/main.py\""
         code_input = open(f"{self.fullfolderpath}/input")
         
         font_color = "white"

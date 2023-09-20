@@ -9,11 +9,11 @@ class CompletedDB():
     root = os.path.dirname(__file__)
     
     def __init__(self, ac_id, ac_type, fields: str) -> None:
-        self.db_name = f"{ac_id}_Completed"
+        self.db_name = f"completed"
 
         self.modulePath = f"{self.root}/{Activity.activity_storage}/{ac_type.name}/{ac_id}"
 
-        print(self.modulePath)
+        # print(self.modulePath)
 
         self.db_path = os.path.join(self.modulePath, f"{self.db_name}.db")
         self.db_fields = fields

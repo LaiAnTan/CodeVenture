@@ -135,7 +135,8 @@ class IDE():
         with open(f"{self.root_path}/{self.code_name}", "w") as file:
             file.write(text)
 
-        cmd = f"{sys.executable} {self.root_path}/{self.code_name}"
+        cmd = f"{sys.executable} \"{self.root_path}/{self.code_name}\""
+
         try:
             code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
         except subprocess.CalledProcessError as errxc:
@@ -179,7 +180,7 @@ class IDE():
         with open(f"{self.root_path}/{self.code_name}", "w") as file:
             file.write(text)
 
-        cmd = f"{sys.executable} {self.root_path}/{self.code_name}"
+        cmd = f"{sys.executable} \"{self.root_path}/{self.code_name}\""
 
         user_input = self.InputTextBox.get("0.0", "end")
         user_input = bytes(user_input, "utf-8")
