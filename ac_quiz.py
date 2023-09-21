@@ -58,10 +58,20 @@ class Quiz(ac.Activity):
         self.__init_Questions()
         self.__getAnswers()
 
+    def getQuestionAnswer(self, index):
+        return self.answers[index]
+
+    def checkAnswers(self, index, answer) -> bool:
+        """
+        True if correct, False if wrong
+        """
+        return self.getQuestionAnswer(index) == answer
+
     def __getAnswers(self) -> None:
         with open(f"{self.ModulePath}/{Quiz.answer_sheet}") as file:
             for line in file:
                 self.answers.append(int(line.strip()))
+        print(self.answers)
 
     def	__init_Questions(self) -> None:
         start = 0

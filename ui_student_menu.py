@@ -1,6 +1,6 @@
 import customtkinter as ctk
-from ui_window_gen import loginPage, profilePage, settingsPage
-from App import App
+from ui_std_window_gen import loginPage, profilePage, settingsPage
+from ui_app import App
 from user.user_student import Student
 
 class StudentMenuWindow:
@@ -200,13 +200,13 @@ class StudentMenuWindow:
             sticky="ew"
         )
 
-        from ac_window_gen import selection_screen
+        from ui_std_window_gen import displayActivitySelections
 
         all_activities = ctk.CTkButton(
             buttons_frame,
             width=40,
             text="All Activities",
-            command=lambda : selection_screen(attach, self.student)
+            command=lambda : displayActivitySelections(attach, self.student)
         )
 
         all_activities.grid(

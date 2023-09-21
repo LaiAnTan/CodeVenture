@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from App import App
+from ui_app import App
 from ac_activity import Activity
 import database.database_activity as ab
 from user.user_student import Student
@@ -20,7 +20,7 @@ class SelectionScreen():
         ActivityDictionary()
 
     def return_to_studentMenu(self):
-        from ui_window_gen import studentMenuPage
+        from ui_std_window_gen import studentMenuPage
         studentMenuPage(self.root, self.student)
     
     def attach_elements(self):
@@ -31,14 +31,13 @@ class SelectionScreen():
             header,
             text="I Dont Know What To Put As Title"
         )
+        header_label.pack(side="left", padx=5, pady=5)
 
         back_button = ctk.CTkButton(
             header,
             text="Back",
             command=self.return_to_studentMenu
         )
-
-        header_label.pack(side="left", padx=5, pady=5)
         back_button.pack(side="right", padx=5, pady=5)
 
         content = ctk.CTkFrame(self.root.main_frame, height=450)
@@ -110,13 +109,12 @@ class DataChunk():
             header_frame,
             text=self.contents[ab.ActivityDB.field.id.value]
         )
-        
+        id_label.grid(row=0, column=0, padx=5, pady=5)
+
         title_label = ctk.CTkLabel(
             header_frame,
             text=self.contents[ab.ActivityDB.field.title.value]
         )
-
-        id_label.grid(row=0, column=0, padx=5, pady=5)
         title_label.grid(row=0, column=1, padx=5, pady=5)
 
         content_frame = ctk.CTkFrame(ret_frame)
@@ -132,7 +130,7 @@ class DataChunk():
         )
         content_label.grid(row=0, column=0, padx=5, pady=5)
 
-        from ac_window_gen import dispatcher
+        from ui_std_window_gen import dispatcher
 
         student_done = ActivityDictionary.getDatabase(self.activity).getStudentEntry(self.student.username) != None
 

@@ -1,8 +1,8 @@
 import customtkinter as ctk
 
-from App import App
+from ui_app import App
 from ac_module import Module
-from ac_window_gen import selection_screen
+from ui_std_window_gen import displayActivitySelections
 from db_ac_completed import ActivityDictionary
 
 from ac_code_runner import CodeRunner
@@ -15,7 +15,7 @@ class ModuleWindow():
         self.module = module
         self.student = student
         self.completion_database = ActivityDictionary.getDatabase(self.module.id)
-        self.alreadydid = self.completion_database.getStudentEntry(self.student.username) != None
+        self.alreadydid = self.completion_database.StudentEntryExist(self.student.username)
         self.root = main_attach
 
     def ImageHandler(self, content, max_img_width, attach_to):
@@ -55,27 +55,26 @@ class ModuleWindow():
         ## header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(self.root.main_frame)
+        header_frame.grid(row=0, column=0, sticky="we", padx=5, pady=5)
 
         quiz_name = ctk.CTkLabel(
             header_frame,
             text=f"{self.module.id} {self.module.title}"
         )
+        quiz_name.pack(side=ctk.LEFT, padx=5, pady=5)
 
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : selection_screen(self.root, self.student),
+            command=lambda : displayActivitySelections(self.root, self.student),
             width=20
         )
-
-        quiz_name.pack(side=ctk.LEFT, padx=5, pady=5)
         back_button.pack(side=ctk.RIGHT, padx=5, pady=5)
-
-        header_frame.grid(row=0, column=0, sticky="we", padx=5, pady=5)
 
         ## header details end --------------------------------------------
 
         content_frame = ctk.CTkFrame(self.root.main_frame)
+        content_frame.grid(row=1, column=0, padx=5, pady=5,)
 
         ## main_content frame ----------------------------
 
@@ -86,6 +85,7 @@ class ModuleWindow():
             width=main_content_frame_width,
             height=460
         )
+        main_content_frame.grid(row=0, column=0, padx=5, pady=5)
 
         paragraph_frame_width = main_content_frame_width - 20
 
@@ -93,6 +93,7 @@ class ModuleWindow():
             paragraph_frame = ctk.CTkFrame(
                 main_content_frame
             )
+            paragraph_frame.grid(row=index, column=0, padx=5, pady=10)
 
             match content[0]:
                 case Module.Content_Type.Paragraph:
@@ -118,11 +119,7 @@ class ModuleWindow():
                         paragraph_frame_width,
                         paragraph_frame
                     )
-
             paragraph.grid(row=0, column=0, padx=5, pady=5)
-            paragraph_frame.grid(row=index, column=0, padx=5, pady=10)
-
-        main_content_frame.grid(row=0, column=0, padx=5, pady=5)
 
         ## qna frame end -------------------------------
 
@@ -133,6 +130,7 @@ class ModuleWindow():
             content_frame,
             width=sidebar_width
         )
+        sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
 
         some_label = ctk.CTkLabel(
             sidebar_frame,
@@ -140,20 +138,16 @@ class ModuleWindow():
             width=sidebar_width,
             wraplength=sidebar_width,
         )
-
         some_label.grid(row=0, column=0, padx=5, pady=5)
 
-        sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
-
         ## some optional side bar end ----------------------------
-
-        content_frame.grid(row=1, column=0, padx=5, pady=5,)
 
         ## footer ---------------------------------------------
 
         footer_frame = ctk.CTkFrame(
             self.root.main_frame,
         )
+        footer_frame.grid(row=2, column=0, padx=5, pady=5)
 
         submit_button = ctk.CTkButton(
             footer_frame,
@@ -162,14 +156,11 @@ class ModuleWindow():
             command= self.set_student_as_completed,
             state="disabled" if self.alreadydid else "normal"
         )
-
         submit_button.grid(row=0, column=0, padx=0, pady=0)
-
-        footer_frame.grid(row=2, column=0, padx=5, pady=5)
 
         ## footer end ------------------------------------------
 
     def set_student_as_completed(self):
         print("Adding Student Entry into database...")
         self.completion_database.addStudentEntry((self.student.username,))
-        selection_screen(self.root, self.student)
+        displayActivitySelections(self.root, self.student)

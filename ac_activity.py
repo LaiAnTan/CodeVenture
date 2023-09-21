@@ -23,7 +23,7 @@ class Activity(ABC):
         self.type = ac_type
         self.img = {}
         self.code = {}
-        self.data_file = "data.ilovemen"
+        self.data_file = "data.dat"
 
         ## header values
         self.id = "null"
@@ -124,9 +124,6 @@ class Activity(ABC):
         line_len = 32
         desc_len = 10
 
-        # shit
-        # description = [ description_msg[(line_len * x) : (line_len * (x + 1))] for x in range(desc_len) if description_msg[(line_len * x) : (line_len * (x + 1))] ]
-
         description = []
         for x in range(desc_len):
             to_append = description_msg[(line_len * x):(line_len * (x + 1))]
@@ -134,7 +131,6 @@ class Activity(ABC):
                 break
             description.append(to_append)
 
-        ## EPIC STRING BUILDING WOWOWOOWO
         data = [
             f"{self.id} Module Description",
             "-" * line_len,

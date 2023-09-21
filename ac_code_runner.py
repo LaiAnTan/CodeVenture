@@ -15,9 +15,11 @@ class CodeRunner():
     def __init__(self, max_img_width, attach_frame, code_name, root_path) -> None:
         self.max_width = max_img_width
         self.attach_frame = attach_frame
+
         self.code_name = code_name
         self.root_path = root_path
-        self.fullfolderpath = f"{self.root_path}/{self.code_name}"
+
+        self.code_folder = f"{self.root_path}/{self.code_name}"
 
         self.CodeRunnerFrame = ctk.CTkFrame(self.attach_frame)
 
@@ -35,7 +37,7 @@ class CodeRunner():
 
     def	DisplayCodeline_FromFile(self):
         code_content = []
-        with open(f"{self.fullfolderpath}/main.py") as file:
+        with open(f"{self.code_folder}/main.py") as file:
             pyg.highlight(
                 file.read(),
                 PythonLexer(),
@@ -43,17 +45,17 @@ class CodeRunner():
                     font_name="Noto Sans Mono",
                     font_size=12
                 ),
-                outfile=f"{self.root_path}/temp"
+                outfile=f"{self.code_folder}/temp"
             )
 
         ret_widget = ImageLabelGen(
-            f"{self.root_path}/temp",
+            f"{self.code_folder}/temp",
             self.max_width,
             self.CodeFrame
         ).ImageLabelGen(True)
 
         ## imagine if this is system24, LETS GO
-        os.remove(f"{self.root_path}/temp")
+        os.remove(f"{self.code_folder}/temp")
 
         return ret_widget
 
@@ -78,7 +80,7 @@ class CodeRunner():
         return self.CodeRunnerFrame
 
     def RunTestCases(self, testcases):
-        cmd = f"{sys.executable} \"{self.fullfolderpath}/main.py\""
+        cmd = f"{sys.executable} \"{self.code_folder}/main.py\""
         testcase_in = open(testcases)
         try:
             code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
@@ -96,8 +98,8 @@ class CodeRunner():
 
         print("Running Code. BzzZt")
 
-        cmd = f"{sys.executable} \"{self.fullfolderpath}/main.py\""
-        code_input = open(f"{self.fullfolderpath}/input")
+        cmd = f"{sys.executable} \"{self.code_folder}/main.py\""
+        code_input = open(f"{self.code_folder}/input")
         
         font_color = "white"
         try:

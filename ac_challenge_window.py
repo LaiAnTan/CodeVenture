@@ -1,9 +1,9 @@
 import customtkinter as ctk
 import os
 
-from App import App
+from ui_app import App
 from ac_challenge import Challange
-from ac_window_gen import selection_screen
+from ui_std_window_gen import displayActivitySelections
 
 from ac_ide import IDE
 
@@ -219,7 +219,7 @@ class ChallangeWindow():
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : selection_screen(self.root, self.student),
+            command=lambda : displayActivitySelections(self.root, self.student),
             width=20
         )
 
@@ -359,10 +359,10 @@ class ChallangeWindow():
     def end(self, codecontent):
         print("Submitting code attempt")
         self.completion_database.updateStudentCode(self.student.username, self.percentage, codecontent)
-        selection_screen(self.root, self.student)
+        displayActivitySelections(self.root, self.student)
 
 if __name__ == "__main__":
-    from App import App
+    from ui_app import App
 
     ActivityDictionary()
     main = App()

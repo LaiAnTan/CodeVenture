@@ -38,8 +38,11 @@ class CompletedDB():
         value = self.cursor.execute(f"SELECT * from {self.db_name} WHERE {self.db_idfield}=(?)",(student_id,)).fetchone()
         return value
 
+    def StudentEntryExist(self, student_id):
+        return self.getStudentEntry(student_id) != None
+
     def addStudentEntry(self, values: tuple[str]):
-        if self.getStudentEntry(values[0]) != None:
+        if self.StudentEntryExist(values[0]):
             return
         self.cursor.execute(f"INSERT INTO {self.db_name} VALUES {self.db_placeholder}", values)
         self.connect.commit()
@@ -57,13 +60,13 @@ class ChallangeCompleted_DB(CompletedDB):
         )
 
     def getStudentCode(self, std_id) -> None:
-        if self.getStudentEntry(std_id) == None:
+        if not self.StudentEntryExist(std_id):
             return None
         data = self.cursor.execute(f"SELECT code from {self.db_name} WHERE {self.db_idfield}=(?)", (std_id,)).fetchone()
         return data[0]
 
     def updateStudentCode(self, std_id, completion, new_answer) -> None:
-        if self.getStudentEntry(std_id) == None:
+        if not self.StudentEntryExist(std_id):
             return self.addStudentEntry((std_id, completion, new_answer))
         self.cursor.execute(f"UPDATE {self.db_name} SET code=(?), completion=(?) WHERE {self.db_idfield}=(?)", (new_answer, completion, std_id))
         self.connect.commit()

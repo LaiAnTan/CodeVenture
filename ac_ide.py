@@ -20,20 +20,10 @@ class IDE():
         self.timeout_period = 10
 
         self.CodeIDEFrame = ctk.CTkFrame(self.attach_frame)
+
         self.RunButtonFrame = ctk.CTkFrame(self.CodeIDEFrame)
-
-        self.RunButtonFrame.grid(
-            row=2,
-            column=0,
-            sticky="ew",
-            padx=5,
-            pady=5
-        )
-
-        self.RunButtonFrame.columnconfigure(
-            0,
-            weight=1
-        )
+        self.RunButtonFrame.columnconfigure(0, weight=1)
+        self.RunButtonFrame.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
         self.IDEFrame = ctk.CTkFrame(self.CodeIDEFrame)
         self.IDEFrame.grid(row=0, column=0, padx=5, pady=5)
@@ -100,7 +90,6 @@ class IDE():
             command=self.RunCode,
             height=10
         )
-
         RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         CodeButton = ctk.CTkButton(

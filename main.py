@@ -1,6 +1,6 @@
-from App import App
+from ui_app import App
 from populate_db import populate_databases
-import ui_window_gen as wingen
+import ui_std_window_gen as wingen
 
 import customtkinter as ctk
 

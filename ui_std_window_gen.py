@@ -1,4 +1,4 @@
-from App import App
+from ui_app import App
 from user.user_student import Student
 
 def loginPage(a: App):
@@ -50,7 +50,28 @@ def datePickerTopLevelPage(a: App):
     date_picker.wait_window()
     return date_picker.getSelectedDate()
 
-## these are in ac_window_gen
-# def modulePage(a: App, module: Module):
-# def quizPage(a: App, quiz: Quiz):
-# def challengePage(a: App, challenge: Challenge):
+def	displayActivitySelections(a: App, student: Student):
+    from ac_selection_window import SelectionScreen
+    a.clean_frame()
+    SelectionScreen(student, a).attach_elements()
+    a.main_frame.grid(row = 0, column = 0)
+
+def dispatcher(activityID, activityType, a: App, student: Student):
+    from ac_challenge_window import ChallangeWindow
+    from ac_quiz_window import QuizWindow
+    from ac_module_windows import ModuleWindow
+
+    from ac_activity import Activity
+    from ac_module import Module
+    from ac_quiz import Quiz
+    from ac_challenge import Challange
+
+    a.clean_frame()
+    match activityType:
+        case Activity.AType.Module.value:
+            ModuleWindow(Module(activityID), student, a).FillFrames()
+        case Activity.AType.Quiz.value:
+            QuizWindow(Quiz(activityID), student, a).FillFrames()
+        case Activity.AType.Challenge.value:
+            ChallangeWindow(Challange(activityID), student, a).FillFrames()
+    a.main_frame.grid(row=0, column=0)
