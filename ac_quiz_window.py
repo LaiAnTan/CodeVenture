@@ -115,21 +115,21 @@ class QuizWindow():
         sidebar_frame = ctk.CTkScrollableFrame(content_frame, width=sidebar_width)
         sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
 
-        show_all_questions = ctk.CTkButton(
-            sidebar_frame,
-            width=button_sidebar_width,
-            text="Show All Questions",
-            command= self.showAllQuestions
-        )
-        show_all_questions.grid(row=0, column=0, padx=5, pady=5)
-
         check_button = ctk.CTkButton(
             sidebar_frame,
             width=button_sidebar_width,
             text="Check",
             command=lambda : self.checkAnswers(questionStatusFrame, button_sidebar_width)
         )
-        check_button.grid(row=1, column=0, padx=5, pady=5)
+        check_button.grid(row=0, column=0, padx=5, pady=5)
+
+        show_all_questions = ctk.CTkButton(
+            sidebar_frame,
+            width=button_sidebar_width,
+            text="Show All Questions",
+            command= self.showAllQuestions
+        )
+        show_all_questions.grid(row=1, column=0, padx=5, pady=5)
 
         questionStatusFrame = ctk.CTkFrame(sidebar_frame, width=sidebar_width)
         questionStatusFrame.grid(row=2, column=0, padx=5, pady=5)
@@ -205,7 +205,7 @@ class QuizWindow():
                 width=max_width,
                 ## fucking shit piece of shit python doesnt store what was the parameter of the function in lambda
                 ## https://stackoverflow.com/questions/31186959/how-to-generate-a-list-of-different-lambda-functions-with-list-comprehension
-                ## mf checks for the value of index AND GEUESS WHAT, INDEX IS DONE TRANSVERSING, ITS GONNA BE 5
+                ## checks for the value of index AND GEUESS WHAT, INDEX IS DONE TRANSVERSING, ITS GONNA BE 5
                 ## need to set the index as default VALUE instead of REFERENCE
                 command= lambda index=index: self.showOneQuestion(index)
             )

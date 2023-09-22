@@ -125,20 +125,20 @@ class ModuleWindow():
 
         ## some optional side bar start -----------------------
 
-        sidebar_width = 50
-        sidebar_frame = ctk.CTkFrame(
-            content_frame,
-            width=sidebar_width
-        )
-        sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
+        # sidebar_width = 50
+        # sidebar_frame = ctk.CTkFrame(
+        #     content_frame,
+        #     width=sidebar_width
+        # )
+        # sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
 
-        some_label = ctk.CTkLabel(
-            sidebar_frame,
-            text="does module need a side bar tho....?",
-            width=sidebar_width,
-            wraplength=sidebar_width,
-        )
-        some_label.grid(row=0, column=0, padx=5, pady=5)
+        # some_label = ctk.CTkLabel(
+        #     sidebar_frame,
+        #     text="does module need a side bar tho....?",
+        #     width=sidebar_width,
+        #     wraplength=sidebar_width,
+        # )
+        # some_label.grid(row=0, column=0, padx=5, pady=5)
 
         ## some optional side bar end ----------------------------
 
