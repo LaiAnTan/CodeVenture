@@ -1,11 +1,12 @@
 import customtkinter as ctk
 from ui_app import App
+from datetime import datetime
 from ui_std_window_gen import subscribePage, datePickerTopLevelPage
 from database.database_student import StudentDB
 from user.user_student import Student
 
-import shutil
-import os
+import shutil as shutil
+import os as os
 
 def profileSetupHandler(student: Student, full_name: str, email: str, dob: str, profile_pic_path: bool):
     """
@@ -20,12 +21,16 @@ def profileSetupHandler(student: Student, full_name: str, email: str, dob: str, 
     if full_name == "" or email == "" or dob == "" or profile_pic_path == "":
         return (False, "One or more fields incomplete")
     
+    if '@' not in email:
+        return(False, "Invalid email")
+    
+    if datetime.strptime(dob, "%d/%m/%Y").date() > datetime.now().date():
+        return(False, "Invalid date")
+
     sdb.add_entry((student.getUsername(), full_name, email, 0, "none", dob, "none", "none", "none"))
     student = Student(student.getUsername())
 
     return (True, "Profile setup sucessful")
-
-
 
 class StudentProfileSetupWindow:
 

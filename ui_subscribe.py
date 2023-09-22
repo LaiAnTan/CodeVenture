@@ -1,5 +1,5 @@
 from user.user_student import Student
-
+from database.database_student import StudentDB
 from ui_std_window_gen import loginPage
 from ui_app import App
 import customtkinter as ctk
@@ -103,7 +103,12 @@ class SubscribeWindow:
         )
         
         def validateSubButtonEvent():
-            pass
+            code = sub_code.get()
+            if code == "99999":
+                sdb = StudentDB()
+                sdb.update_attr("subscription", self.student.getUsername(), 1)
+                sdb.update_attr("subscription_end", self.student.getUsername(), "hehe")
+                loginPage(attach)
 
         validate_sub_button = ctk.CTkButton(
             entry_frame,
@@ -140,7 +145,7 @@ class SubscribeWindow:
 
         def subscribeButtonEvent():
             print("This button relocates to the subscription service")
-            pass
+            return
 
         subscribe_button = ctk.CTkButton(
             button_frame,
