@@ -146,6 +146,8 @@ class QuizWindow():
 
         ## footer end ------------------------------------------
 
+    ## helper functions
+
     def generateAllQuestionFrames(self, max_width):
         self.questionFrames : list[QuestionBlock] = []
 
