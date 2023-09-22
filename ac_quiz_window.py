@@ -8,14 +8,13 @@ from db_ac_completed import ActivityDictionary, QuizCompleted_DB
 from user.user_student import Student
 
 class QuestionBlock():
-    def __init__(self, question: Question, max_width, previous_selection, attach_to) -> None:
+    def __init__(self, question: Question, max_width, previous_selection) -> None:
         self.question = question
         self.max_width = max_width
         self.previous_selection = previous_selection
-        self.frame = attach_to
 
-    def generateFrame(self):
-        return_frame = ctk.CTkFrame(self.frame)
+    def generateFrame(self, attach_to):
+        return_frame = ctk.CTkFrame(attach_to)
 
         le_prompt = ctk.CTkLabel(
             return_frame,
@@ -84,22 +83,16 @@ class QuizWindow():
 
         ## header details end --------------------------------------------
 
-        content_frame = ctk.CTkFrame(
+        self.content_frame = ctk.CTkFrame(
             self.root.main_frame,
         )
-        content_frame.grid(row=1, column=0, padx=5, pady=5)
+        self.content_frame.grid(row=1, column=0, padx=5, pady=5)
 
         ## qna frame ----------------------------
 
-        qna_frame_width = 450
-        self.qna_frame = ctk.CTkScrollableFrame(
-            content_frame,
-            width=qna_frame_width,
-            height=460
-        )
-        self.qna_frame.grid(row=0, column=0, padx=5, pady=5)
+        self.InitializeQnAFrame()
 
-        question_block_width = qna_frame_width - 30
+        question_block_width = self.qna_width - 30
         self.generateAllQuestionFrames(question_block_width)
         show_all_questions = self.showAllQuestions()
 
@@ -107,12 +100,12 @@ class QuizWindow():
 
         ## some optional side bar start -----------------------
 
-        content_frame.rowconfigure(0, weight=1)
-        content_frame.columnconfigure(1, weight=1)
+        self.content_frame.rowconfigure(0, weight=1)
+        self.content_frame.columnconfigure(1, weight=1)
 
         sidebar_width = 150
         button_sidebar_width = 150 - 30
-        sidebar_frame = ctk.CTkScrollableFrame(content_frame, width=sidebar_width)
+        sidebar_frame = ctk.CTkScrollableFrame(self.content_frame, width=sidebar_width)
         sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
 
         check_button = ctk.CTkButton(
@@ -147,38 +140,43 @@ class QuizWindow():
             footer_frame,
             text="Resubmit" if self.alreadydid else "Submit",
             width=150,
-            command=self.end
+            command=self.StudentSubmission
         )
         submit_button.grid(row=0, column=0)
 
         ## footer end ------------------------------------------
 
     def generateAllQuestionFrames(self, max_width):
-        self.questionFrames : list[ctk.CTkFrame] = []
+        self.questionFrames : list[QuestionBlock] = []
 
         for index, questions in enumerate(self.quiz.questions):
-            placeholder_frame = QuestionBlock(questions, max_width, self.studentanswer[index], self.qna_frame).generateFrame()
+            placeholder_frame = QuestionBlock(questions, max_width, self.studentanswer[index])
             self.questionFrames.append(placeholder_frame)
 
-    def showAllQuestions(self):
-        for widgets in self.qna_frame.winfo_children():
-            widgets.grid_forget()
+    def InitializeQnAFrame(self):
+        self.qna_width = 450
+        self.qna_height = 460
 
-        for index, frames in enumerate(self.questionFrames):
-            frames.grid(row=index, column=0, padx=10, pady=10)
+        self.qna_frame = ctk.CTkScrollableFrame(
+            self.content_frame,
+            width=self.qna_width,
+            height=self.qna_height
+        )
+        self.qna_frame.grid(row=0, column=0, padx=5, pady=5)
+
+    def RefreshQnAFrame(self):
+        self.qna_frame.destroy()
+        self.qna_frame = ctk.CTkScrollableFrame(self.content_frame, width=self.qna_width, height=self.qna_height)
+        self.qna_frame.grid(row=0, column=0, padx=5, pady=5)
+
+    def showAllQuestions(self):
+        self.RefreshQnAFrame()
+        for index, question_frame in enumerate(self.questionFrames):
+            question_frame.generateFrame(self.qna_frame).grid(row=index, column=0, padx=5, pady=5)
 
     def showOneQuestion(self, index):
-        for widgets in self.qna_frame.winfo_children(): 
-            widgets.grid_forget()
-
-        self.questionFrames[index].grid(row=0, column=0, padx=10, pady=10)
-
-    def end(self):
-        print("Uploading Student's Answer to Database...")
-        student_answer = ",".join([str(x.get()) for x in self.studentanswer])
-        self.completion_database.updateStudentAnswer(self.student.username, student_answer)
-        print("Final Student Answer", student_answer)
-        displayActivitySelections(self.root, self.student)
+        self.RefreshQnAFrame()
+        self.questionFrames[index].generateFrame(self.qna_frame).grid(row=0, column=0, padx=5, pady=5)
 
     def checkAnswers(self, questionStatusFrame: ctk.CTkFrame, max_width):
         for widget in questionStatusFrame.winfo_children():
@@ -210,7 +208,13 @@ class QuizWindow():
                 command= lambda index=index: self.showOneQuestion(index)
             )
             statusButton.grid(row=index, column=0, padx=5, pady=5)
-        return
+
+    def StudentSubmission(self):
+        print("Uploading Student's Answer to Database...")
+        student_answer = ",".join([str(x.get()) for x in self.studentanswer])
+        self.completion_database.updateStudentAnswer(self.student.username, student_answer)
+        print("Final Student Answer", student_answer)
+        displayActivitySelections(self.root, self.student)
 
 if __name__ == "__main__":
     from ui_app import App
