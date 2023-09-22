@@ -164,3 +164,12 @@ class ModuleWindow():
         print("Adding Student Entry into database...")
         self.completion_database.addStudentEntry((self.student.username,))
         displayActivitySelections(self.root, self.student)
+
+if __name__ == "__main__":
+    from ui_app import App
+
+    ActivityDictionary()
+    main = App()
+    ModuleWindow(Module("MD0000"), Student("test_student"), main).FillFrames()
+    main.main_frame.grid(row=0, column=0)
+    main.mainloop()
