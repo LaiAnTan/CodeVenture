@@ -1,7 +1,7 @@
 import customtkinter as ctk
 
-from ac_quiz import Quiz, Question
-from ac_activity_window import ActivityWindow
+from ..ac_classes.ac_quiz import Quiz, Question
+from .ac_activity_window import ActivityWindow
 from ui_app import App
 from user.user_student import Student
 from ui_std_window_gen import displayActivitySelections
@@ -170,7 +170,7 @@ class QuizWindow(ActivityWindow):
 
 if __name__ == "__main__":
     from ui_app import App
-    from db_ac_completed import ActivityDictionary
+    from ..ac_database.db_ac_completed import ActivityDictionary
 
     ActivityDictionary()
     main = App()

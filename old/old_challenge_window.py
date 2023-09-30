@@ -11,7 +11,7 @@ from ac_imagelabel import ImageLabel
 
 from ac_code_runner import CodeRunner
 
-from db_ac_completed import ActivityDictionary, ChallangeCompleted_DB
+from activity.ac_database.db_ac_completed import ActivityDictionary, ChallangeCompleted_DB
 
 from user.user_student import Student
 

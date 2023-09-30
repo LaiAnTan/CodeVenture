@@ -1,11 +1,11 @@
 import customtkinter as ctk
 
 from ui_app import App
-from ac_activity import Activity
+from ..ac_classes.ac_activity import Activity
 import database.database_activity as ab
 from user.user_student import Student
 
-from db_ac_completed import ActivityDictionary
+from ..ac_database.db_ac_completed import ActivityDictionary
 
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter

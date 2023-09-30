@@ -2,10 +2,10 @@ import customtkinter as ctk
 
 from abc import abstractmethod
 
-from ac_activity import Activity
+from ..ac_classes.ac_activity import Activity
 from user.user_student import Student
 from ui_app import App
-from db_ac_completed import ActivityDictionary
+from ..ac_database.db_ac_completed import ActivityDictionary
 
 class ActivityWindow(ctk.CTkFrame):
     def __init__(self, activity: Activity, student: Student, main_attach: App):

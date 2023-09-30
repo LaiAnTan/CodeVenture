@@ -3,7 +3,7 @@ import customtkinter as ctk
 from ui_app import App
 from ac_quiz import Quiz, Question
 from ui_std_window_gen import displayActivitySelections
-from db_ac_completed import ActivityDictionary, QuizCompleted_DB
+from activity.ac_database.db_ac_completed import ActivityDictionary, QuizCompleted_DB
 
 from user.user_student import Student
 

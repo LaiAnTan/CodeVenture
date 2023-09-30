@@ -51,20 +51,20 @@ def datePickerTopLevelPage(a: App):
     return date_picker.getSelectedDate()
 
 def	displayActivitySelections(a: App, student: Student):
-    from ac_selection_window import SelectionScreen
+    from activity.std_window_gen.ac_std_selection_window import SelectionScreen
     a.clean_frame()
     SelectionScreen(student, a).attach_elements()
     a.main_frame.grid(row = 0, column = 0)
 
 def dispatcher(activityID, activityType, a: App, student: Student):
-    from ac_challenge_window import ChallangeWindow
-    from ac_quiz_window import QuizWindow
-    from ac_module_windows import ModuleWindow
+    from activity.std_window_gen.ac_challenge_window import ChallangeWindow
+    from activity.std_window_gen.ac_quiz_window import QuizWindow
+    from activity.std_window_gen.ac_module_windows import ModuleWindow
 
-    from ac_activity import Activity
-    from ac_module import Module
-    from ac_quiz import Quiz
-    from ac_challenge import Challange
+    from activity.ac_classes.ac_activity import Activity
+    from activity.ac_classes.ac_module import Module
+    from activity.ac_classes.ac_quiz import Quiz
+    from activity.ac_classes.ac_challenge import Challange
 
     a.clean_frame()
     match activityType:

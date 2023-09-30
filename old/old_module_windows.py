@@ -3,7 +3,7 @@ import customtkinter as ctk
 from ui_app import App
 from ac_module import Module
 from ui_std_window_gen import displayActivitySelections
-from db_ac_completed import ActivityDictionary
+from activity.ac_database.db_ac_completed import ActivityDictionary
 
 from ac_code_runner import CodeRunner
 from ac_imagelabel import ImageLabel

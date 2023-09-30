@@ -1,8 +1,8 @@
-import ac_activity as ac
+from .ac_activity import Activity
 
-class Module(ac.Activity):
+class Module(Activity):
     def __init__(self, filename: str) -> None:
-        super().__init__(filename, ac.Activity.AType["Module"])
+        super().__init__(filename, Activity.AType["Module"])
         self.read_mf_read()
         self.ParseContent()
         self.ParseSources()

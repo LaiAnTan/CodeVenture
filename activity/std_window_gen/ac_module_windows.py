@@ -1,13 +1,15 @@
 import customtkinter as ctk
 
 from ui_app import App
-from ac_module import Module
+from ..ac_classes.ac_module import Module
 from ui_std_window_gen import displayActivitySelections
-from db_ac_completed import ActivityDictionary
-from ac_code_runner import CodeRunner
-from ac_imagelabel import ImageLabel
+from ..ac_database.db_ac_completed import ActivityDictionary
+
+from .helper_windows.code_runner import CodeRunner
+from .helper_windows.imagelabel import ImageLabel
+
 from user.user_student import Student
-from ac_activity_window import ActivityWindow
+from .ac_activity_window import ActivityWindow
 
 class ModuleWindow(ActivityWindow):
     def	__init__(self, module: Module, student: Student, main_attach: App):

@@ -4,15 +4,15 @@ import os
 from ui_app import App
 from ui_std_window_gen import displayActivitySelections
 
-from ac_challenge import Challange
-from ac_ide import IDE
-from ac_imagelabel import ImageLabel
-from ac_code_runner import CodeRunner
+from ..ac_classes.ac_challenge import Challange
+from .helper_windows.ide import IDE
+from .helper_windows.imagelabel import ImageLabel
+from .helper_windows.code_runner import CodeRunner
 
-from db_ac_completed import ActivityDictionary, ChallangeCompleted_DB
+from ..ac_database.db_ac_completed import ActivityDictionary
 from user.user_student import Student
 
-from ac_activity_window import ActivityWindow
+from .ac_activity_window import ActivityWindow
 
 class ChallangeWindow(ActivityWindow):
     def __init__(self, challenge: Challange, student: Student, a: App):
@@ -190,8 +190,8 @@ class ChallangeWindow(ActivityWindow):
 
         if self.attempted_count > 5 or self.suceeded:
             solution_widget = CodeRunner(
-                frame_width - 30,
                 self.displayed_frame,
+                frame_width - 30,
                 "solution",
                 self.ac.ModulePath
             )

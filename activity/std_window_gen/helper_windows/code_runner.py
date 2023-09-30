@@ -9,7 +9,7 @@ import customtkinter as ctk
 
 import subprocess
 
-from ac_imagelabel import ImageLabel
+from .imagelabel import ImageLabel
 
 class CodeRunner(ctk.CTkFrame):
     def __init__(self, master, max_img_width, code_name, root_path) -> None:
