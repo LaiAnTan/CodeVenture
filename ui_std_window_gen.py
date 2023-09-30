@@ -69,9 +69,9 @@ def dispatcher(activityID, activityType, a: App, student: Student):
     a.clean_frame()
     match activityType:
         case Activity.AType.Module.value:
-            ModuleWindow(Module(activityID), student, a).FillFrames()
+            ModuleWindow(Module(activityID), student, a).Attach()
         case Activity.AType.Quiz.value:
-            QuizWindow(Quiz(activityID), student, a).FillFrames()
+            QuizWindow(Quiz(activityID), student, a).Attach()
         case Activity.AType.Challenge.value:
-            ChallangeWindow(Challange(activityID), student, a).FillFrames()
+            ChallangeWindow(Challange(activityID), student, a).Attach()
     a.main_frame.grid(row=0, column=0)

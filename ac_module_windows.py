@@ -4,95 +4,32 @@ from ui_app import App
 from ac_module import Module
 from ui_std_window_gen import displayActivitySelections
 from db_ac_completed import ActivityDictionary
-
 from ac_code_runner import CodeRunner
-from ac_imagelabel import ImageLabelGen
-
+from ac_imagelabel import ImageLabel
 from user.user_student import Student
+from ac_activity_window import ActivityWindow
 
-class ModuleWindow():
+class ModuleWindow(ActivityWindow):
     def	__init__(self, module: Module, student: Student, main_attach: App):
-        self.module = module
-        self.student = student
-        self.completion_database = ActivityDictionary.getDatabase(self.module.id)
-        self.alreadydid = self.completion_database.StudentEntryExist(self.student.username)
-        self.root = main_attach
+        super().__init__(module, student, main_attach)
 
-    def ImageHandler(self, content, max_img_width, attach_to):
-        if self.module.img.get(content):
-            ret_widget = ImageLabelGen(
-                f"{self.module.ModulePath}/{self.module.img[content]}",
-                max_img_width - 50,
-                attach_to
-            ).ImageLabelGen()
-        else:
-            ret_widget = ctk.CTkLabel(
-                attach_to,
-                text=f"Error displaying image {content}",
-                width=max_img_width,
-                wraplength=max_img_width - 10,
-            )
-        return ret_widget
-    
-    def CodeHandler(self, content, max_img_width, attach_to):
-        if self.module.code.get(content):
-            ret_widget = CodeRunner(max_img_width - 30,
-                            attach_to,
-                            self.module.code[content],
-                            self.module.ModulePath
-                            ).setUpFrame()
-        else:
-            ret_widget = ctk.CTkLabel(
-                attach_to,
-                text=f"Error displaying code {content}",
-                width=max_img_width,
-                wraplength=max_img_width - 10,
-            )
-        return ret_widget
+        self.SetFrames()
 
-    def FillFrames(self):
-
-        ## header details -------------------------------------------
-
-        header_frame = ctk.CTkFrame(self.root.main_frame)
-        header_frame.grid(row=0, column=0, sticky="we", padx=5, pady=5)
-
-        quiz_name = ctk.CTkLabel(
-            header_frame,
-            text=f"{self.module.id} {self.module.title}"
-        )
-        quiz_name.pack(side=ctk.LEFT, padx=5, pady=5)
-
-        back_button = ctk.CTkButton(
-            header_frame,
-            text="Back",
-            command=lambda : displayActivitySelections(self.root, self.student),
-            width=20
-        )
-        back_button.pack(side=ctk.RIGHT, padx=5, pady=5)
-
-        ## header details end --------------------------------------------
-
-        content_frame = ctk.CTkFrame(self.root.main_frame)
-        content_frame.grid(row=1, column=0, padx=5, pady=5,)
-
-        ## main_content frame ----------------------------
-
+    def SetContent(self):
         main_content_frame_width = 550
+        main_content_frame_height = 420
 
-        main_content_frame = ctk.CTkScrollableFrame(
-            content_frame,
+        self.contents = ctk.CTkScrollableFrame(
+            self.content_frame, 
             width=main_content_frame_width,
-            height=460
+            height=main_content_frame_height
         )
-        main_content_frame.grid(row=0, column=0, padx=5, pady=5)
+        self.contents.grid(row=0, column=0, padx=5, pady=5)
 
         paragraph_frame_width = main_content_frame_width - 20
 
-        for index, content in enumerate(self.module.content):
-            paragraph_frame = ctk.CTkFrame(
-                main_content_frame
-            )
+        for index, content in enumerate(self.ac.content):
+            paragraph_frame = ctk.CTkFrame(self.contents)
             paragraph_frame.grid(row=index, column=0, padx=5, pady=10)
 
             match content[0]:
@@ -121,55 +58,62 @@ class ModuleWindow():
                     )
             paragraph.grid(row=0, column=0, padx=5, pady=5)
 
-        ## qna frame end -------------------------------
-
-        ## some optional side bar start -----------------------
-
-        # sidebar_width = 50
-        # sidebar_frame = ctk.CTkFrame(
-        #     content_frame,
-        #     width=sidebar_width
-        # )
-        # sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
-
-        # some_label = ctk.CTkLabel(
-        #     sidebar_frame,
-        #     text="does module need a side bar tho....?",
-        #     width=sidebar_width,
-        #     wraplength=sidebar_width,
-        # )
-        # some_label.grid(row=0, column=0, padx=5, pady=5)
-
-        ## some optional side bar end ----------------------------
-
-        ## footer ---------------------------------------------
-
-        footer_frame = ctk.CTkFrame(
-            self.root.main_frame,
-        )
-        footer_frame.grid(row=2, column=0, padx=5, pady=5)
-
+    def SetFooter(self):
         submit_button = ctk.CTkButton(
-            footer_frame,
+            self.footer_frame,
             text="Complete",
             width=150,
-            command= self.set_student_as_completed,
-            state="disabled" if self.alreadydid else "normal"
+            command= self.StudentCompletion,
+            state="disabled" if self.done else "normal"
         )
         submit_button.grid(row=0, column=0, padx=0, pady=0)
 
-        ## footer end ------------------------------------------
+    ## helper functions
 
-    def set_student_as_completed(self):
+    def ImageHandler(self, content, max_img_width, attach_to):
+        if self.ac.img.get(content):
+            ret_widget = ImageLabel(
+                attach_to,
+                f"{self.ac.ModulePath}/{self.ac.img[content]}",
+                max_img_width - 50,
+            )
+        else:
+            ret_widget = ctk.CTkLabel(
+                attach_to,
+                text=f"Error displaying image {content}",
+                width=max_img_width,
+                wraplength=max_img_width - 10,
+            )
+        return ret_widget
+    
+    def CodeHandler(self, content, max_img_width, attach_to):
+        if self.ac.code.get(content):
+            ret_widget = CodeRunner(
+                            attach_to,
+                            max_img_width - 30,
+                            self.ac.code[content],
+                            self.ac.ModulePath
+                            )
+        else:
+            ret_widget = ctk.CTkLabel(
+                attach_to,
+                text=f"Error displaying code {content}",
+                width=max_img_width,
+                wraplength=max_img_width - 10,
+            )
+        return ret_widget
+
+    def StudentCompletion(self):
         print("Adding Student Entry into database...")
-        self.completion_database.addStudentEntry((self.student.username,))
-        displayActivitySelections(self.root, self.student)
+        self.completion_database.addStudentEntry((self.std.username,))
+        displayActivitySelections(self.root, self.std)
 
 if __name__ == "__main__":
     from ui_app import App
 
     ActivityDictionary()
     main = App()
-    ModuleWindow(Module("MD0000"), Student("test_student"), main).FillFrames()
+    frame = ModuleWindow(Module("MD0000"), Student("test_student"), main)
+    frame.Attach()
     main.main_frame.grid(row=0, column=0)
     main.mainloop()

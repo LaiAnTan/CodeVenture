@@ -5,27 +5,23 @@ import customtkinter as ctk
 
 import subprocess
 
-class IDE():
-    def __init__(self, max_img_width, attach_frame, code_name, id, root_path) -> None:
+class IDE(ctk.CTkFrame):
+    def __init__(self, master, max_img_width, code_name, id, root_path, content=None) -> None:
+        super().__init__(master)
+
         self.max_width = max_img_width
-        self.attach_frame = attach_frame
         self.code_name = f"{code_name}-{id}"
         self.root_path = root_path
-        self.max_output_size = 68750
 
-        self.ide_maxwidth = 320
+        self.max_output_size = 68750
+        self.ide_maxwidth = 310
         self.ide_maxheight = 280
+        self.previous_input = content
 
         ## please change this to a reasonable timeout period
         self.timeout_period = 10
 
-        self.CodeIDEFrame = ctk.CTkFrame(self.attach_frame)
-
-        self.RunButtonFrame = ctk.CTkFrame(self.CodeIDEFrame)
-        self.RunButtonFrame.columnconfigure(0, weight=1)
-        self.RunButtonFrame.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
-
-        self.IDEFrame = ctk.CTkFrame(self.CodeIDEFrame)
+        self.IDEFrame = ctk.CTkFrame(self)
         self.IDEFrame.grid(row=0, column=0, padx=5, pady=5)
         
         self.IDEHeader = ctk.CTkFrame(self.IDEFrame)
@@ -34,10 +30,11 @@ class IDE():
         self.IDEContent = ctk.CTkFrame(self.IDEFrame)
         self.IDEContent.grid(row=1, column=0, padx=5, pady=5)
 
-        self.outputFrame = ctk.CTkFrame(self.CodeIDEFrame)
+        self.outputFrame = ctk.CTkFrame(self)
 
+        self.setUpFrame()
 
-    def setUpIDEWindow(self, content):
+    def InitIDEWindow(self):
         font = ctk.CTkFont(
             "Noto Sans Mono",
             size=12,
@@ -52,13 +49,10 @@ class IDE():
             wrap=ctk.WORD
         )
 
-        if content is not None:
-            self.IDETextBox.insert("0.0", content)
+        if self.previous_input is not None:
+            self.IDETextBox.insert("0.0", self.previous_input)
 
-        return self.IDETextBox
-
-
-    def setupInputFrame(self):
+    def InitInputFrame(self):
         font = ctk.CTkFont(
             "Noto Sans Mono",
             size=12,
@@ -73,8 +67,6 @@ class IDE():
             wrap=ctk.WORD
         )
 
-        return self.InputTextBox
-
     def setInputFrame(self):
         self.IDETextBox.grid_forget()
         self.InputTextBox.grid(row=0, column=0, padx=5, pady=5)
@@ -84,14 +76,6 @@ class IDE():
         self.IDETextBox.grid(row=0, column=0, padx=5, pady=5)
 
     def	setUpFrame(self, previous_content = None):
-        RunButton = ctk.CTkButton(
-            self.RunButtonFrame,
-            text="Run",
-            command=self.RunCode,
-            height=10
-        )
-        RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
-
         CodeButton = ctk.CTkButton(
             self.IDEHeader,
             text="Code",
@@ -106,12 +90,17 @@ class IDE():
         )
         InputButton.grid(row=0, column=1, padx=5, pady=5)
 
-        self.setUpIDEWindow(previous_content)
-        self.setupInputFrame()
-        
+        self.InitIDEWindow()
+        self.InitInputFrame()
         self.setCodeFrame()
 
-        return self.CodeIDEFrame
+        RunButton = ctk.CTkButton(
+            self.IDEFrame,
+            text="Run",
+            command=self.RunCode,
+            height=10
+        )
+        RunButton.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def getContents(self):
         return self.IDETextBox.get("0.0", "end")
@@ -140,7 +129,7 @@ class IDE():
         ## if error, return the raw error output
         return code_output
 
-    def terminalOutput_Gen(self, output, attach_to, max_width, word_color):
+    def terminalOutputLabel(self, output, attach_to, max_width, word_color):
         output = output[:self.max_output_size]
         output_label = ctk.CTkLabel(
             attach_to,
@@ -189,10 +178,10 @@ class IDE():
             code_output_frame.grid(row=0, column=0, padx=5, pady=5)
             self.outputFrame.grid(row=3, column=0, padx=5, pady=5)
 
-        if code_output:
-            code_output_label = self.terminalOutput_Gen(code_output, code_output_frame, terminal_width, "white")
-            code_output_label.grid(row=0, column=0, sticky="ns")
+            if code_output:
+                code_output_label = self.terminalOutputLabel(code_output, code_output_frame, terminal_width, "white")
+                code_output_label.grid(row=0, column=0, sticky="ns")
 
-        if error_output:
-            error_label = self.terminalOutput_Gen(error_output, code_output_frame, terminal_width, "red")
-            error_label.grid(row=1, column=0, sticky="ns")
+            if error_output:
+                error_label = self.terminalOutputLabel(error_output, code_output_frame, terminal_width, "red")
+                error_label.grid(row=1, column=0, sticky="ns")
