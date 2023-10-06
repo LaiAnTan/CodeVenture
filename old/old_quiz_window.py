@@ -195,10 +195,6 @@ class QuizWindow():
                 hover_color=hover_color,
                 fg_color=color,
                 width=max_width,
-                ## fucking shit piece of shit python doesnt store what was the parameter of the function in lambda
-                ## https://stackoverflow.com/questions/31186959/how-to-generate-a-list-of-different-lambda-functions-with-list-comprehension
-                ## checks for the value of index AND GEUESS WHAT, INDEX IS DONE TRANSVERSING, ITS GONNA BE 5
-                ## need to set the index as default VALUE instead of REFERENCE
                 command= lambda index=index: self.showOneQuestion(index)
             )
             statusButton.grid(row=index, column=0, padx=5, pady=5)
