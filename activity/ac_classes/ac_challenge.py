@@ -1,9 +1,9 @@
-import ac_activity as ac
+from .ac_activity import Activity
 
-class Hints(ac.Activity):
+class Hints(Activity):
 
     def __init__(self, filename: str) -> None:
-        super().__init__(filename, ac.Activity.AType["Challenge"])
+        super().__init__(filename, Activity.AType["Challenge"])
         self.data_file = "hints"
 
         self.read_mf_read()
@@ -13,9 +13,9 @@ class Hints(ac.Activity):
     def RunActivity(self):
         pass
 
-class Challange(ac.Activity):
+class Challange(Activity):
     def __init__(self, filename: str) -> None:
-        super().__init__(filename, ac.Activity.AType["Challenge"])
+        super().__init__(filename, Activity.AType["Challenge"])
 
         self.read_mf_read()
         self.ParseContent()

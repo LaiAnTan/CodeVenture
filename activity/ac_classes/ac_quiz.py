@@ -1,4 +1,4 @@
-import ac_activity as ac
+from .ac_activity import Activity
 
 class Question():
     def __init__(self, question_block: list[str]):
@@ -46,14 +46,14 @@ class Question():
     def get_Options(self):
         return self.options
 
-class Quiz(ac.Activity):
+class Quiz(Activity):
     answer_sheet = "answer.ans"
 
     def __init__(self, filename: str) -> None:
         self.answers = []
         self.questions: list[Question] = []
 
-        super().__init__(filename, ac.Activity.AType["Quiz"])
+        super().__init__(filename, Activity.AType["Quiz"])
         self.read_mf_read()
         self.__init_Questions()
         self.__getAnswers()

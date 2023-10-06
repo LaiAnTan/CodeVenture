@@ -1,15 +1,12 @@
 import sqlite3 as sql
 import os
-from ac_activity import Activity
-from ac_challenge import Challange
-from ac_module import Module
-from ac_quiz import Quiz
+from ..ac_classes.ac_activity import Activity
 
 class CompletedDB():
-    root = os.path.dirname(__file__)
-    
     def __init__(self, ac_id, ac_type, fields: str) -> None:
         self.db_name = f"completed"
+
+        self.root = os.path.split(os.path.split(os.path.dirname(__file__))[0])[0]
 
         self.modulePath = f"{self.root}/{Activity.activity_storage}/{ac_type.name}/{ac_id}"
 

@@ -9,34 +9,35 @@ import customtkinter as ctk
 
 import subprocess
 
-from ac_imagelabel import ImageLabelGen
+from .imagelabel import ImageLabel
 
-class CodeRunner():
-    def __init__(self, max_img_width, attach_frame, code_name, root_path) -> None:
+class CodeRunner(ctk.CTkFrame):
+    def __init__(self, master, max_img_width, code_name, root_path) -> None:
         self.max_width = max_img_width
-        self.attach_frame = attach_frame
 
         self.code_name = code_name
         self.root_path = root_path
 
         self.code_folder = f"{self.root_path}/{self.code_name}"
 
-        self.CodeRunnerFrame = ctk.CTkFrame(self.attach_frame)
+        if master != None:
+            super().__init__(master)
 
-        self.HeaderFrame = ctk.CTkFrame(self.CodeRunnerFrame)
-        self.HeaderFrame.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+            self.HeaderFrame = ctk.CTkFrame(self)
+            self.HeaderFrame.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
-        self.CodeFrame = ctk.CTkFrame(self.CodeRunnerFrame)
-        self.CodeFrame.grid(row=1, column=0, padx=5, pady=5,)
+            self.CodeFrame = ctk.CTkFrame(self)
+            self.CodeFrame.grid(row=1, column=0, padx=5, pady=5,)
 
-        self.RunButtonFrame = ctk.CTkFrame(self.CodeRunnerFrame)
-        self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
-        self.RunButtonFrame.columnconfigure(0, weight=1)
+            self.RunButtonFrame = ctk.CTkFrame(self)
+            self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+            self.RunButtonFrame.columnconfigure(0, weight=1)
 
-        self.outputFrame = ctk.CTkFrame(self.CodeRunnerFrame)
+            self.outputFrame = ctk.CTkFrame(self)
+
+            self.setUpFrame()
 
     def	DisplayCodeline_FromFile(self):
-        code_content = []
         with open(f"{self.code_folder}/main.py") as file:
             pyg.highlight(
                 file.read(),
@@ -48,11 +49,12 @@ class CodeRunner():
                 outfile=f"{self.code_folder}/temp"
             )
 
-        ret_widget = ImageLabelGen(
+        ret_widget = ImageLabel(
+            self.CodeFrame,
             f"{self.code_folder}/temp",
             self.max_width,
-            self.CodeFrame
-        ).ImageLabelGen(True)
+            True
+        )
 
         ## imagine if this is system24, LETS GO
         os.remove(f"{self.code_folder}/temp")
@@ -77,11 +79,9 @@ class CodeRunner():
         CodeContent = self.DisplayCodeline_FromFile()
         CodeContent.grid(row=0, column=0, padx=5, pady=5)
 
-        return self.CodeRunnerFrame
-
-    def RunTestCases(self, testcases):
+    def RunTestCases(self, testcase_path):
         cmd = f"{sys.executable} \"{self.code_folder}/main.py\""
-        testcase_in = open(testcases)
+        testcase_in = open(testcase_path)
         try:
             code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
         except subprocess.CalledProcessError as errxc:

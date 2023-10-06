@@ -3,7 +3,7 @@ import customtkinter as ctk
 from ui_app import App
 from ac_quiz import Quiz, Question
 from ui_std_window_gen import displayActivitySelections
-from db_ac_completed import ActivityDictionary, QuizCompleted_DB
+from activity.ac_database.db_ac_completed import ActivityDictionary, QuizCompleted_DB
 
 from user.user_student import Student
 
@@ -46,11 +46,19 @@ class QuizWindow():
         self.quiz = quiz
         self.student = student
         self.completion_database: QuizCompleted_DB = ActivityDictionary.getDatabase(self.quiz.id)
+        self.root = main_attach
 
         self.alreadydid = self.completion_database.getStudentEntry(self.student.username)
         self.studentanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.student.username))
 
-        self.root = main_attach
+        self.header_frame = ctk.CTkFrame(self.root.main_frame)
+        self.header_frame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+
+        self.content_frame = ctk.CTkFrame(self.root.main_frame)
+        self.content_frame.grid(row=1, column=0, padx=5, pady=5)
+
+        self.footer_frame = ctk.CTkFrame(self.root.main_frame)
+        self.footer_frame.grid(row=2, column=0, padx=5, pady=5)
 
     def processAnswer(self, extracted_data: str):
         ret = []
@@ -61,45 +69,37 @@ class QuizWindow():
         return ret
 
     def	FillFrames(self):
+        self.FillHeader()
+        self.FillContent()
+        self.FillFooter()
 
-        ## header details -------------------------------------------
-
-        header_frame = ctk.CTkFrame(self.root.main_frame)
-        header_frame.grid(row=0, column=0, padx=5, pady=5, sticky="we",)
-
+    def FillHeader(self):
         quiz_name = ctk.CTkLabel(
-            header_frame,
+            self.header_frame,
             text=f"{self.quiz.id} {self.quiz.title}"
         )
         quiz_name.pack(side=ctk.LEFT, padx=5, pady=5)
 
         back_button = ctk.CTkButton(
-            header_frame,
+            self.header_frame,
             text="Back",
             command=lambda : displayActivitySelections(self.root, self.student),
             width=20
         )
         back_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
-        ## header details end --------------------------------------------
+    def FillContent(self):
+        self.FillMainContent()
+        self.FillSidebar()
 
-        self.content_frame = ctk.CTkFrame(
-            self.root.main_frame,
-        )
-        self.content_frame.grid(row=1, column=0, padx=5, pady=5)
-
-        ## qna frame ----------------------------
-
+    def FillMainContent(self):
         self.InitializeQnAFrame()
 
         question_block_width = self.qna_width - 30
         self.generateAllQuestionFrames(question_block_width)
-        show_all_questions = self.showAllQuestions()
+        self.showAllQuestions()
 
-        ## qna frame end -------------------------------
-
-        ## some optional side bar start -----------------------
-
+    def FillSidebar(self):
         self.content_frame.rowconfigure(0, weight=1)
         self.content_frame.columnconfigure(1, weight=1)
 
@@ -129,22 +129,14 @@ class QuizWindow():
 
         self.checkAnswers(questionStatusFrame, button_sidebar_width)
 
-        ## some optional side bar end ----------------------------
-
-        ## footer ---------------------------------------------
-
-        footer_frame = ctk.CTkFrame(self.root.main_frame)
-        footer_frame.grid(row=2, column=0, padx=5, pady=5)
-
+    def FillFooter(self):
         submit_button = ctk.CTkButton(
-            footer_frame,
+            self.footer_frame,
             text="Resubmit" if self.alreadydid else "Submit",
             width=150,
             command=self.StudentSubmission
         )
         submit_button.grid(row=0, column=0)
-
-        ## footer end ------------------------------------------
 
     ## helper functions
 

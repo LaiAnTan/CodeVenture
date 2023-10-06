@@ -3,10 +3,10 @@ import customtkinter as ctk
 from ui_app import App
 from ac_module import Module
 from ui_std_window_gen import displayActivitySelections
-from db_ac_completed import ActivityDictionary
+from activity.ac_database.db_ac_completed import ActivityDictionary
 
 from ac_code_runner import CodeRunner
-from ac_imagelabel import ImageLabelGen
+from ac_imagelabel import ImageLabel
 
 from user.user_student import Student
 
@@ -20,11 +20,11 @@ class ModuleWindow():
 
     def ImageHandler(self, content, max_img_width, attach_to):
         if self.module.img.get(content):
-            ret_widget = ImageLabelGen(
+            ret_widget = ImageLabel(
+                attach_to,
                 f"{self.module.ModulePath}/{self.module.img[content]}",
                 max_img_width - 50,
-                attach_to
-            ).ImageLabelGen()
+            )
         else:
             ret_widget = ctk.CTkLabel(
                 attach_to,
@@ -40,7 +40,7 @@ class ModuleWindow():
                             attach_to,
                             self.module.code[content],
                             self.module.ModulePath
-                            ).setUpFrame()
+                            )
         else:
             ret_widget = ctk.CTkLabel(
                 attach_to,

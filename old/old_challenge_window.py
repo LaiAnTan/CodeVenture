@@ -7,11 +7,11 @@ from ui_std_window_gen import displayActivitySelections
 
 from ac_ide import IDE
 
-from ac_imagelabel import ImageLabelGen
+from ac_imagelabel import ImageLabel
 
 from ac_code_runner import CodeRunner
 
-from db_ac_completed import ActivityDictionary, ChallangeCompleted_DB
+from activity.ac_database.db_ac_completed import ActivityDictionary, ChallangeCompleted_DB
 
 from user.user_student import Student
 
@@ -36,11 +36,11 @@ class ChallangeWindow():
 
     def ImageHandler(self, source, content, max_img_width, attach_frame):
         if source.img.get(content):
-            ret_widget = ImageLabelGen(
+            ret_widget = ImageLabel(
+                attach_frame,
                 f"{source.ModulePath}/{source.img[content]}",
                 max_img_width - 50,
-                attach_frame
-            ).ImageLabelGen()
+            )
         else:
             ret_widget = ctk.CTkLabel(
                 attach_frame,
@@ -93,7 +93,7 @@ class ChallangeWindow():
                 self.main_showcontent_frame,
                 "solution",
                 self.challenge.ModulePath
-            ).setUpFrame()
+            )
         else:
             solution_widget = ctk.CTkLabel(
                         self.main_showcontent_frame,
