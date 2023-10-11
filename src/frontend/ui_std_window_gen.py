@@ -60,16 +60,16 @@ def datePickerTopLevelPage(a: App):
 
 
 def displayActivitySelections(a: App, student: Student):
-    from .student_windows.ui_std_selection_window import SelectionScreen
+    from .std_windows.ui_std_selection_window import SelectionScreen
     a.clean_frame()
     SelectionScreen(student, a).attach_elements()
     a.main_frame.grid(row=0, column=0)
 
 
 def dispatcher(activityID, activityType, a: App, student: Student):
-    from .student_windows.ui_std_challenge_window import ChallangeWindow
-    from .student_windows.ui_std_quiz_window import QuizWindow
-    from .student_windows.ui_std_module_windows import ModuleWindow
+    from .std_windows.ui_std_challenge_window import ChallangeWindow
+    from .std_windows.ui_std_quiz_window import QuizWindow
+    from .std_windows.ui_std_module_windows import ModuleWindow
 
     from src.backend.activity.ac_classes.ac_activity import Activity
     from src.backend.activity.ac_classes.ac_module import Module

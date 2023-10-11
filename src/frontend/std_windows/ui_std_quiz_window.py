@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from ..student_windows.ui_std_activity_window import ActivityWindow
+from ..std_windows.ui_std_activity_window import ActivityWindow
 from ..ui_app import App
 from ..ui_std_window_gen import displayActivitySelections
 from ...backend.user.user_student import Student
