@@ -4,6 +4,9 @@ A webapp built to teach python programming.
 
 Created for Monash's FIT1056: Collaborative Development for Web Applications' Group Project.
 
+This project was developed following the waterfall model, where all documents
+(i.e. requirements, design, software quality assurance) were created.
+
 ## Features
 - Coding Modules, Quizzes, Challenges
 - Functional IDE
