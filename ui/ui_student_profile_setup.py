@@ -1,6 +1,6 @@
 import customtkinter as ctk
-from ui_app import App
-from ui_std_window_gen import subscribePage, datePickerTopLevelPage
+from .ui_app import App
+from .ui_std_window_gen import subscribePage, datePickerTopLevelPage
 from database.database_student import StudentDB
 from user.user_student import Student
 

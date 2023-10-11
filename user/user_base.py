@@ -1,7 +1,7 @@
 import sqlite3
 from abc import ABC, abstractmethod
 from database.database_user import UserDB
-from settings import Settings
+from settings.settings import Settings
 
 class User(ABC):
 

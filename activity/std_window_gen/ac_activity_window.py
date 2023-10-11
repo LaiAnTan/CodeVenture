@@ -4,10 +4,12 @@ from abc import abstractmethod
 
 from ..ac_classes.ac_activity import Activity
 from user.user_student import Student
-from ui_app import App
+from ui.ui_app import App
 from ..ac_database.db_ac_completed import ActivityDictionary
 
+
 class ActivityWindow(ctk.CTkFrame):
+
     def __init__(self, activity: Activity, student: Student, main_attach: App):
         super().__init__(main_attach.main_frame)
         self.root = main_attach
@@ -35,7 +37,7 @@ class ActivityWindow(ctk.CTkFrame):
         self.SetFooter()
 
     def SetHeader(self):
-        from ui_std_window_gen import displayActivitySelections
+        from ui.ui_std_window_gen import displayActivitySelections
 
         name = ctk.CTkLabel(
             self.header_frame,
@@ -46,7 +48,7 @@ class ActivityWindow(ctk.CTkFrame):
         back_button = ctk.CTkButton(
             self.header_frame,
             text="Back",
-            command=lambda : displayActivitySelections(self.root, self.std),
+            command=lambda: displayActivitySelections(self.root, self.std),
             width=20
         )
         back_button.pack(side=ctk.RIGHT, padx=5, pady=5)

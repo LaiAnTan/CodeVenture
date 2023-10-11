@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from settings import Settings
+from settings.settings import Settings
 
 class App():
 	_instance = None

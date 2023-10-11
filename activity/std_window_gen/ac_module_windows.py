@@ -1,8 +1,8 @@
 import customtkinter as ctk
 
-from ui_app import App
+from ui.ui_app import App
 from ..ac_classes.ac_module import Module
-from ui_std_window_gen import displayActivitySelections
+from ui.ui_std_window_gen import displayActivitySelections
 from ..ac_database.db_ac_completed import ActivityDictionary
 
 from .helper_windows.code_runner import CodeRunner
@@ -11,7 +11,9 @@ from .helper_windows.imagelabel import ImageLabel
 from user.user_student import Student
 from .ac_activity_window import ActivityWindow
 
+
 class ModuleWindow(ActivityWindow):
+
     def	__init__(self, module: Module, student: Student, main_attach: App):
         super().__init__(module, student, main_attach)
 
@@ -70,7 +72,7 @@ class ModuleWindow(ActivityWindow):
         )
         submit_button.grid(row=0, column=0, padx=0, pady=0)
 
-    ## helper functions
+    # helper functions
 
     def ImageHandler(self, content, max_img_width, attach_to):
         if self.ac.img.get(content):

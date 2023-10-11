@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from ui_app import App
+from ui.ui_app import App
 from ..ac_classes.ac_activity import Activity
 import database.database_activity as ab
 from user.user_student import Student
@@ -20,7 +20,7 @@ class SelectionScreen():
         ActivityDictionary()
 
     def return_to_studentMenu(self):
-        from ui_std_window_gen import studentMenuPage
+        from ui.ui_std_window_gen import studentMenuPage
         studentMenuPage(self.root, self.student)
     
     def attach_elements(self):
@@ -130,7 +130,7 @@ class DataChunk():
         )
         content_label.grid(row=0, column=0, padx=5, pady=5)
 
-        from ui_std_window_gen import dispatcher
+        from ui.ui_std_window_gen import dispatcher
 
         student_done = ActivityDictionary.getDatabase(self.activity).getStudentEntry(self.student.username) != None
 

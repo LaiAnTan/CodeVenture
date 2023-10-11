@@ -1,7 +1,7 @@
 import customtkinter as ctk
-from ui_app import App
+from .ui_app import App
 from user.user_student import Student
-from ui_std_window_gen import studentMenuPage
+from .ui_std_window_gen import studentMenuPage
 
 class ProfileWindow:
 

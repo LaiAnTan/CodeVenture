@@ -1,8 +1,8 @@
 import customtkinter as ctk
 import os
 
-from ui_app import App
-from ui_std_window_gen import displayActivitySelections
+from ui.ui_app import App
+from ui.ui_std_window_gen import displayActivitySelections
 
 from ..ac_classes.ac_challenge import Challange
 from .helper_windows.ide import IDE
@@ -14,7 +14,9 @@ from user.user_student import Student
 
 from .ac_activity_window import ActivityWindow
 
+
 class ChallangeWindow(ActivityWindow):
+
     def __init__(self, challenge: Challange, student: Student, a: App):
         super().__init__(challenge, student, a)
         self.attempted_count = 0
@@ -36,11 +38,11 @@ class ChallangeWindow(ActivityWindow):
         content_frame_height = 460
         content_frame_width = 350
 
-        ## left side of the frame
+        # left side of the frame
 
         main_content_frame = ctk.CTkFrame(self.content_frame)
 
-        ## buttons to switch between 3 frames, question, hint 
+        # buttons to switch between 3 frames, question, hint 
 
         main_content_options_frame = ctk.CTkFrame(
             main_content_frame,
@@ -54,7 +56,7 @@ class ChallangeWindow(ActivityWindow):
             width=85,
             height=25,
             text="Question",
-            command=lambda : self.QuestionFrames(content_frame_width)
+            command=lambda: self.QuestionFrames(content_frame_width)
         )
         question_button.grid(row=0, column=0, padx=5, pady=5)
 
@@ -72,7 +74,7 @@ class ChallangeWindow(ActivityWindow):
             width=85,
             height=25,
             text="Solution",
-            command=lambda : self.SolutionFrames(content_frame_width)
+            command=lambda: self.SolutionFrames(content_frame_width)
         )
         solution_button.grid(row=0, column=2, padx=5, pady=5)
 
@@ -81,7 +83,7 @@ class ChallangeWindow(ActivityWindow):
             width=85,
             height=25,
             text="Run Tests",
-            command=lambda : self.RunTestCases_GenFrame(content_frame_width)
+            command=lambda: self.RunTestCases_GenFrame(content_frame_width)
         )
         mark_button.grid(row=0, column=3, padx=5, pady=5)
 
@@ -133,12 +135,12 @@ class ChallangeWindow(ActivityWindow):
             self.footer_frame,
             text="Resubmit" if self.done else "Submit",
             width=150,
-            command= lambda : self.StudentSubmission
+            command=lambda: self.StudentSubmission
         )
 
         submit_button.grid(row=0, column=0, padx=0, pady=0)
 
-        ## footer end ------------------------------------------
+        # footer end ------------------------------------------
 
     def ImageHandler(self, source, content, max_img_width, attach_frame):
         if source.img.get(content):
@@ -180,10 +182,10 @@ class ChallangeWindow(ActivityWindow):
                         frame_width,
                         self.displayed_frame
                     )
-            
+
             paragraph.grid(row=index, column=0, padx=5, pady=5)
 
-    def	SolutionFrames(self, frame_width):
+    def SolutionFrames(self, frame_width):
         for widget in self.displayed_frame.winfo_children():
             widget.destroy()
         self.displayed_frame.forget()

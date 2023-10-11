@@ -1,9 +1,9 @@
 from database.database_user import UserDB
 from database.database_student import StudentDB
 from database.database_activity import ActivityDB
-
 import csv
 # from database_educator import EducatorDB
+
 
 def import_data_from_csv(filename) -> list[tuple]:
     """
@@ -15,27 +15,6 @@ def import_data_from_csv(filename) -> list[tuple]:
         ret = [row for row in csv_reader]
     return ret
 
-def create_new_user(username: str, password: str, user_type: str, details=None) -> bool:
-    if details:
-        pass
-    user_db = UserDB()
-    try:
-        user_db.add_user((username, password, user_type))
-    except user_db.UserExistsException:
-        return False
-    match user_type:
-        case "student":
-            student_db = StudentDB()
-            if details:
-                student_db.add_student(details)
-        case "educator":
-            pass
-            # educator_db = EducatorDB()
-            # if details:
-            #     educator_db.add_educator(details)
-        case _: # should never happen
-            pass
-    return True
 
 def populate_databases():
     """
@@ -57,14 +36,15 @@ def populate_databases():
     # edb = EducatorDB()
     # adb = AdminDB()
 
-    database_list = [db, sdb, adb] # add more as time goes on
-
+    # add more as time goes on
+    database_list = [db, sdb, adb]
 
     users = import_data_from_csv(test_users_filename)
     students = import_data_from_csv(test_students_filename)
     activity = import_data_from_csv(test_activities_filename)
 
-    entries_list = [users, students, activity] # add more as time goes on (corespond to database_list)
+    # add more as time goes on (corespond to database_list)
+    entries_list = [users, students, activity]
 
     # init .db files
     for database in database_list:

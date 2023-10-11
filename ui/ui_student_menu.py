@@ -1,6 +1,6 @@
 import customtkinter as ctk
-from ui_std_window_gen import loginPage, profilePage, settingsPage
-from ui_app import App
+from .ui_std_window_gen import loginPage, profilePage, settingsPage
+from .ui_app import App
 from user.user_student import Student
 
 class StudentMenuWindow:
@@ -200,7 +200,7 @@ class StudentMenuWindow:
             sticky="ew"
         )
 
-        from ui_std_window_gen import displayActivitySelections
+        from .ui_std_window_gen import displayActivitySelections
 
         all_activities = ctk.CTkButton(
             buttons_frame,

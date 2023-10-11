@@ -2,9 +2,9 @@ import customtkinter as ctk
 
 from ..ac_classes.ac_quiz import Quiz, Question
 from .ac_activity_window import ActivityWindow
-from ui_app import App
+from ui.ui_app import App
 from user.user_student import Student
-from ui_std_window_gen import displayActivitySelections
+from ui.ui_std_window_gen import displayActivitySelections
 
 class QuestionFrame(ctk.CTkFrame):
     def __init__(self, question: Question, max_width, previous_selection: ctk.IntVar, master: ctk.CTkFrame) -> None:
@@ -169,7 +169,7 @@ class QuizWindow(ActivityWindow):
         displayActivitySelections(self.root, self.std)
 
 if __name__ == "__main__":
-    from ui_app import App
+    from ui.ui_app import App
     from ..ac_database.db_ac_completed import ActivityDictionary
 
     ActivityDictionary()

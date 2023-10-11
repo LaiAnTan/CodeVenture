@@ -3,8 +3,11 @@ import customtkinter as ctk
 from PIL import Image
 from PIL.ImageOps import invert
 
+
 class ImageLabel(ctk.CTkFrame):
-    def	__init__(self, master, img_path, max_img_width, has_invert: bool=False) -> None:
+
+    def __init__(self, master, img_path, max_img_width,
+                 has_invert: bool = False) -> None:
         super().__init__(master)
 
         self.img_path = img_path
@@ -22,10 +25,10 @@ class ImageLabel(ctk.CTkFrame):
             width = self.max_width
         return width, height
 
-    def SetUpFrame(self, has_invert: bool=False) -> None:
+    def SetUpFrame(self, has_invert: bool = False) -> None:
         ctk.CTkLabel(
             self,
-            image = ctk.CTkImage(
+            image=ctk.CTkImage(
                 light_image=self.img,
                 dark_image=invert(self.img) if self.invert else self.img,
                 size=self.size

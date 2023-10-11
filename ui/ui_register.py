@@ -1,6 +1,6 @@
 import customtkinter as ctk
-from ui_app import App
-from ui_std_window_gen import loginPage
+from .ui_app import App
+from .ui_std_window_gen import loginPage
 from database.database_user import UserDB
 from database.database_student import StudentDB
 

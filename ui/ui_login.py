@@ -1,10 +1,10 @@
 import customtkinter as ctk
 
-from ui_app import App
+from .ui_app import App
 
-from ui_std_window_gen import registerPage, studentMenuPage, subscribePage
+from .ui_std_window_gen import registerPage, studentMenuPage, subscribePage
 
-from ui_std_window_gen import studentMenuPage, registerPage, studentProfileSetupPage
+from .ui_std_window_gen import studentMenuPage, registerPage, studentProfileSetupPage
 from user.user_base import User
 from user.user_student import Student
 

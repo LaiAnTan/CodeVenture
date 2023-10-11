@@ -1,6 +1,6 @@
 
 import customtkinter as ctk
-from ui_app import App
+from .ui_app import App
 from tkcalendar import Calendar
 
 class DatePickerWindow(ctk.CTkToplevel):
