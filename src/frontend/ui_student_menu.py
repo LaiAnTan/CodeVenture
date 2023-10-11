@@ -1,33 +1,31 @@
 import customtkinter as ctk
+
 from .ui_std_window_gen import loginPage, profilePage, settingsPage
 from .ui_app import App
 from ..backend.user.user_student import Student
 
-class StudentMenuWindow:
 
-    def __init__(self, student: Student):
-            self.student = student
+class StudentMenuWindow(ctk.CTkFrame):
 
-    def FillFrames(self, attach: App):
+    header_height = 20
+    full_width = 450
+    half_width = full_width / 2
+    full_content_height = 460 - header_height
+    half_content_height = full_content_height / 2
 
-        attach.main_frame.grid(
-            row=0,
-            column=0
-        )
+    def __init__(self, student: Student, main_attach: App):
+        super().__init__(main_attach.main_frame)
+        self.student = student
+        self.root = main_attach
 
-        header_height = 20
-        full_width = 450
-        half_width = full_width / 2
-        full_content_height = 460 - header_height
-        half_content_height = full_content_height / 2
+    def attach_elements(self):
 
-
-        ## header details -------------------------------------------
+        # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
-            height=header_height,
+            self.root.main_frame,
+            width=self.full_width,
+            height=self.header_height,
             fg_color="transparent"
         )
 
@@ -43,12 +41,12 @@ class StudentMenuWindow:
         )
 
         def logoutButtonEvent():
-            loginPage(attach)
+            loginPage(self.root)
 
         logout_button = ctk.CTkButton(
             header_frame,
             text="Log Out",
-            command=lambda : logoutButtonEvent(),
+            command=lambda: logoutButtonEvent(),
             width=20
         )
 
@@ -59,12 +57,12 @@ class StudentMenuWindow:
         )
 
         def settingsButtonEvent():
-            settingsPage(attach, self.student)
+            settingsPage(self.root, self.student)
 
         settings_button = ctk.CTkButton(
             header_frame,
             text="Settings",
-            command=lambda : settingsButtonEvent(),
+            command=lambda: settingsButtonEvent(),
             width=20
         )
 
@@ -75,12 +73,12 @@ class StudentMenuWindow:
         )
 
         def profileButtonEvent():
-            profilePage(attach, self.student)
+            profilePage(self.root, self.student)
 
         profile_button = ctk.CTkButton(
             header_frame,
             text="Profile",
-            command=lambda : profileButtonEvent(),
+            command=lambda: profileButtonEvent(),
             width=20
         )
 
@@ -98,14 +96,14 @@ class StudentMenuWindow:
             pady=5
         )
 
-        ## header details end --------------------------------------------
+        # header details end --------------------------------------------
 
-        ## main content frame
+        # main content frame
 
         content_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
-            height=full_content_height,
+            self.root.main_frame,
+            width=self.full_width,
+            height=self.full_content_height,
             fg_color="transparent"
         )
 
@@ -115,11 +113,11 @@ class StudentMenuWindow:
             sticky="ew"
         )
 
-        ## search bar
+        # search bar
 
         search_bar_frame = ctk.CTkFrame(
             content_frame,
-            width=full_width,
+            width=self.full_width,
             fg_color="transparent",
             height=30
         )
@@ -130,10 +128,9 @@ class StudentMenuWindow:
             sticky="ew"
         )
 
-
         search_bar = ctk.CTkEntry(
             search_bar_frame,
-            width= int(full_width * 0.75),
+            width=int(self.full_width * 0.75),
             placeholder_text="Looking for something?",
             font=("Helvetica", 14),
             justify=ctk.LEFT
@@ -150,7 +147,7 @@ class StudentMenuWindow:
         search_button = ctk.CTkButton(
             search_bar_frame,
             text="Search",
-            command=lambda : searchButtonEvent(),
+            command=lambda: searchButtonEvent(),
             width=20
         )
 
@@ -160,11 +157,11 @@ class StudentMenuWindow:
             pady=5,
         )
 
-        ## recommended
+        # recommended
 
         recommended_frame = ctk.CTkFrame(
             content_frame,
-            width=full_width,
+            width=self.full_width,
         )
 
         recommended_title = ctk.CTkLabel(
@@ -187,11 +184,11 @@ class StudentMenuWindow:
             sticky="ew"
         )
 
-        ## buttons
+        # buttons
 
         buttons_frame = ctk.CTkFrame(
             content_frame,
-            width=full_width
+            width=self.full_width
         )
 
         buttons_frame.grid(
@@ -206,7 +203,7 @@ class StudentMenuWindow:
             buttons_frame,
             width=40,
             text="All Activities",
-            command=lambda : displayActivitySelections(attach, self.student)
+            command=lambda: displayActivitySelections(self.root, self.student)
         )
 
         all_activities.grid(
@@ -217,5 +214,3 @@ class StudentMenuWindow:
         )
 
         buttons_frame.columnconfigure(0, weight=1)
-
-

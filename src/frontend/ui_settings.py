@@ -5,11 +5,14 @@ from .ui_app import App
 from ..backend.user.user_student import Student
 from ..backend.database.database_user import UserDB
 
-def changePasswordHandler(student: Student, old_password: str, new_password: str, confirm_password: str):
+
+def changePasswordHandler(student: Student, old_password: str,
+                          new_password: str, confirm_password: str):
     """
     Handles password change of a user.
 
-    returns a 2-tuple with the first value being a boolean and the second value being the message to display.
+    returns a 2-tuple with the first value being a boolean and the second value
+    being the message to display.
     """
     db = UserDB()
 
@@ -20,42 +23,38 @@ def changePasswordHandler(student: Student, old_password: str, new_password: str
 
     if old_password == new_password:
         return (False, "Old password same as new password")
-    
+
     if new_password != confirm_password:
         return (False, "Passwords do not match")
-    
+
     if current_pw != old_password:
         return (False, "Wrong password")
-    
+
     db.update_attr("password", student.getUsername(), new_password)
     return (True, "Password Change Successful")
 
 
+class SettingsWindow(ctk.CTkFrame):
 
-class SettingsWindow:
+    header_height = 20
+    full_width = 600
+    half_width = full_width / 2
+    full_content_height = 460 - header_height
+    half_content_height = full_content_height / 2
 
-    def __init__(self, student: Student):
-            self.student = student
+    def __init__(self, student: Student, main_attach: App):
+        super().__init__(main_attach.main_frame)
+        self.student = student
+        self.root = main_attach
 
-    def FillFrames(self, attach: App):
+    def attach_elements(self):
 
-        attach.main_frame.grid(
-            row=0,
-            column=0
-        )
-
-        header_height = 20
-        full_width = 600
-        half_width = full_width / 2
-        full_content_height = 460 - header_height
-        half_content_height = full_content_height / 2
-
-        ## header details -------------------------------------------
+        # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
-            height=header_height
+            self.root.main_frame,
+            width=self.full_width,
+            height=self.header_height
         )
 
         header_frame.grid(
@@ -68,7 +67,7 @@ class SettingsWindow:
 
         settings_title = ctk.CTkLabel(
             header_frame,
-            text=f"Settings"
+            text="Settings"
         )
 
         settings_title.pack(
@@ -78,12 +77,12 @@ class SettingsWindow:
         )
 
         def backButtonEvent():
-            studentMenuPage(attach, self.student)
+            studentMenuPage(self.root, self.student)
 
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : backButtonEvent(),
+            command=lambda: backButtonEvent(),
             width=20
         )
 
@@ -93,14 +92,14 @@ class SettingsWindow:
             pady=5
         )
 
-        ## header details end --------------------------------------------
+        # header details end --------------------------------------------
 
-        ## main content frame
+        # main content frame
 
         content_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
-            height=full_content_height,
+            self.root.main_frame,
+            width=self.full_width,
+            height=self.full_content_height,
             fg_color="transparent"
         )
 
@@ -109,12 +108,12 @@ class SettingsWindow:
             column=0
         )
 
-        ## change appearance mode
+        # change appearance mode
 
         toggle_appearance_mode_frame = ctk.CTkFrame(
             content_frame,
-            width=full_width,
-            height=header_height
+            width=self.full_width,
+            height=self.header_height
         )
 
         toggle_appearance_mode_frame.grid(
@@ -126,11 +125,11 @@ class SettingsWindow:
         )
 
         toggle_appearance_mode_frame.rowconfigure((0), weight=1)
-        toggle_appearance_mode_frame.columnconfigure((0,1), weight=1)
+        toggle_appearance_mode_frame.columnconfigure((0, 1), weight=1)
 
         toggle_appearance_mode_title = ctk.CTkLabel(
             toggle_appearance_mode_frame,
-            text=f"Toggle light mode"
+            text="Toggle light mode"
         )
 
         toggle_appearance_mode_title.grid(
@@ -147,14 +146,14 @@ class SettingsWindow:
             if appearance_toggler_status.get() == 1:
                 ctk.set_appearance_mode("light")
                 ctk.set_default_color_theme("blue")
-                attach.settings.updateSetting("lightmode", "true")
+                self.root.settings.updateSetting("lightmode", "true")
 
             else:
                 ctk.set_appearance_mode("dark")
                 ctk.set_default_color_theme("dark-blue")
-                attach.settings.updateSetting("lightmode", "false")
+                self.root.settings.updateSetting("lightmode", "false")
 
-            attach.main.update_idletasks()
+            self.root.main.update_idletasks()
 
         appearance_toggler = ctk.CTkSwitch(
             toggle_appearance_mode_frame,
@@ -162,10 +161,10 @@ class SettingsWindow:
             offvalue=0,
             text="Light mode on",
             variable=appearance_toggler_status,
-            command=lambda : appearanceTogglerEvent(),
+            command=lambda: appearanceTogglerEvent(),
         )
 
-        if attach.settings.getSettingValue("lightmode").lower() == "true":
+        if self.root.settings.getSettingValue("lightmode").lower() == "true":
             print("lightmode enabled")
             appearance_toggler.select()
 
@@ -177,11 +176,11 @@ class SettingsWindow:
             sticky="w"
         )
 
-        ## change password
+        # change password
 
         change_password_frame = ctk.CTkFrame(
             content_frame,
-            width=full_width,
+            width=self.full_width,
         )
 
         change_password_frame.grid(
@@ -211,7 +210,7 @@ class SettingsWindow:
         old_password = ctk.CTkEntry(
             change_password_frame,
             height=20,
-            placeholder_text="Old password", 
+            placeholder_text="Old password",
             font=("Helvetica", 14),
             justify=ctk.CENTER,
             show="•",
@@ -227,7 +226,7 @@ class SettingsWindow:
         new_password = ctk.CTkEntry(
             change_password_frame,
             height=20,
-            placeholder_text="New password", 
+            placeholder_text="New password",
             font=("Helvetica", 14),
             justify=ctk.CENTER,
             show="•",
@@ -243,7 +242,7 @@ class SettingsWindow:
         confirm_password = ctk.CTkEntry(
             change_password_frame,
             height=20,
-            placeholder_text="Confirm password", 
+            placeholder_text="Confirm password",
             font=("Helvetica", 14),
             justify=ctk.CENTER,
             show="•",
@@ -265,13 +264,15 @@ class SettingsWindow:
         )
 
         def changePasswordButtonEvent():
-            ret = changePasswordHandler(self.student, old_password.get(), new_password.get(), confirm_password.get())
-            if ret[0] == True:
+            ret = changePasswordHandler(self.student, old_password.get(),
+                                        new_password.get(),
+                                        confirm_password.get())
+            if ret[0] is True:
                 password_msg_label.configure(text=ret[1], text_color="#00FF00")
 
-            elif ret[0] == False:
+            elif ret[0] is False:
                 password_msg_label.configure(text=ret[1], text_color="#FF0000")
-            
+
             password_msg_label.grid(
                 row=4,
                 column=0,

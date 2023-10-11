@@ -1,33 +1,31 @@
 import customtkinter as ctk
+
 from .ui_app import App
 from ..backend.user.user_student import Student
 from .ui_std_window_gen import studentMenuPage
 
-class ProfileWindow:
 
-    def __init__(self, student: Student):
+class ProfileWindow(ctk.CTkFrame):
+
+    header_height = 20
+    full_width = 450
+    half_width = full_width / 2
+    full_content_height = 460 - header_height
+    half_content_height = full_content_height / 2
+
+    def __init__(self, student: Student, main_attach: App):
+        super().__init__(main_attach.main_frame)
         self.student = student
+        self.root = main_attach
 
-    def FillFrames(self, attach: App):
-
-        attach.main_frame.grid(
-            row=0,
-            column=0
-        )
-
-        header_height = 20
-        full_width = 450
-        half_width = full_width / 2
-        full_content_height = 460 - header_height
-        half_content_height = full_content_height / 2
-
+    def attach_elements(self):
 
         # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
-            height=header_height
+            self.root.main_frame,
+            width=self.full_width,
+            height=self.header_height
         )
 
         profile_title = ctk.CTkLabel(
@@ -36,12 +34,12 @@ class ProfileWindow:
         )
 
         def backButtonEvent():
-            studentMenuPage(attach, self.student)
+            studentMenuPage(self.root, self.student)
 
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda : backButtonEvent(),
+            command=lambda: backButtonEvent(),
             width=20
         )
 
@@ -65,14 +63,14 @@ class ProfileWindow:
             pady=5
         )
 
-        ## header details end --------------------------------------------
+        # header details end --------------------------------------------
 
-        ## main content frame
+        # main content frame
 
         content_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
-            height=full_content_height
+            self.root.main_frame,
+            width=self.full_width,
+            height=self.full_content_height
         )
 
         content_frame.grid(
@@ -80,12 +78,12 @@ class ProfileWindow:
             column=0
         )
 
-        ## user details
+        # user details
 
         user_details_frame = ctk.CTkFrame(
             content_frame,
-            width=half_width,
-            height=half_content_height
+            width=self.half_width,
+            height=self.half_content_height
         )
 
         user_details_frame.grid(
@@ -98,8 +96,8 @@ class ProfileWindow:
 
         user_details_header_frame = ctk.CTkFrame(
             user_details_frame,
-            width=half_width,
-            height=header_height
+            width=self.half_width,
+            height=self.header_height
         )
 
         user_details_header_frame.pack(
@@ -126,13 +124,13 @@ class ProfileWindow:
             padx=5,
             pady=5,
         )
-        
+
         # user details content
 
         user_details_content_frame = ctk.CTkFrame(
             user_details_frame,
-            width=half_width,
-            height=half_content_height - header_height
+            width=self.half_width,
+            height=self.half_content_height - self.header_height
         )
 
         user_details_content_frame.grid(
@@ -145,15 +143,14 @@ class ProfileWindow:
             user_details_content_frame,
             justify="left",
             wraplength=210,
-            text=
-f"""Name: {self.student.getName()}
+            text=f"""Name: {self.student.getName()}
 Date of birth: {self.student.getDateOfBirth()}
 Email: {self.student.getEmail()}
 Subscription: {self.student.getSubscriptionStatus()}
 Subscription End Date: {self.student.getSubscriptionEndDate()}
 """,
-            width=half_width,
-            height=half_content_height - header_height,
+            width=self.half_width,
+            height=self.half_content_height - self.header_height,
         )
 
         user_details_label.grid(
@@ -161,12 +158,12 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             column=0
         )
 
-        ## graph
+        # graph
 
         graph_frame = ctk.CTkFrame(
             content_frame,
-            width=half_width,
-            height=half_content_height
+            width=self.half_width,
+            height=self.half_content_height
         )
 
         graph_frame.grid(
@@ -175,12 +172,12 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             sticky="nsew"
         )
 
-        ## graph header
+        # graph header
 
         graph_header_frame = ctk.CTkFrame(
             graph_frame,
-            width=half_width,
-            height=header_height
+            width=self.half_width,
+            height=self.header_height
         )
 
         graph_header_frame.grid(
@@ -206,12 +203,12 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             pady=5,
         )
 
-        ## graph content
+        # graph content
 
         graph_content_frame = ctk.CTkFrame(
             graph_frame,
-            width=half_width,
-            height=half_content_height - header_height
+            width=self.half_width,
+            height=self.half_content_height - self.header_height
         )
 
         graph_content_frame.grid(
@@ -220,12 +217,12 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             sticky="nsew"
         )
 
-        ## completion stats frame
+        # completion stats frame
 
         completion_frame = ctk.CTkFrame(
             content_frame,
-            width=half_width,
-            height=half_content_height
+            width=self.half_width,
+            height=self.half_content_height
         )
 
         completion_frame.grid(
@@ -237,8 +234,8 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
 
         completion_header_frame = ctk.CTkFrame(
             completion_frame,
-            width=half_width,
-            height=header_height
+            width=self.half_width,
+            height=self.header_height
         )
 
         completion_header_frame.grid(
@@ -252,7 +249,7 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             justify="left",
             text="Completed Activities"
         )
-        
+
         completion_title.grid(
             row=0,
             column=0,
@@ -269,8 +266,8 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
 
         completion_content_frame = ctk.CTkScrollableFrame(
             completion_frame,
-            width=half_width,
-            height=half_content_height - header_height
+            width=self.half_width,
+            height=self.half_content_height - self.header_height
         )
 
         completion_content_frame.grid(
@@ -278,12 +275,12 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             column=0
         )
 
-        ## achievements
+        # achievements
 
         achievement_frame = ctk.CTkFrame(
             content_frame,
-            width=half_width,
-            height=half_content_height
+            width=self.half_width,
+            height=self.half_content_height
         )
 
         achievement_frame.grid(
@@ -295,8 +292,8 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
 
         achievment_header_frame = ctk.CTkFrame(
             achievement_frame,
-            width=half_width,
-            height=header_height
+            width=self.half_width,
+            height=self.header_height
         )
 
         achievment_header_frame.pack(
@@ -317,7 +314,7 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             justify="left",
             text="Achievements"
         )
-        
+
         achievment_title.grid(
             row=0,
             column=0
@@ -333,17 +330,11 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
 
         achievment_content_frame = ctk.CTkScrollableFrame(
             achievement_frame,
-            width=half_width,
-            height=half_content_height - header_height
+            width=self.half_width,
+            height=self.half_content_height - self.header_height
         )
 
         achievment_content_frame.grid(
             row=1,
             column=0
         )
-
-if __name__ == "__main__":
-    test = App()
-    p = ProfilePage(Student("tlai-an"))
-    p.FillFrames(test)
-    test.mainloop()

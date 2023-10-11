@@ -13,15 +13,16 @@ class DatePickerWindow(ctk.CTkToplevel):
         self.geometry(f"{self.width}x{self.height}")
 
         self.date = None
-    
+        self.title("Date Picker")
+
     def getSelectedDate(self):
         return self.date
-    
-    def FillFrames(self):
+
+    def show_window(self):
 
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
-        
+
         main_frame = ctk.CTkFrame(
             self,
             width=self.width,
@@ -33,9 +34,6 @@ class DatePickerWindow(ctk.CTkToplevel):
             row=0,
             column=0
         )
-
-        full_width = 450
-        half_width = full_width / 2
 
         title = ctk.CTkLabel(
             main_frame,

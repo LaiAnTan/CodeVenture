@@ -6,26 +6,23 @@ from src.backend.user.user_student import Student
 from src.backend.database.database_student import StudentDB
 
 
-class SubscribeWindow:
+class SubscribeWindow(ctk.CTkFrame):
 
-    def __init__(self, student: Student):
+    full_width = 450
+    half_width = full_width / 2
+
+    def __init__(self, student: Student, main_attach: App):
+        super().__init__(main_attach.main_frame)
         self.student = student
+        self.root = main_attach
 
-    def FillFrames(self, attach: App):
-
-        attach.main_frame.grid(
-            row=0,
-            column=0
-        )
-
-        full_width = 450
-        half_width = full_width / 2
+    def attach_elements(self):
 
         # title frame
 
         title_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=40,
             fg_color="transparent"
         )
@@ -36,7 +33,7 @@ class SubscribeWindow:
             sticky="ew"
         )
 
-        title_frame.rowconfigure((0,1), weight=1)
+        title_frame.rowconfigure((0, 1), weight=1)
         title_frame.columnconfigure(0, weight=1)
 
         title_label = ctk.CTkLabel(
@@ -72,8 +69,8 @@ class SubscribeWindow:
         # entry frame
 
         entry_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=100,
             fg_color="transparent"
         )
@@ -89,7 +86,7 @@ class SubscribeWindow:
 
         sub_code = ctk.CTkEntry(
             entry_frame,
-            width=int(full_width * 0.5),
+            width=int(self.full_width * 0.5),
             height=20,
             placeholder_text="Enter Activation Code",
             font=("Helvetica", 14),
@@ -102,14 +99,15 @@ class SubscribeWindow:
             padx=10,
             pady=10
         )
-        
+
         def validateSubButtonEvent():
             code = sub_code.get()
             if code == "99999":
                 sdb = StudentDB()
                 sdb.update_attr("subscription", self.student.getUsername(), 1)
-                sdb.update_attr("subscription_end", self.student.getUsername(), "hehe")
-                loginPage(attach)
+                sdb.update_attr("subscription_end", self.student.getUsername(),
+                                "hehe")
+                loginPage(self.root)
 
         validate_sub_button = ctk.CTkButton(
             entry_frame,
@@ -129,8 +127,8 @@ class SubscribeWindow:
         # buttons frame
 
         button_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=20,
             fg_color="transparent"
         )
@@ -164,7 +162,7 @@ class SubscribeWindow:
         )
 
         def backToLoginButtonEvent():
-            loginPage(attach)
+            loginPage(self.root)
 
         back_to_login_button = ctk.CTkButton(
             button_frame,

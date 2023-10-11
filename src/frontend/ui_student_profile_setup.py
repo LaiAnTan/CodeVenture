@@ -1,18 +1,22 @@
 import os as os
 import shutil as shutil
 import customtkinter as ctk
+from datetime import datetime
 
 from src.frontend.ui_app import App
-from src.frontend.ui_std_window_gen import subscribePage, datePickerTopLevelPage
+from src.frontend.ui_std_window_gen import subscribePage, \
+    datePickerTopLevelPage
 from src.backend.database.database_student import StudentDB
 from src.backend.user.user_student import Student
 
 
-def profileSetupHandler(student: Student, full_name: str, email: str, dob: str, profile_pic_path: bool):
+def profileSetupHandler(student: Student, full_name: str, email: str, dob: str,
+                        profile_pic_path: bool):
     """
     Handles first time profile setup of a new student
 
-    returns a 2-tuple with the first value being a boolean and the second value being the message to display.
+    returns a 2-tuple with the first value being a boolean and the second value
+    being the message to display.
     """
 
     sdb = StudentDB()
@@ -20,54 +24,52 @@ def profileSetupHandler(student: Student, full_name: str, email: str, dob: str, 
 
     if full_name == "" or email == "" or dob == "" or profile_pic_path == "":
         return (False, "One or more fields incomplete")
-    
-    if '@' not in email:
-        return(False, "Invalid email")
-    
-    if datetime.strptime(dob, "%d/%m/%Y").date() > datetime.now().date():
-        return(False, "Invalid date")
 
-    sdb.add_entry((student.getUsername(), full_name, email, 0, "none", dob, "none", "none", "none"))
+    if '@' not in email:
+        return (False, "Invalid email")
+
+    if datetime.strptime(dob, "%d/%m/%Y").date() > datetime.now().date():
+        return (False, "Invalid date")
+
+    sdb.add_entry((student.getUsername(), full_name, email, 0, "none", dob,
+                   "none", "none", "none"))
+
     student = Student(student.getUsername())
 
     return (True, "Profile setup sucessful")
 
 
-class StudentProfileSetupWindow:
+class StudentProfileSetupWindow(ctk.CTkFrame):
 
     profile_pic_dir_path = "pfp"
+    full_width = 450
+    half_width = full_width / 2
 
-    def __init__(self, student: Student):
+    def __init__(self, student: Student, main_attach: App):
+        super().__init__(main_attach.main_frame)
         self.student = student
+        self.root = main_attach
         self.full_name = ""
         self.email = ""
         self.dob = ""
         self.profile_pic_path = ""
 
-    def	FillFrames(self, attach: App):
+    def attach_elements(self):
 
         def deleteProfilePic():
             try:
                 os.remove(self.profile_pic_path)
             except FileNotFoundError:
                 pass
-            attach.main.destroy()
+            self.root.main.destroy()
 
-        attach.main.protocol("WM_DELETE_WINDOW", lambda: deleteProfilePic())
+        self.root.main.protocol("WM_DELETE_WINDOW", lambda: deleteProfilePic())
 
-        attach.main_frame.grid(
-                    row=0,
-                    column=0
-                )
-
-        full_width = 450
-        half_width = full_width / 2
-
-        #title frame
+        # title frame
 
         title_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=40,
             fg_color="transparent"
         )
@@ -78,7 +80,7 @@ class StudentProfileSetupWindow:
             sticky="ew"
         )
 
-        title_frame.rowconfigure((0,1), weight=1)
+        title_frame.rowconfigure((0, 1), weight=1)
         title_frame.columnconfigure(0, weight=1)
 
         title_label = ctk.CTkLabel(
@@ -99,8 +101,8 @@ class StudentProfileSetupWindow:
         # details frame
 
         details_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=100,
             fg_color="transparent"
         )
@@ -131,7 +133,7 @@ class StudentProfileSetupWindow:
         name = ctk.CTkEntry(
             details_frame,
             height=20,
-            placeholder_text="Full Name", 
+            placeholder_text="Full Name",
             font=("Helvetica", 14),
             justify=ctk.CENTER
         )
@@ -146,7 +148,7 @@ class StudentProfileSetupWindow:
         email_label = ctk.CTkLabel(
             details_frame,
             height=20,
-            text="Email:", 
+            text="Email:",
             font=("Helvetica", 14),
         )
 
@@ -186,10 +188,8 @@ class StudentProfileSetupWindow:
             pady=10
         )
 
-        date_picker = None
-
         def dateOfBirthButtonEvent():
-            date = datePickerTopLevelPage(attach)
+            date = datePickerTopLevelPage(self.root)
             self.dob = date
             date_of_birth_button.configure(
                 text=date
@@ -234,8 +234,10 @@ class StudentProfileSetupWindow:
                 print("Invalid file format")
                 profile_pic_button.configure(text="Invalid file format")
                 return
-            profile_pic_button.configure(text=f"{profile_pic_filepath.split('/')[-1]}")
-            self.profile_pic_path = self.profile_pic_dir_path + "/" + self.student.getUsername() + "." + pfp_format
+            profile_pic_button.configure(
+                text=f"{profile_pic_filepath.split('/')[-1]}")
+            self.profile_pic_path = self.profile_pic_dir_path + "/" + \
+                self.student.getUsername() + "." + pfp_format
             os.rename(profile_pic_filepath, self.profile_pic_path)
             shutil.copyfile(self.profile_pic_path, profile_pic_filepath)
 
@@ -266,8 +268,8 @@ class StudentProfileSetupWindow:
         # buttons frame
 
         button_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=20,
             fg_color="transparent"
         )
@@ -283,9 +285,9 @@ class StudentProfileSetupWindow:
             self.email = email.get()
             ret = profileSetupHandler(self.student, self.full_name, self.email,
                                       self.dob, self.profile_pic_path)
-            if ret[0] == True:
-                attach.main.protocol("", "")
-                subscribePage(attach, self.student)
+            if ret[0] is True:
+                self.root.main.protocol("", "")
+                subscribePage(self.root, self.student)
             else:
                 profile_setup_failed_label.configure(text=ret[1],
                                                      text_color="#FF0000")

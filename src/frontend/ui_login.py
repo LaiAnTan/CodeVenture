@@ -26,11 +26,6 @@ class LoginWindow(ctk.CTkFrame):
 
     def attach_elements(self):
 
-        self.root.main_frame.grid(
-            row=0,
-            column=0
-        )
-
         full_width = 450
 
         # title frame

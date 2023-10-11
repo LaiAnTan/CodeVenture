@@ -1,36 +1,40 @@
 import customtkinter as ctk
+
 from .ui_app import App
 from .ui_std_window_gen import loginPage
 from ..backend.database.database_user import UserDB
-from ..backend.database.database_student import StudentDB
 
-def registerHandler(username: str, password: str, confirm_pw: str, user_type: str):
+
+def registerHandler(username: str, password: str, confirm_pw: str,
+                    user_type: str):
     """
     Handles registration of new user.
 
-    returns a 2-tuple with the first value being a boolean and the second value being the message to display.
+    returns a 2-tuple with the first value being a boolean and the second value
+    being the message to display.
     """
     db = UserDB()
 
     if password == "" or confirm_pw == "" or username == "":
         return (False, "One or more fields empty")
-    
+
     if password != confirm_pw:
         return (False, "Passwords do not match")
 
-    if db.fetch_attr("username", username) != None:
+    if db.fetch_attr("username", username) is not None:
         return (False, "Username already taken")
-    
+
     if username == password:
         return (False, "Username cannot be password")
-    
+
     db.add_entry((username, password, user_type))
 
     # match user_type:
 
     #     case "student":
     #         sdb = StudentDB()
-    #         sdb.add_entry((username, "none", "none", 0, "none", "none", "none", "none", "none"))
+    #         sdb.add_entry((username, "none", "none", 0, "none", "none",
+    #                        "none", "none", "none"))
     #     case "educator":
     #         pass
     #     case "admin":
@@ -40,23 +44,22 @@ def registerHandler(username: str, password: str, confirm_pw: str, user_type: st
 
     return (True, "Register Successful")
 
-class RegisterWindow:
 
-    def	FillFrames(self, attach: App):
+class RegisterWindow(ctk.CTkFrame):
 
-        attach.main_frame.grid(
-                    row=0,
-                    column=0
-                )
+    full_width = 450
 
-        full_width = 450
-        half_width = full_width / 2
+    def __init__(self, main_attach: App):
+        super().__init__(main_attach.main_frame)
+        self.root = main_attach
 
-        #title frame
+    def attach_elements(self):
+
+        # title frame
 
         title_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=40,
             fg_color="transparent"
         )
@@ -67,7 +70,7 @@ class RegisterWindow:
             sticky="ew"
         )
 
-        title_frame.rowconfigure((0,1), weight=1)
+        title_frame.rowconfigure((0, 1), weight=1)
         title_frame.columnconfigure(0, weight=1)
 
         title_label = ctk.CTkLabel(
@@ -91,7 +94,7 @@ class RegisterWindow:
             font=("Helvetica", 18, "bold"),
             justify=ctk.CENTER,
         )
-        
+
         register_label.grid(
             row=1,
             column=0,
@@ -103,8 +106,8 @@ class RegisterWindow:
         # entry frame
 
         entry_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=100,
             fg_color="transparent"
         )
@@ -121,7 +124,7 @@ class RegisterWindow:
         new_username = ctk.CTkEntry(
             entry_frame,
             height=20,
-            placeholder_text="New Username", 
+            placeholder_text="New Username",
             font=("Helvetica", 14),
             justify=ctk.CENTER
         )
@@ -190,7 +193,7 @@ class RegisterWindow:
             variable=checkbox1_status,
             onvalue=1,
             offvalue=0,
-            command= lambda: show_password()
+            command=lambda: show_password()
         )
 
         toggle_show_pw.grid(
@@ -237,8 +240,8 @@ class RegisterWindow:
         # buttons frame
 
         button_frame = ctk.CTkFrame(
-            attach.main_frame,
-            width=full_width,
+            self.root.main_frame,
+            width=self.full_width,
             height=20,
             fg_color="transparent"
         )
@@ -250,13 +253,17 @@ class RegisterWindow:
         )
 
         def registerButtonEvent():
-            ret = registerHandler(new_username.get(), new_password.get(), confirm_password.get(), register_user_type.get())
-            if ret[0] == True:
-                register_failed_label.configure(text=ret[1], text_color="#00FF00")
+            ret = registerHandler(new_username.get(), new_password.get(),
+                                  confirm_password.get(),
+                                  register_user_type.get())
+            if ret[0] is True:
+                register_failed_label.configure(text=ret[1],
+                                                text_color="#00FF00")
 
-            elif ret[0] == False:
-                register_failed_label.configure(text=ret[1], text_color="#FF0000")
-            
+            elif ret[0] is False:
+                register_failed_label.configure(text=ret[1],
+                                                text_color="#FF0000")
+
             register_failed_label.grid(
                 row=5,
                 column=0,
@@ -282,20 +289,18 @@ class RegisterWindow:
         )
 
         def loginButtonEvent():
-            loginPage(attach)
+            loginPage(self.root)
 
-        login_button = ctk.CTkButton(
-            button_frame, 
-            text="Back to Login",
-            font=("Helvetica", 14),
-            width=120, height=50,
-            command=lambda: loginButtonEvent()
-        )
-        
+        login_button = ctk.CTkButton(button_frame,
+                                     text="Back to Login",
+                                     font=("Helvetica", 14),
+                                     width=120, height=50,
+                                     command=lambda: loginButtonEvent()
+                                     )
+
         login_button.grid(
             row=0,
             column=1,
             padx=20,
             pady=30
         )
-
