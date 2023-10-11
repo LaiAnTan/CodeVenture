@@ -1,14 +1,19 @@
-from ui_app import App
-from populate_db import populate_databases
-import ui_std_window_gen as wingen
+from src.frontend.ui_app import App
+from src.populate_db import populate_databases
+import src.frontend.ui_std_window_gen as wingen
 
-import customtkinter as ctk
 
-def main():
+def main() -> None:
+    """
+    Main function of the program.
+
+    @return None
+    """
     populate_databases()
     a = App()
     wingen.loginPage(a)
     a.mainloop()
+
 
 if __name__ == "__main__":
     main()
