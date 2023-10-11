@@ -6,6 +6,7 @@ from src.frontend.ui_std_window_gen import loginPage
 from src.backend.user.user_student import Student
 from src.backend.database.database_student import StudentDB
 
+
 class SubscribeWindow:
 
     def __init__(self, student: Student):
