@@ -2,10 +2,10 @@
 import customtkinter as ctk
 from abc import abstractmethod
 
-from src.frontend.ui_app import App
-from src.backend.activity.ac_classes.ac_activity import Activity
-from src.backend.user.user_student import Student
-from src.backend.activity.ac_database.db_ac_completed import ActivityDictionary
+from ..ui_app import App
+from ...backend.activity.ac_classes.ac_activity import Activity
+from ...backend.user.user_student import Student
+from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
 
 class ActivityWindow(ctk.CTkFrame):
@@ -17,7 +17,8 @@ class ActivityWindow(ctk.CTkFrame):
         self.ac = activity
         self.std = student
         self.completion_database = ActivityDictionary.getDatabase(self.ac.id)
-        self.done = self.completion_backend.database.StudentEntryExist(self.std.username)
+        
+        self.done = self.completion_database.StudentEntryExist(self.std.name)
 
         self.header_frame = ctk.CTkFrame(self)
         self.header_frame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
@@ -37,7 +38,7 @@ class ActivityWindow(ctk.CTkFrame):
         self.SetFooter()
 
     def SetHeader(self):
-        from .ui_std_window_gen import displayActivitySelections
+        from ..ui_std_window_gen import displayActivitySelections
 
         name = ctk.CTkLabel(
             self.header_frame,

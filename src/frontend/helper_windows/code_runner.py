@@ -12,13 +12,13 @@ import subprocess
 from .imagelabel import ImageLabel
 
 class CodeRunner(ctk.CTkFrame):
-    def __init__(self, master, max_img_width, code_name, root_path) -> None:
+    def __init__(self, master, max_img_width, code_name, activity_folder) -> None:
         self.max_width = max_img_width
 
         self.code_name = code_name
-        self.root_path = root_path
+        self.activity_folder = activity_folder
 
-        self.code_folder = f"{self.root_path}/{self.code_name}"
+        self.code_folder = f"{self.activity_folder}/{self.code_name}"
 
         if master != None:
             super().__init__(master)

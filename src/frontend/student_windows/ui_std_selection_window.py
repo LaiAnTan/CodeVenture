@@ -2,10 +2,10 @@ import customtkinter as ctk
 
 import src.backend.database.database_activity as ab
 
-from src.frontend.ui_app import App
-from src.backend.activity.ac_classes.ac_activity import Activity
-from src.backend.user.user_student import Student
-from src.backend.activity.ac_database.db_ac_completed import ActivityDictionary
+from ..ui_app import App
+from ...backend.activity.ac_classes.ac_activity import Activity
+from ...backend.user.user_student import Student
+from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
@@ -22,7 +22,7 @@ class SelectionScreen():
         ActivityDictionary()
 
     def return_to_studentMenu(self):
-        from .ui_std_window_gen import studentMenuPage
+        from ..ui_std_window_gen import studentMenuPage
         studentMenuPage(self.root, self.student)
 
     def attach_elements(self):
@@ -132,7 +132,7 @@ class DataChunk():
         )
         content_label.grid(row=0, column=0, padx=5, pady=5)
 
-        from .ui_std_window_gen import dispatcher
+        from ..ui_std_window_gen import dispatcher
 
         student_done = ActivityDictionary.getDatabase(self.activity).getStudentEntry(self.student.username) is not None
 

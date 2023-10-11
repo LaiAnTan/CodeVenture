@@ -2,15 +2,16 @@
 import customtkinter as ctk
 import os
 
-from src.frontend.ui_app import App
-from src.frontend.ui_std_window_gen import displayActivitySelections
-from src.frontend.helper_windows.ide import IDE
-from src.frontend.helper_windows.imagelabel import ImageLabel
-from src.frontend.helper_windows.code_runner import CodeRunner
-from src.frontend.ac_activity_window import ActivityWindow
-from src.backend.activity.ac_classes.ac_challenge import Challange
-from src.backend.activity.ac_database.db_ac_completed import ActivityDictionary
-from src.backend.user.user_student import Student
+from ..ui_app import App
+from ..ui_app import App
+from ..ui_std_window_gen import displayActivitySelections
+from ..helper_windows.ide import IDE
+from ..helper_windows.imagelabel import ImageLabel
+from ..helper_windows.code_runner import CodeRunner
+from .ui_std_activity_window import ActivityWindow
+from ...backend.activity.ac_classes.ac_challenge import Challange
+from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
+from ...backend.user.user_student import Student
 
 
 class ChallangeWindow(ActivityWindow):
@@ -21,7 +22,7 @@ class ChallangeWindow(ActivityWindow):
         self.suceeded = False
         self.percentage = 0
 
-        self.codeentry = self.completion_backend.database.getStudentCode(self.std.username)
+        self.codeentry = self.completion_database.getStudentCode(self.std.username)
 
         self.displayed_frame = None
         self.shittyIDE = None
@@ -309,7 +310,7 @@ class ChallangeWindow(ActivityWindow):
         displayActivitySelections(self.root, self.std)
 
 if __name__ == "__main__":
-    from .ui_app import App
+    from ..ui_app import App
 
     ActivityDictionary()
     main = App()

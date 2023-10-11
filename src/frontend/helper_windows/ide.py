@@ -6,12 +6,12 @@ import customtkinter as ctk
 import subprocess
 
 class IDE(ctk.CTkFrame):
-    def __init__(self, master, max_img_width, code_name, id, root_path, content=None) -> None:
+    def __init__(self, master, max_img_width, code_name, id, activity_folder, content=None) -> None:
         super().__init__(master)
 
         self.max_width = max_img_width
         self.code_name = f"{code_name}-{id}"
-        self.root_path = root_path
+        self.activity_folder = activity_folder
 
         self.max_output_size = 68750
         self.ide_maxwidth = 310
@@ -108,12 +108,12 @@ class IDE(ctk.CTkFrame):
     def RunTestCases(self, testcases):
         ## open file and dump all data inside
         text = self.IDETextBox.get("0.0", "end")
-        testcase_in = open(f"{self.root_path}/{testcases}")
+        testcase_in = open(f"{self.activity_folder}/{testcases}")
 
-        with open(f"{self.root_path}/{self.code_name}", "w") as file:
+        with open(f"{self.activity_folder}/{self.code_name}", "w") as file:
             file.write(text)
 
-        cmd = f"{sys.executable} \"{self.root_path}/{self.code_name}\""
+        cmd = f"{sys.executable} \"{self.activity_folder}/{self.code_name}\""
 
         try:
             code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
@@ -123,7 +123,7 @@ class IDE(ctk.CTkFrame):
             code_output = "Timeout After Running For 10 seconds"
 
         ## remove the file
-        os.remove(f"{self.root_path}/{self.code_name}")
+        os.remove(f"{self.activity_folder}/{self.code_name}")
 
         ## Returns the output
         ## if error, return the raw error output
@@ -155,10 +155,10 @@ class IDE(ctk.CTkFrame):
 
         ## open file and dump all data inside
         text = self.IDETextBox.get("0.0", "end")
-        with open(f"{self.root_path}/{self.code_name}", "w") as file:
+        with open(f"{self.activity_folder}/{self.code_name}", "w") as file:
             file.write(text)
 
-        cmd = f"{sys.executable} \"{self.root_path}/{self.code_name}\""
+        cmd = f"{sys.executable} \"{self.activity_folder}/{self.code_name}\""
 
         user_input = self.InputTextBox.get("0.0", "end")
         user_input = bytes(user_input, "utf-8")
@@ -171,7 +171,7 @@ class IDE(ctk.CTkFrame):
             error_output = bytes("Timeout After Running For 10 seconds", "utf-8")
 
         ## remove the file
-        os.remove(f"{self.root_path}/{self.code_name}")
+        os.remove(f"{self.activity_folder}/{self.code_name}")
 
         if code_output or error_output:
             code_output_frame = ctk.CTkFrame(self.outputFrame)
