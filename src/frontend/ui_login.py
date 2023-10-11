@@ -2,39 +2,41 @@ import customtkinter as ctk
 
 from .ui_app import App
 
-from .ui_std_window_gen import registerPage, studentMenuPage, subscribePage
+from .ui_std_window_gen import registerPage, studentMenuPage, subscribePage, \
+    studentProfileSetupPage
 
-from .ui_std_window_gen import studentMenuPage, registerPage, studentProfileSetupPage
 from ..backend.user.user_base import User
 from ..backend.user.user_student import Student
 
-class LoginWindow():
 
-    def __init__(self):
+class LoginWindow(ctk.CTkFrame):
+
+    def __init__(self, main_attach: App):
+        super().__init__(main_attach.main_frame)
         self.username = None
         self.password = None
         self.user = User(None)
+        self.root = main_attach
 
     def getUsername(self):
         return self.username
-    
+
     def getPassword(self):
         return self.password
-    
-    def	FillFrames(self, attach: App):
 
-        attach.main_frame.grid(
+    def attach_elements(self):
+
+        self.root.main_frame.grid(
             row=0,
             column=0
         )
 
         full_width = 450
-        half_width = full_width / 2
 
         # title frame
 
         title_frame = ctk.CTkFrame(
-            attach.main_frame,
+            self.root.main_frame,
             width=full_width,
             height=40,
             fg_color="transparent"
@@ -46,7 +48,7 @@ class LoginWindow():
             sticky="ew"
         )
 
-        title_frame.rowconfigure((0,1), weight=1)
+        title_frame.rowconfigure((0, 1), weight=1)
         title_frame.columnconfigure(0, weight=1)
 
         title_label = ctk.CTkLabel(
@@ -70,7 +72,7 @@ class LoginWindow():
             font=("Helvetica", 18, "bold"),
             justify=ctk.CENTER,
         )
-        
+
         login_label.grid(
             row=1,
             column=0,
@@ -78,11 +80,11 @@ class LoginWindow():
             pady=20,
             sticky=""
         )
-        
+
         # entry frame
 
         entry_frame = ctk.CTkFrame(
-            attach.main_frame,
+            self.root.main_frame,
             width=full_width,
             height=100,
             fg_color="transparent"
@@ -100,7 +102,7 @@ class LoginWindow():
         username1 = ctk.CTkEntry(
             entry_frame,
             height=20,
-            placeholder_text="Username", 
+            placeholder_text="Username",
             font=("Helvetica", 14),
             justify=ctk.CENTER
         )
@@ -146,7 +148,7 @@ class LoginWindow():
             variable=checkbox1_status,
             onvalue=1,
             offvalue=0,
-            command= lambda: eventShowPassword()
+            command=lambda: eventShowPassword()
         )
 
         checkbox1.grid(
@@ -167,7 +169,7 @@ class LoginWindow():
         # buttons frame
 
         button_frame = ctk.CTkFrame(
-            attach.main_frame,
+            self.root.main_frame,
             width=full_width,
             height=20,
             fg_color="transparent"
@@ -195,13 +197,13 @@ class LoginWindow():
 
                         s = Student(self.user.getUsername())
 
-                        if s.getProfileSetupStatus() == True:
+                        if s.getProfileSetupStatus() is True:
                             print("hehe")
-                            studentProfileSetupPage(attach, s)
-                        elif s.isSubscribed() == False:
-                            subscribePage(attach, s)
+                            studentProfileSetupPage(self.root, s)
+                        elif s.isSubscribed() is False:
+                            subscribePage(self.root, s)
                         else:
-                            studentMenuPage(attach, s)
+                            studentMenuPage(self.root, s)
 
                     case "educator":
                         return
@@ -236,7 +238,7 @@ class LoginWindow():
         )
 
         def registerButtonEvent():
-            registerPage(attach)
+            registerPage(self.root)
 
         register_button = ctk.CTkButton(
             button_frame,
@@ -252,10 +254,3 @@ class LoginWindow():
             padx=20,
             pady=20
         )
-
-
-if __name__ == "__main__":
-    test = App()
-    l = LoginWindow()
-    l.FillFrames(test)
-    test.mainloop()

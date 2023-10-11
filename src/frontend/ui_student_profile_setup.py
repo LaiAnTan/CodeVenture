@@ -1,11 +1,12 @@
-import customtkinter as ctk
-from .ui_app import App
-from .ui_std_window_gen import subscribePage, datePickerTopLevelPage
-from ..backend.database.database_student import StudentDB
-from ..backend.user.user_student import Student
-
-import shutil as shutil
 import os as os
+import shutil as shutil
+import customtkinter as ctk
+
+from src.frontend.ui_app import App
+from src.frontend.ui_std_window_gen import subscribePage, datePickerTopLevelPage
+from src.backend.database.database_student import StudentDB
+from src.backend.user.user_student import Student
+
 
 def profileSetupHandler(student: Student, full_name: str, email: str, dob: str, profile_pic_path: bool):
     """
@@ -30,6 +31,7 @@ def profileSetupHandler(student: Student, full_name: str, email: str, dob: str, 
     student = Student(student.getUsername())
 
     return (True, "Profile setup sucessful")
+
 
 class StudentProfileSetupWindow:
 
@@ -233,12 +235,10 @@ class StudentProfileSetupWindow:
                 profile_pic_button.configure(text="Invalid file format")
                 return
             profile_pic_button.configure(text=f"{profile_pic_filepath.split('/')[-1]}")
-            profile_pic_dirpath = "/".join(profile_pic_filepath.split("/")[:-1])
             self.profile_pic_path = self.profile_pic_dir_path + "/" + self.student.getUsername() + "." + pfp_format
             os.rename(profile_pic_filepath, self.profile_pic_path)
             shutil.copyfile(self.profile_pic_path, profile_pic_filepath)
 
-        
         profile_pic_button = ctk.CTkButton(
             details_frame,
             text="Select Profile Picture",
@@ -281,12 +281,14 @@ class StudentProfileSetupWindow:
         def doneButtonEvent():
             self.full_name = name.get()
             self.email = email.get()
-            ret = profileSetupHandler(self.student, self.full_name, self.email, self.dob, self.profile_pic_path)
+            ret = profileSetupHandler(self.student, self.full_name, self.email,
+                                      self.dob, self.profile_pic_path)
             if ret[0] == True:
                 attach.main.protocol("", "")
                 subscribePage(attach, self.student)
             else:
-                profile_setup_failed_label.configure(text=ret[1], text_color="#FF0000")
+                profile_setup_failed_label.configure(text=ret[1],
+                                                     text_color="#FF0000")
                 profile_setup_failed_label.grid(
                     row=4,
                     column=0,
@@ -294,7 +296,6 @@ class StudentProfileSetupWindow:
                     padx=5,
                     pady=5
                 )
-        
 
         done_button = ctk.CTkButton(
             button_frame,

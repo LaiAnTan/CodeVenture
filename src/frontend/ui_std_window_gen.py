@@ -5,8 +5,7 @@ from src.backend.user.user_student import Student
 def loginPage(a: App):
     from .ui_login import LoginWindow
     a.clean_frame()
-    login_win = LoginWindow()
-    login_win.FillFrames(a)
+    LoginWindow(a).attach_elements()
 
 
 def registerPage(a: App):
