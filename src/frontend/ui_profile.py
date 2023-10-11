@@ -22,7 +22,7 @@ class ProfileWindow:
         half_content_height = full_content_height / 2
 
 
-        ## header details -------------------------------------------
+        # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
             attach.main_frame,
