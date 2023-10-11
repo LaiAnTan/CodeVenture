@@ -1,7 +1,6 @@
-from ui.ui_app import App
-from populate_db import populate_databases
-import ui.ui_std_window_gen as wingen
-import customtkinter as ctk
+from src.frontend.ui_app import App
+from src.populate_db import populate_databases
+import src.frontend.ui_std_window_gen as wingen
 
 
 def main() -> None:
@@ -14,6 +13,7 @@ def main() -> None:
     a = App()
     wingen.loginPage(a)
     a.mainloop()
+
 
 if __name__ == "__main__":
     main()
