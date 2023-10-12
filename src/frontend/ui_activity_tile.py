@@ -6,7 +6,6 @@ from src.backend.user.user_student import Student
 from src.backend.database.database_activity import ActivityDB
 
 
-
 class ActivityTile(ctk.CTkFrame):
 
     """
@@ -16,17 +15,20 @@ class ActivityTile(ctk.CTkFrame):
     an activity.
     """
 
-    font = ("Helvetica", 10)
+    font = ("Helvetica", 12)
 
     def __init__(self, id: str, width: int, height: int, student: Student,
                  master: ctk.CTkFrame, main_attach: App):
-        super().__init__(master)
+        super().__init__(master,
+                         width=width,
+                         height=height,
+                         )
         self.root = main_attach
         self.master_frame = master  # master frame is not root.main_frame
         self.id = id
+        self.student = student
         self.width = width
         self.height = height
-        self.student = student
 
         # fetch data
         adb = ActivityDB()
@@ -38,49 +40,48 @@ class ActivityTile(ctk.CTkFrame):
 
     def attach_elements(self):
 
-        tile_frame = ctk.CTkFrame(self.master_frame,
-                                  width=self.width,
-                                  height=self.height,
-                                  )
+        # master frame is self, because class inherits tkinter Frame
 
-        tile_frame.grid(row=0,
-                        column=0
-                        )
-
-        name_label = ctk.CTkLabel(tile_frame,
+        name_label = ctk.CTkLabel(self,
                                   text=self.name,
                                   font=self.font,
-                                  justify=ctk.LEFT,
+                                  justify="center",
+                                  width=self.width,
                                   wraplength=self.width
                                   )
 
         name_label.grid(row=0,
                         column=0,
                         padx=5,
+                        pady=5,
                         )
 
-        difficulty_label = ctk.CTkLabel(tile_frame,
+        difficulty_label = ctk.CTkLabel(self,
                                         text=f"Difficulty: {self.difficulty}",
                                         font=self.font,
-                                        justify=ctk.LEFT,
+                                        justify="left",
+                                        anchor="w",
+                                        width=self.width,
                                         wraplength=self.width
                                         )
 
         difficulty_label.grid(row=1,
                               column=0,
-                              padx=5,
+                              padx=3,
                               )
 
-        tags_label = ctk.CTkLabel(tile_frame,
+        tags_label = ctk.CTkLabel(self,
                                   text=f"Tags: {self.tags}",
                                   font=self.font,
-                                  justify=ctk.LEFT,
+                                  justify="left",
+                                  anchor="w",
+                                  width=self.width,
                                   wraplength=self.width
                                   )
 
         tags_label.grid(row=2,
                         column=0,
-                        padx=5,
+                        padx=3,
                         )
 
         # quick access button
@@ -88,7 +89,7 @@ class ActivityTile(ctk.CTkFrame):
         def quickButtonEvent():
             dispatcher(self.id, self.type, self.root, self.student)
 
-        quick_button = ctk.CTkButton(tile_frame,
+        quick_button = ctk.CTkButton(self,
                                      text="Go",
                                      font=self.font,
                                      width=int(self.width / 2),
@@ -97,5 +98,6 @@ class ActivityTile(ctk.CTkFrame):
 
         quick_button.grid(row=3,
                           column=0,
-                          padx=5
+                          padx=5,
+                          pady=5,
                           )

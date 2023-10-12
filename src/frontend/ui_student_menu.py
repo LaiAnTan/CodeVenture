@@ -166,15 +166,15 @@ class StudentMenuWindow(ctk.CTkFrame):
         )
 
         recommended_title = ctk.CTkLabel(
-            recommended_frame,
+            content_frame,
             text="Recommended modules:",
             font=("Helvetica", 14),
         )
 
         recommended_title.grid(
-            row=0,
+            row=1,
             column=0,
-            sticky="e",
+            sticky="w",
             padx=10,
             pady=10,
         )
@@ -185,23 +185,56 @@ class StudentMenuWindow(ctk.CTkFrame):
             sticky="ew"
         )
 
-        ac_tile_width = 70
-        ac_tile_height = 100
+        ac_tile_width = 120
+        ac_tile_height = 220
 
-        activity_tile_1 = ActivityTile("MD0000",
-                                       ac_tile_width,
-                                       ac_tile_height,
-                                       self.student,
-                                       recommended_frame,
-                                       self.root
-                                       )
+        recommended_1 = ActivityTile("MD0000",
+                                     ac_tile_width,
+                                     ac_tile_height,
+                                     self.student,
+                                     recommended_frame,
+                                     self.root
+                                     )
 
-        activity_tile_1.attach_elements()
+        recommended_1.attach_elements()
 
-        activity_tile_1.grid(row=2,
-                             column=0,
-                             padx=10,
-                             pady=10)
+        recommended_1.grid(row=1,
+                           column=0,
+                           padx=10,
+                           pady=10)
+
+        recommended_2 = ActivityTile("QZ0000",
+                                     ac_tile_width,
+                                     ac_tile_height,
+                                     self.student,
+                                     recommended_frame,
+                                     self.root
+                                     )
+
+        recommended_2.attach_elements()
+
+        recommended_2.grid(row=1,
+                           column=1,
+                           padx=10,
+                           pady=10)
+
+        recommended_3 = ActivityTile("CH0000",
+                                     ac_tile_width,
+                                     ac_tile_height,
+                                     self.student,
+                                     recommended_frame,
+                                     self.root
+                                     )
+
+        recommended_3.attach_elements()
+
+        recommended_3.grid(row=1,
+                           column=2,
+                           padx=10,
+                           pady=10)
+
+        recommended_frame.rowconfigure((0, 1), weight=1)
+        recommended_frame.columnconfigure((0, 1, 2), weight=1)
 
         # buttons
 
