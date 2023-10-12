@@ -164,7 +164,7 @@ class QuizWindow(ActivityWindow):
     def StudentSubmission(self):
         print("Uploading Student's Answer to backend.database...")
         student_answer = ",".join([str(x.get()) for x in self.stdanswer])
-        self.completion_backend.database.updateStudentAnswer(self.std.username, student_answer)
+        self.completion_database.updateStudentAnswer(self.std.username, student_answer)
         print("Final Student Answer", student_answer)
         displayActivitySelections(self.root, self.std)
 

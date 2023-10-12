@@ -108,7 +108,7 @@ class ModuleWindow(ActivityWindow):
 
     def StudentCompletion(self):
         print("Adding Student Entry into backend.database...")
-        self.completion_backend.database.addStudentEntry((self.std.username,))
+        self.completion_database.addStudentEntry((self.std.username,))
         displayActivitySelections(self.root, self.std)
 
 if __name__ == "__main__":

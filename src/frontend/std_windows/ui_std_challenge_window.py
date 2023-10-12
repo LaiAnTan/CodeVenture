@@ -134,7 +134,7 @@ class ChallangeWindow(ActivityWindow):
             self.footer_frame,
             text="Resubmit" if self.done else "Submit",
             width=150,
-            command=lambda: self.StudentSubmission
+            command=lambda: self.StudentSubmission()
         )
 
         submit_button.grid(row=0, column=0, padx=0, pady=0)
@@ -306,7 +306,7 @@ class ChallangeWindow(ActivityWindow):
     def StudentSubmission(self):
         print("Submitting code attempt")
         codecontent = self.shittyIDE.getContents()
-        self.completion_backend.database.updateStudentCode(self.std.username, self.percentage, codecontent)
+        self.completion_database.updateStudentCode(self.std.username, self.percentage, codecontent);
         displayActivitySelections(self.root, self.std)
 
 if __name__ == "__main__":
