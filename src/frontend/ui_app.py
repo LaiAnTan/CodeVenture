@@ -52,6 +52,7 @@ class App():
     def mainloop(cls):
         cls.main.mainloop()
 
+
 if __name__ == "__main__":
     test = App()
     test.mainloop()
