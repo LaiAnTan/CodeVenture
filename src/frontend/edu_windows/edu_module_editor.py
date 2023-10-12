@@ -2,8 +2,7 @@ import customtkinter as ctk
 from ui_app import App
 from .edu_activity_editor import ActivityEditor
 
-from ..ac_classes.ac_module import Activity
-from ..ac_classes.ac_module import Module
+from ...backend.activity.ac_classes.ac_module import Activity, Module
 
 class ModuleEditor(ActivityEditor):
     def __init__(self, master: App, width, height, existing_module: Module=None):
