@@ -50,6 +50,6 @@ class Module(Activity):
         return "\n".join(data)
 
 if __name__ == "__main__":
-    FuckMe = Module("MD0000")
-    print(FuckMe)
-    # FuckMe.RunActivity()
+    testModule = Module("MD0000")
+    print(testModule)
+    # testModule.RunActivity()
