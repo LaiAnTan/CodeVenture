@@ -5,9 +5,9 @@ import os
 from ..ui_app import App
 from ..ui_app import App
 from ..ui_std_window_gen import displayActivitySelections
-from ..helper_windows.ide import IDE
-from ..helper_windows.imagelabel import ImageLabel
-from ..helper_windows.code_runner import CodeRunner
+from .helper_class.ide import IDE
+from .helper_class.imagelabel import ImageLabel
+from .helper_class.code_runner import CodeRunner
 from .ui_std_activity_window import ActivityWindow
 from ...backend.activity.ac_classes.ac_challenge import Challange
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary

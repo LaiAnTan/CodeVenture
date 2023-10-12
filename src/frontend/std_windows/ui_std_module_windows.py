@@ -3,8 +3,8 @@ import customtkinter as ctk
 
 from ..ui_app import App
 from ..ui_std_window_gen import displayActivitySelections
-from ..helper_windows.code_runner import CodeRunner
-from ..helper_windows.imagelabel import ImageLabel
+from .helper_class.code_runner import CodeRunner
+from .helper_class.imagelabel import ImageLabel
 from ..std_windows.ui_std_activity_window import ActivityWindow
 from ...backend.user.user_student import Student
 from ...backend.activity.ac_classes.ac_module import Module

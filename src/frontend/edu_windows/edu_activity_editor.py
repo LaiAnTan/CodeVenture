@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from ui_app import App
-from ..ac_classes.ac_activity import Activity
+from ...backend.activity.ac_classes.ac_activity import Activity
 from abc import abstractmethod, ABC
 
 class ActivityEditor(ctk.CTkFrame, ABC):
