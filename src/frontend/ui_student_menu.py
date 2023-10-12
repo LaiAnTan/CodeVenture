@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 from .ui_std_window_gen import loginPage, profilePage, settingsPage
+from src.frontend.ui_activity_tile import ActivityTile
 from .ui_app import App
 from ..backend.user.user_student import Student
 
@@ -183,6 +184,24 @@ class StudentMenuWindow(ctk.CTkFrame):
             column=0,
             sticky="ew"
         )
+
+        ac_tile_width = 70
+        ac_tile_height = 100
+
+        activity_tile_1 = ActivityTile("MD0000",
+                                       ac_tile_width,
+                                       ac_tile_height,
+                                       self.student,
+                                       recommended_frame,
+                                       self.root
+                                       )
+
+        activity_tile_1.attach_elements()
+
+        activity_tile_1.grid(row=2,
+                             column=0,
+                             padx=10,
+                             pady=10)
 
         # buttons
 

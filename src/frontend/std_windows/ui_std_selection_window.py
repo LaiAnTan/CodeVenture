@@ -5,6 +5,7 @@ import src.backend.database.database_activity as ab
 from ..ui_app import App
 from ...backend.activity.ac_classes.ac_activity import Activity
 from ...backend.user.user_student import Student
+
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
 # u gotta be kidding me
@@ -17,9 +18,6 @@ class SelectionScreen():
         self.student = student
         self.activity_database = ab.ActivityDB()
         self.root = attach
-
-        # initializes Activity Database Dictionary (ADD)
-        ActivityDictionary()
 
     def return_to_studentMenu(self):
         from ..ui_std_window_gen import studentMenuPage

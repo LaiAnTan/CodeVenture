@@ -1,6 +1,7 @@
 from .backend.database.database_user import UserDB
 from .backend.database.database_student import StudentDB
 from .backend.database.database_activity import ActivityDB
+from .backend.activity.ac_database.db_ac_completed import ActivityDictionary
 import csv
 # from database_educator import EducatorDB
 
@@ -57,5 +58,7 @@ def populate_databases():
                 database.add_entry(entry)
             except database.DuplicateEntryException:
                 continue
+
+    ActivityDictionary()
 
     print("Populated databases")
