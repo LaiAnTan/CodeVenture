@@ -8,6 +8,8 @@ from ...backend.user.user_student import Student
 
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
+from ...backend.activity.ac_functions import search_database
+
 from config import LIGHTMODE_GRAY, DARKMODE_GRAY
 
 # u gotta be kidding me
@@ -24,9 +26,6 @@ class SelectionScreen():
     def return_to_studentMenu(self):
         from ..ui_std_window_gen import studentMenuPage
         studentMenuPage(self.root, self.student)
-
-    def search_button_event(self):
-        pass
 
     def attach_elements(self):
 
@@ -67,7 +66,9 @@ class SelectionScreen():
         search_button = ctk.CTkButton(
             search_bar_frame,
             text="Search",
-            command=self.search_button_event,
+            command=lambda: self.search_button_event(search_bar.get(),
+                                                     content_width,
+                                                     main_contents_bar),
             width=50,
         )
 
@@ -137,6 +138,22 @@ class SelectionScreen():
             ret = DataChunk(module, max_width - 40, self.root,
                             self.student).generateChunk(attach_to)
             ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
+
+    def search_button_event(self, query, max_width, 
+                            attach_to: ctk.CTkScrollableFrame) -> None:
+
+        for widgets in attach_to.winfo_children():
+            widgets.destroy()
+
+        results = search_database(query)
+
+        ids = [res[0] for res in results]
+
+        for index, module in enumerate(ids):
+            ret = DataChunk(module, max_width - 40, self.root,
+                            self.student).generateChunk(attach_to)
+            ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
+
 
     def __beep_boop(self) -> None:
         print("Button Pressed!")

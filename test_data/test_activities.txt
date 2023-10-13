@@ -1,4 +1,4 @@
 MD0000,1,This is A Test Module,5,"py001,py002","Lorem ipsum dolor sit amet, consectetur adipiscing elit vel."
 QZ0000,3,This is A Test Quiz,5,"py001,py002","Sample Simple Quiz"
-CH0000,2,This is A Test Challange,10,"py001,py002","Sample Simple Challange, just print stuff out"
+CH0000,2,This is A Test Challenge,10,"py001,py002","Sample Simple Challange, just print stuff out"
 CH0001,2,Sample of a Multi-TestCase Module,30,"py003,py002","Sample of a Challange with multiple Test cases, Recreate The Earth Or Something Idk"
