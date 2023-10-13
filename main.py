@@ -10,7 +10,6 @@ def main() -> None:
     @return None
     """
     populate_databases()
-    # initializes Activity Database Dictionary (ADD)
     a = App()
     wingen.loginPage(a)
     a.mainloop()

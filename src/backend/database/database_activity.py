@@ -37,11 +37,16 @@ class ActivityDB(DBBase):
             type = f"WHERE type = {type}"
 
         raw_data = cls.cursor.execute(f"SELECT {cls.db_idfield} from {cls.db_name} {type}").fetchall()
-        ## stupid shit returning in tuple
+        # stupid shit returning in tuple
         ret_value = [id[0] for id in raw_data]
         return ret_value
 
     @classmethod
     def getIDandType(cls):
         raw_data = cls.cursor.execute(f"SELECT id, type from {cls.db_name}").fetchall()
+        return raw_data
+
+    @classmethod
+    def getIDTitleType(cls):
+        raw_data = cls.cursor.execute(f"SELECT id, type, title from {cls.db_name}").fetchall()
         return raw_data

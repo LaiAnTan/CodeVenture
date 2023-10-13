@@ -5,6 +5,8 @@ from src.frontend.ui_std_window_gen import dispatcher
 from src.backend.user.user_student import Student
 from src.backend.database.database_activity import ActivityDB
 
+from config import LIGHTMODE_GRAY, DARKMODE_GRAY
+
 
 class ActivityTile(ctk.CTkFrame):
 
@@ -22,6 +24,9 @@ class ActivityTile(ctk.CTkFrame):
         super().__init__(master,
                          width=width,
                          height=height,
+                         fg_color=LIGHTMODE_GRAY if
+                         main_attach.settings.getSettingValue("lightmode")
+                         .lower() == "true" else DARKMODE_GRAY
                          )
         self.root = main_attach
         self.master_frame = master  # master frame is not root.main_frame
@@ -39,6 +44,10 @@ class ActivityTile(ctk.CTkFrame):
         self.tags = adb.fetch_attr("tags", self.id)
 
     def attach_elements(self):
+
+        """
+        Attaches the elements to the frame (self).
+        """
 
         # master frame is self, because class inherits tkinter Frame
 

@@ -8,20 +8,36 @@ from ..backend.user.user_student import Student
 
 class StudentMenuWindow(ctk.CTkFrame):
 
+    """
+    Frame class for displaying the student menu with tkinter.
+    """
+
+    # constants
     header_height = 20
     full_width = 450
     half_width = full_width / 2
     full_content_height = 460 - header_height
     half_content_height = full_content_height / 2
 
-    def __init__(self, student: Student, main_attach: App):
+    def __init__(self, student: Student, main_attach: App) -> None:
+        """
+        Initializes the class.
+
+        @param student: student object coresponding to current user.
+        @param main_attach: main tkinter object containing root frame.
+        @return None
+        """
         super().__init__(main_attach.main_frame)
         self.student = student
         self.root = main_attach
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame in root.
 
-        # header details -------------------------------------------
+        @return None
+        """
+        # header frame
 
         header_frame = ctk.CTkFrame(
             self.root.main_frame,
@@ -97,8 +113,6 @@ class StudentMenuWindow(ctk.CTkFrame):
             pady=5
         )
 
-        # header details end --------------------------------------------
-
         # main content frame
 
         content_frame = ctk.CTkFrame(
@@ -163,6 +177,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         recommended_frame = ctk.CTkFrame(
             content_frame,
             width=self.full_width,
+            fg_color="transparent"
         )
 
         recommended_title = ctk.CTkLabel(
@@ -182,8 +197,10 @@ class StudentMenuWindow(ctk.CTkFrame):
         recommended_frame.grid(
             row=2,
             column=0,
-            sticky="ew"
+            sticky="ew",
         )
+
+        # recommended frame
 
         ac_tile_width = 120
         ac_tile_height = 220
@@ -236,11 +253,12 @@ class StudentMenuWindow(ctk.CTkFrame):
         recommended_frame.rowconfigure((0, 1), weight=1)
         recommended_frame.columnconfigure((0, 1, 2), weight=1)
 
-        # buttons
+        # button frame
 
         buttons_frame = ctk.CTkFrame(
             content_frame,
-            width=self.full_width
+            width=self.full_width,
+            fg_color="transparent"
         )
 
         buttons_frame.grid(
