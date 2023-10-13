@@ -8,6 +8,8 @@ from ...backend.user.user_student import Student
 
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
+from config import LIGHTMODE_GRAY, DARKMODE_GRAY
+
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
 
@@ -23,41 +25,97 @@ class SelectionScreen():
         from ..ui_std_window_gen import studentMenuPage
         studentMenuPage(self.root, self.student)
 
+    def search_button_event(self):
+        pass
+
     def attach_elements(self):
-        header = ctk.CTkFrame(self.root.main_frame)
+
+        # header
+
+        header = ctk.CTkFrame(self.root.main_frame, fg_color="transparent")
         header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        header_label = ctk.CTkLabel(
+        # search bar
+
+        search_bar_frame = ctk.CTkFrame(
             header,
-            text="I Dont Know What To Put As Title"
+            width=600,
+            fg_color="transparent",
+            height=30
         )
-        header_label.pack(side="left", padx=5, pady=5)
+
+        search_bar_frame.grid(
+            row=0,
+            column=0,
+            sticky="ew"
+        )
+
+        search_bar = ctk.CTkEntry(
+            search_bar_frame,
+            width=500,
+            placeholder_text="Looking for something?",
+            font=("Helvetica", 14),
+            justify=ctk.LEFT,
+        )
+
+        search_bar.grid(row=0,
+                        column=0,
+                        sticky="w",
+                        padx=5,
+                        pady=5)
+
+        search_button = ctk.CTkButton(
+            search_bar_frame,
+            text="Search",
+            command=self.search_button_event,
+            width=50,
+        )
+
+        search_button.grid(row=0,
+                           column=1,
+                           sticky="w",
+                           padx=5,
+                           pady=5)
 
         back_button = ctk.CTkButton(
             header,
             text="Back",
-            command=self.return_to_studentMenu
+            command=self.return_to_studentMenu,
+            width=50
         )
-        back_button.pack(side="right", padx=5, pady=5)
 
-        content = ctk.CTkFrame(self.root.main_frame, height=450)
+        back_button.grid(row=0,
+                         column=5,
+                         sticky="e",
+                         padx=(140, 1),
+                         pady=5)
+
+        # content
+
+        content = ctk.CTkFrame(self.root.main_frame, height=450,
+                               fg_color="transparent")
         content.grid(row=1, column=0, padx=5, pady=5)
 
         side_selection_bar = ctk.CTkFrame(content)
         side_selection_bar.grid(row=0, column=0, padx=5, pady=5, sticky="ns")
 
         content_width = 650
-        main_contents_bar = ctk.CTkScrollableFrame(content, height=450, width=content_width)
+        main_contents_bar = ctk.CTkScrollableFrame(content,
+                                                   height=450,
+                                                   width=content_width)
         main_contents_bar.grid(row=0, column=1, padx=5, pady=5)
 
         self.display_all_info(0, content_width, main_contents_bar)
 
         button_labels = ["All", "Module", "Quiz", "Challange"]
         button_functions = [
-            lambda : self.display_all_info(0, content_width, main_contents_bar),
-            lambda : self.display_all_info(Activity.AType.Module.value, content_width, main_contents_bar),
-            lambda : self.display_all_info(Activity.AType.Quiz.value, content_width, main_contents_bar),
-            lambda : self.display_all_info(Activity.AType.Challenge.value, content_width, main_contents_bar)
+            lambda: self.display_all_info(0, content_width, main_contents_bar),
+            lambda: self.display_all_info(Activity.AType.Module.value,
+                                          content_width, main_contents_bar),
+            lambda: self.display_all_info(Activity.AType.Quiz.value,
+                                          content_width, main_contents_bar),
+            lambda: self.display_all_info(Activity.AType.Challenge.value,
+                                          content_width, main_contents_bar)
         ]
 
         for index, button_label in enumerate(button_labels):
@@ -69,13 +127,15 @@ class SelectionScreen():
             )
             button.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
 
-    def display_all_info(self, type, max_width, attach_to: ctk.CTkScrollableFrame) -> None:
+    def display_all_info(self, type, max_width,
+                         attach_to: ctk.CTkScrollableFrame) -> None:
         for widgets in attach_to.winfo_children():
             widgets.destroy()
 
         result = self.activity_database.getListID(type)
         for index, module in enumerate(result):
-            ret = DataChunk(module, max_width - 30, self.root, self.student).generateChunk(attach_to)
+            ret = DataChunk(module, max_width - 40, self.root,
+                            self.student).generateChunk(attach_to)
             ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
 
     def __beep_boop(self) -> None:
@@ -98,9 +158,12 @@ class DataChunk():
     def generateChunk(self, attach_main):
         self.GetData()
 
-        ret_frame = ctk.CTkFrame(attach_main)
-        header_frame = ctk.CTkFrame(ret_frame)
-        header_frame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        ret_frame = ctk.CTkFrame(attach_main,
+                                 fg_color=LIGHTMODE_GRAY if self.root.settings
+                                 .getSettingValue("lightmode")
+                                 .lower() == "true" else DARKMODE_GRAY)
+        header_frame = ctk.CTkFrame(ret_frame, fg_color="transparent")
+        header_frame.grid(row=0, column=0, padx=5, pady=(5, 0), sticky="ew")
 
         # header_frame.rowconfigure(0, weight=1)
         # header_frame.columnconfigure(0, weight=1)
@@ -117,8 +180,8 @@ class DataChunk():
         )
         title_label.grid(row=0, column=1, padx=5, pady=5)
 
-        content_frame = ctk.CTkFrame(ret_frame)
-        content_frame.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+        content_frame = ctk.CTkFrame(ret_frame, fg_color="transparent")
+        content_frame.grid(row=1, column=0, padx=5, pady=(0, 5), sticky="ew")
 
         content_label = ctk.CTkLabel(
             content_frame,
@@ -132,13 +195,15 @@ class DataChunk():
 
         from ..ui_std_window_gen import dispatcher
 
-        student_done = ActivityDictionary.getDatabase(self.activity).getStudentEntry(self.student.username) is not None
+        student_done = ActivityDictionary.getDatabase(self.activity)\
+            .getStudentEntry(self.student.username) is not None
 
         run_button = ctk.CTkButton(
             content_frame,
             text="Review" if student_done else "Attempt",
             width=50,
-            command=lambda: dispatcher(self.id, self.type, self.root, self.student)
+            command=lambda: dispatcher(self.id, self.type, self.root,
+                                       self.student)
         )
         run_button.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
 

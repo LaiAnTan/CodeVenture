@@ -128,50 +128,6 @@ class StudentMenuWindow(ctk.CTkFrame):
             sticky="ew"
         )
 
-        # search bar
-
-        search_bar_frame = ctk.CTkFrame(
-            content_frame,
-            width=self.full_width,
-            fg_color="transparent",
-            height=30
-        )
-
-        search_bar_frame.grid(
-            row=0,
-            column=0,
-            sticky="ew"
-        )
-
-        search_bar = ctk.CTkEntry(
-            search_bar_frame,
-            width=int(self.full_width * 0.75),
-            placeholder_text="Looking for something?",
-            font=("Helvetica", 14),
-            justify=ctk.LEFT
-        )
-
-        search_bar.pack(
-            side=ctk.LEFT,
-            padx=5,
-        )
-
-        def searchButtonEvent():
-            pass
-
-        search_button = ctk.CTkButton(
-            search_bar_frame,
-            text="Search",
-            command=lambda: searchButtonEvent(),
-            width=20
-        )
-
-        search_button.pack(
-            side=ctk.RIGHT,
-            padx=5,
-            pady=5,
-        )
-
         # recommended
 
         recommended_frame = ctk.CTkFrame(
@@ -187,7 +143,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         )
 
         recommended_title.grid(
-            row=1,
+            row=0,
             column=0,
             sticky="w",
             padx=10,
@@ -195,7 +151,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         )
 
         recommended_frame.grid(
-            row=2,
+            row=1,
             column=0,
             sticky="ew",
         )
@@ -262,7 +218,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         )
 
         buttons_frame.grid(
-            row=3,
+            row=2,
             column=0,
             sticky="ew"
         )

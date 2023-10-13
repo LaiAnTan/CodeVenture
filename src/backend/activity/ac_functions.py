@@ -2,12 +2,13 @@
 from src.backend.database.database_activity import ActivityDB
 
 
-def search_database(ac_name: str) -> list[str]:
+def search_database(ac_name: str) -> list[tuple[str]]:
     """
     Function to enable searching of modules using a search bar.
 
     @param: ac_name, query to search
-    @return: a list of activity ids that represent the search results.
+    @return: a list of tuples of (activity ids, activity type) that represent
+    the search results.
     """
 
     # get raw data
@@ -27,3 +28,12 @@ def search_database(ac_name: str) -> list[str]:
             results.append(data[:-1])
 
     return results
+
+
+def filter_by_difficulty(results: list[tuple[str]], upper_limit: int,
+                         lower_limit: int) -> list[tuple[str]]:
+    pass
+
+
+def filter_by_tag(results: list[tuple[str]], tag: str) -> list[tuple[str]]:
+    pass
