@@ -12,14 +12,14 @@ def search_database(ac_name: str) -> list[str]:
 
     # get raw data
     adb = ActivityDB()
-    raw_data = adb.getIDTitleType()
+    raw_data = adb.getIDTypeTitle()
 
     results = []
 
     # remove spaces
     tokenstr = "".join(ac_name.split(" ")).lower()
 
-    # data is a tuple in the form (id, name)
+    # data is a tuple in the form (id, type, title)
     for data in raw_data:
 
         matchstr = "".join(data[2].split(" ")).lower()

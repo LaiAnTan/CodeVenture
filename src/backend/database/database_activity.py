@@ -47,6 +47,6 @@ class ActivityDB(DBBase):
         return raw_data
 
     @classmethod
-    def getIDTitleType(cls):
+    def getIDTypeTitle(cls):
         raw_data = cls.cursor.execute(f"SELECT id, type, title from {cls.db_name}").fetchall()
         return raw_data
