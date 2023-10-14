@@ -8,9 +8,10 @@ from ...backend.user.user_student import Student
 
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
-from ...backend.activity.ac_functions import search_database
+from ...backend.activity.ac_functions import search_database, \
+    filter_by_difficulty, filter_by_tags
 
-from config import LIGHTMODE_GRAY, DARKMODE_GRAY, ALMOST_WHITE, ALMOST_BLACK
+from config import LIGHTMODE_GRAY, DARKMODE_GRAY
 
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
@@ -22,6 +23,7 @@ class SelectionScreen():
         self.student = student
         self.activity_database = ab.ActivityDB()
         self.root = attach
+        self.results = search_database("")
 
     def return_to_studentMenu(self):
         from ..ui_std_window_gen import studentMenuPage
@@ -51,7 +53,7 @@ class SelectionScreen():
 
         search_bar = ctk.CTkEntry(
             search_bar_frame,
-            width=500,
+            width=400,
             placeholder_text="Looking for something?",
             font=("Helvetica", 14),
             justify=ctk.LEFT,
@@ -77,8 +79,20 @@ class SelectionScreen():
                            sticky="w",
                            padx=5,
                            pady=5)
-        
-        # there will be a sort feature here
+
+        # sort
+
+        sort_label = ctk.CTkLabel(header, text="Sort by:",)
+        sort_label.grid(row=0, column=2, padx=5, pady=5)
+
+        sort_options = ctk.CTkOptionMenu(header,
+                                         values=['Name', 'ID', 'Difficulty'],
+                                         width=120,
+                                         command=lambda option:
+                                         self.sort_dropdown_display_auxiliary
+                                         (option, header, 4)
+                                         )
+        sort_options.grid(row=0, column=3, padx=5, pady=5)
 
         back_button = ctk.CTkButton(
             header,
@@ -90,10 +104,12 @@ class SelectionScreen():
         back_button.grid(row=0,
                          column=5,
                          sticky="e",
-                         padx=(175, 1),
+                         padx=5,
                          pady=5)
 
         # content
+
+        content_width = 650
 
         content = ctk.CTkFrame(self.root.main_frame, height=450,
                                fg_color="transparent")
@@ -102,7 +118,6 @@ class SelectionScreen():
         side_selection_bar = ctk.CTkFrame(content, width=100)
         side_selection_bar.grid(row=0, column=0, padx=5, pady=5, sticky="ns")
 
-        content_width = 650
         main_contents_bar = ctk.CTkScrollableFrame(content,
                                                    height=450,
                                                    width=content_width)
@@ -126,7 +141,8 @@ class SelectionScreen():
                                           command=lambda option: self
                                           .filter_dropdown_event
                                           (option, filter_content,
-                                           content_width, main_contents_bar)
+                                           content_width,
+                                           main_contents_bar)
                                           )
         filter_option.grid(row=1, column=0, padx=5, pady=5)
 
@@ -136,37 +152,57 @@ class SelectionScreen():
 
         filter_content.columnconfigure(0, weight=1)
 
+    def display_using_ids(self, ids: list[str], max_width, attach_to) -> None:
+
+        # destroys previous widgets
+        for widgets in attach_to.winfo_children():
+            widgets.destroy()
+
+        for index, module in enumerate(ids):
+            ret = DataChunk(module, max_width - 40, self.root,
+                            self.student).generateChunk(attach_to)
+            ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
+
     def display_all_info(self, type, max_width,
                          attach_to: ctk.CTkScrollableFrame) -> None:
         for widgets in attach_to.winfo_children():
             widgets.destroy()
 
         result = self.activity_database.getListID(type)
-        for index, module in enumerate(result):
-            ret = DataChunk(module, max_width - 40, self.root,
-                            self.student).generateChunk(attach_to)
-            ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
+
+        self.display_using_ids(result, max_width, attach_to)
 
     def search_button_event(self, query, max_width,
                             attach_to: ctk.CTkScrollableFrame) -> None:
         """
         Handles the event when search button is pressed.
         """
-
-        # destroys previous widgets
-        for widgets in attach_to.winfo_children():
-            widgets.destroy()
-
         # runs the search function
-        results = search_database(query)
+        self.results = search_database(query)
 
-        ids = [res[0] for res in results]
+        ids = [res[0] for res in self.results]
 
-        # adds the correct widgets back into frame
-        for index, module in enumerate(ids):
-            ret = DataChunk(module, max_width - 40, self.root,
-                            self.student).generateChunk(attach_to)
-            ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
+        self.display_using_ids(ids, max_width, attach_to)
+
+    def sort_dropdown_display_auxiliary(self, option, attach_to, col):
+        """
+        Handles the event where an option from the main sort dropdown menu
+        is chosen to display the auxiliary dropdown menu.
+        """
+        v = []
+
+        match option.lower():
+            case "difficulty":
+                v = ["Low to High", "High to low"]
+            case "name":
+                v = ["A to Z", "Z to A"]
+            case "id":
+                v = ["Ascending", "Descending"]
+
+        aux_sort = ctk.CTkOptionMenu(attach_to,
+                                     values=v,
+                                     width=120)
+        aux_sort.grid(row=0, column=col, padx=5, pady=5)
 
     def filter_dropdown_event(self, option, attach_to, content_width,
                               main_contents_bar) -> None:
@@ -179,12 +215,27 @@ class SelectionScreen():
             widgets.destroy()
 
         # based on the option we will show different widgets
-
         match option:
 
             case "difficulty":
 
                 # entry for max and min diff
+                def diff_filter():
+
+                    try:
+                        max = int(max_diff.get())
+                        min = int(min_diff.get())
+                        if min >= max:
+                            return
+                    except ValueError:
+                        return
+
+                    filtered = filter_by_difficulty(self.results, max, min)
+
+                    ids = [item[0] for item in filtered]
+
+                    self.display_using_ids(ids, content_width,
+                                           main_contents_bar)
 
                 attach_to.columnconfigure((0, 1, 2), weight=1)
 
@@ -206,15 +257,41 @@ class SelectionScreen():
                                         font=("Helvetica", 14))
                 max_diff.grid(row=1, column=2, padx=(0, 5), pady=5)
 
+                apply_filter_button = ctk.CTkButton(attach_to,
+                                                    text="Apply Filter",
+                                                    command=diff_filter,
+                                                    width=100,
+                                                    anchor="center"
+                                                    )
+                apply_filter_button.grid(row=2, column=0,
+                                         columnspan=3, padx=5, pady=5)
+
             case "tags":
 
                 # checkboxes for tags
 
+                # this should not be hardcoded
                 tag_labels = ["py001", "py002", "py003"]
 
+                tag_states = [0] * len(tag_labels)
+
+                def checkbox_filter(index):
+                    tag_states[index] = 0 if tag_states[index] == 1 else 1
+
+                    filtered = filter_by_tags(self.results, tag_labels,
+                                              tag_states)
+
+                    ids = [item[0] for item in filtered]
+
+                    self.display_using_ids(ids, content_width,
+                                           main_contents_bar)
+
                 for index, tag_label in enumerate(tag_labels):
+
                     tag = ctk.CTkCheckBox(attach_to,
                                           text=tag_label,
+                                          command=lambda x=index:
+                                          checkbox_filter(x),
                                           width=100,
                                           )
                     tag.grid(row=index, column=0, columnspan=3, padx=5, pady=5)
@@ -249,9 +326,6 @@ class SelectionScreen():
                     )
                     button.grid(row=index, column=0, columnspan=3,
                                 padx=5, pady=5)
-
-    def __beep_boop(self) -> None:
-        print("Button Pressed!")
 
 
 class DataChunk():

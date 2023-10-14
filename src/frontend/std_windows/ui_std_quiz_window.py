@@ -6,8 +6,10 @@ from ..ui_std_window_gen import displayActivitySelections
 from ...backend.user.user_student import Student
 from ...backend.activity.ac_classes.ac_quiz import Quiz, Question
 
+
 class QuestionFrame(ctk.CTkFrame):
-    def __init__(self, question: Question, max_width, previous_selection: ctk.IntVar, master: ctk.CTkFrame) -> None:
+    def __init__(self, question: Question, max_width,
+                 previous_selection: ctk.IntVar, master: ctk.CTkFrame) -> None:
         super().__init__(master)
 
         self.question = question
