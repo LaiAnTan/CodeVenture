@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from ui_app import App
+from ..ui_app import App
 from ...backend.activity.ac_classes.ac_activity import Activity
 from abc import abstractmethod, ABC
 
