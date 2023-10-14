@@ -120,7 +120,8 @@ class ChallangeWindow(ActivityWindow):
 
         self.shittyIDE = IDE(
             sidebar_frame,
-            sidebar_width,
+            sidebar_width - 30,
+            360,
             self.ac.id.lower(),
             self.std.username,
             self.ac.ModulePath
@@ -314,6 +315,6 @@ if __name__ == "__main__":
 
     ActivityDictionary()
     main = App()
-    ChallangeWindow(Challange("CH0001"), Student("test_student"), main).Attach()
+    ChallangeWindow(Challange("CH0001"), Student("james"), main).Attach()
     main.main_frame.grid(row=0, column=0)
     main.mainloop()

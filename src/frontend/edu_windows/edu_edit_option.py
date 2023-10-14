@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from ui_app import App
+from ..ui_app import App
 
 class EditorWindow(ctk.CTkFrame):
     def __init__(self, master: App):
