@@ -27,6 +27,8 @@ def search_database(ac_name: str) -> list[tuple[str]]:
         if tokenstr in matchstr:
             results.append(data[:-1])
 
+    # result in the form (id, type)
+
     return results
 
 
@@ -66,3 +68,27 @@ def filter_by_tags(results: list[tuple[str]], tag_names: list[str],
                 break
 
     return filtered
+
+
+def sort_results(results: list[tuple[str]], mode: str, option: str):
+    """
+    Function to sort results based on certain criteria.
+    """
+
+    adb = ActivityDB()
+
+    match mode.lower():
+
+        case "difficulty":
+            weights = [adb.fetch_attr("difficulty", result[0]) for result in
+                       results]
+        case "name":
+            weights = [adb.fetch_attr("title", result[0]) for result in
+                       results]
+
+    if option == "asc":
+        s = [x for _, x in sorted(zip(weights, results))]
+    elif option == "desc":
+        s = [x for _, x in sorted(zip(weights, results), reverse=True)]
+
+    return s

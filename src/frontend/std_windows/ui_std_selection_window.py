@@ -9,7 +9,7 @@ from ...backend.user.user_student import Student
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
 from ...backend.activity.ac_functions import search_database, \
-    filter_by_difficulty, filter_by_tags
+    filter_by_difficulty, filter_by_tags, sort_results
 
 from config import LIGHTMODE_GRAY, DARKMODE_GRAY
 
@@ -30,6 +30,8 @@ class SelectionScreen():
         studentMenuPage(self.root, self.student)
 
     def attach_elements(self):
+
+        content_width = 650
 
         # header
 
@@ -86,11 +88,12 @@ class SelectionScreen():
         sort_label.grid(row=0, column=2, padx=5, pady=5)
 
         sort_options = ctk.CTkOptionMenu(header,
-                                         values=['Name', 'ID', 'Difficulty'],
+                                         values=['Name', 'Difficulty'],
                                          width=120,
                                          command=lambda option:
                                          self.sort_dropdown_display_auxiliary
-                                         (option, header, 4)
+                                         (option, header, 4, content_width,
+                                          main_contents_bar)
                                          )
         sort_options.grid(row=0, column=3, padx=5, pady=5)
 
@@ -108,8 +111,6 @@ class SelectionScreen():
                          pady=5)
 
         # content
-
-        content_width = 650
 
         content = ctk.CTkFrame(self.root.main_frame, height=450,
                                fg_color="transparent")
@@ -184,7 +185,8 @@ class SelectionScreen():
 
         self.display_using_ids(ids, max_width, attach_to)
 
-    def sort_dropdown_display_auxiliary(self, option, attach_to, col):
+    def sort_dropdown_display_auxiliary(self, option, attach_to, col,
+                                        content_width, main_contents_bar):
         """
         Handles the event where an option from the main sort dropdown menu
         is chosen to display the auxiliary dropdown menu.
@@ -196,11 +198,31 @@ class SelectionScreen():
                 v = ["Low to High", "High to low"]
             case "name":
                 v = ["A to Z", "Z to A"]
-            case "id":
-                v = ["Ascending", "Descending"]
+
+        def aux_sort_event(value):
+
+            match value.lower():
+
+                case "low to high":
+                    self.results = sort_results(self.results, "difficulty",
+                                                "asc")
+                case "high to low":
+                    self.results = sort_results(self.results, "difficulty",
+                                                "desc")
+                case "a to z":
+                    self.results = sort_results(self.results, "name",
+                                                "asc")
+                case "z to a":
+                    self.results = sort_results(self.results, "name",
+                                                "desc")
+
+            ids = [res[0] for res in self.results]
+
+            self.display_using_ids(ids, content_width, main_contents_bar)
 
         aux_sort = ctk.CTkOptionMenu(attach_to,
                                      values=v,
+                                     command=lambda x: aux_sort_event(x),
                                      width=120)
         aux_sort.grid(row=0, column=col, padx=5, pady=5)
 
@@ -225,7 +247,7 @@ class SelectionScreen():
                     try:
                         max = int(max_diff.get())
                         min = int(min_diff.get())
-                        if min >= max:
+                        if min > max:
                             return
                     except ValueError:
                         return
@@ -290,7 +312,7 @@ class SelectionScreen():
 
                     tag = ctk.CTkCheckBox(attach_to,
                                           text=tag_label,
-                                          command=lambda x=index:
+                                          command=lambda x=index:  # late bind
                                           checkbox_filter(x),
                                           width=100,
                                           )
