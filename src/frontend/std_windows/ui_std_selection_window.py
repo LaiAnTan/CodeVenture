@@ -10,7 +10,7 @@ from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
 from ...backend.activity.ac_functions import search_database
 
-from config import LIGHTMODE_GRAY, DARKMODE_GRAY
+from config import LIGHTMODE_GRAY, DARKMODE_GRAY, ALMOST_WHITE, ALMOST_BLACK
 
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
@@ -77,6 +77,8 @@ class SelectionScreen():
                            sticky="w",
                            padx=5,
                            pady=5)
+        
+        # there will be a sort feature here
 
         back_button = ctk.CTkButton(
             header,
@@ -88,7 +90,7 @@ class SelectionScreen():
         back_button.grid(row=0,
                          column=5,
                          sticky="e",
-                         padx=(140, 1),
+                         padx=(175, 1),
                          pady=5)
 
         # content
@@ -97,7 +99,7 @@ class SelectionScreen():
                                fg_color="transparent")
         content.grid(row=1, column=0, padx=5, pady=5)
 
-        side_selection_bar = ctk.CTkFrame(content)
+        side_selection_bar = ctk.CTkFrame(content, width=100)
         side_selection_bar.grid(row=0, column=0, padx=5, pady=5, sticky="ns")
 
         content_width = 650
@@ -108,25 +110,31 @@ class SelectionScreen():
 
         self.display_all_info(0, content_width, main_contents_bar)
 
-        button_labels = ["All", "Module", "Quiz", "Challange"]
-        button_functions = [
-            lambda: self.display_all_info(0, content_width, main_contents_bar),
-            lambda: self.display_all_info(Activity.AType.Module.value,
-                                          content_width, main_contents_bar),
-            lambda: self.display_all_info(Activity.AType.Quiz.value,
-                                          content_width, main_contents_bar),
-            lambda: self.display_all_info(Activity.AType.Challenge.value,
-                                          content_width, main_contents_bar)
-        ]
+        # filter frame in sidebar
 
-        for index, button_label in enumerate(button_labels):
-            button = ctk.CTkButton(
-                side_selection_bar,
-                text=button_label,
-                command=button_functions[index],
-                width=50
-            )
-            button.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
+        filter_frame = ctk.CTkFrame(side_selection_bar, width=100,
+                                    fg_color="transparent")
+        filter_frame.grid(row=0, column=0, padx=5, pady=5)
+
+        filter_label = ctk.CTkLabel(filter_frame,
+                                    text="Filter by:")
+        filter_label.grid(row=0, column=0, padx=5, pady=5)
+
+        filter_option = ctk.CTkOptionMenu(filter_frame,
+                                          values=["difficulty", "tags",
+                                                  "type"],
+                                          command=lambda option: self
+                                          .filter_dropdown_event
+                                          (option, filter_content,
+                                           content_width, main_contents_bar)
+                                          )
+        filter_option.grid(row=1, column=0, padx=5, pady=5)
+
+        filter_content = ctk.CTkFrame(side_selection_bar, width=100,
+                                      fg_color="transparent")
+        filter_content.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+
+        filter_content.columnconfigure(0, weight=1)
 
     def display_all_info(self, type, max_width,
                          attach_to: ctk.CTkScrollableFrame) -> None:
@@ -139,21 +147,108 @@ class SelectionScreen():
                             self.student).generateChunk(attach_to)
             ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
 
-    def search_button_event(self, query, max_width, 
+    def search_button_event(self, query, max_width,
                             attach_to: ctk.CTkScrollableFrame) -> None:
+        """
+        Handles the event when search button is pressed.
+        """
 
+        # destroys previous widgets
         for widgets in attach_to.winfo_children():
             widgets.destroy()
 
+        # runs the search function
         results = search_database(query)
 
         ids = [res[0] for res in results]
 
+        # adds the correct widgets back into frame
         for index, module in enumerate(ids):
             ret = DataChunk(module, max_width - 40, self.root,
                             self.student).generateChunk(attach_to)
             ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
 
+    def filter_dropdown_event(self, option, attach_to, content_width,
+                              main_contents_bar) -> None:
+        """
+        Handles the event where an option from the dropdown menu is chosen.
+        """
+
+        # destroys previous widgets
+        for widgets in attach_to.winfo_children():
+            widgets.destroy()
+
+        # based on the option we will show different widgets
+
+        match option:
+
+            case "difficulty":
+
+                # entry for max and min diff
+
+                attach_to.columnconfigure((0, 1, 2), weight=1)
+
+                label = ctk.CTkLabel(attach_to, text="Difficulty Range")
+                label.grid(row=0, column=0, columnspan=3, padx=5, pady=5)
+
+                min_diff = ctk.CTkEntry(attach_to,
+                                        width=50,
+                                        placeholder_text="Min",
+                                        font=("Helvetica", 14),)
+                min_diff.grid(row=1, column=0, padx=(5, 0), pady=5)
+
+                to_label = ctk.CTkLabel(attach_to, text="-")
+                to_label.grid(row=1, column=1, padx=5, pady=5,)
+
+                max_diff = ctk.CTkEntry(attach_to,
+                                        width=50,
+                                        placeholder_text="Max",
+                                        font=("Helvetica", 14))
+                max_diff.grid(row=1, column=2, padx=(0, 5), pady=5)
+
+            case "tags":
+
+                # checkboxes for tags
+
+                tag_labels = ["py001", "py002", "py003"]
+
+                for index, tag_label in enumerate(tag_labels):
+                    tag = ctk.CTkCheckBox(attach_to,
+                                          text=tag_label,
+                                          width=100,
+                                          )
+                    tag.grid(row=index, column=0, columnspan=3, padx=5, pady=5)
+
+            case "type":
+
+                # sidebar type buttons (filter by type)
+
+                button_labels = ["All", "Module", "Quiz", "Challange"]
+                button_functions = [
+                    lambda: self.display_all_info(0, content_width,
+                                                  main_contents_bar),
+                    lambda: self.display_all_info(Activity.AType.Module.value,
+                                                  content_width,
+                                                  main_contents_bar),
+                    lambda: self.display_all_info(Activity.AType.Quiz.value,
+                                                  content_width,
+                                                  main_contents_bar),
+                    lambda: self.display_all_info(Activity.AType.Challenge
+                                                  .value,
+                                                  content_width,
+                                                  main_contents_bar)
+                ]
+
+                for index, button_label in enumerate(button_labels):
+                    button = ctk.CTkButton(
+                        attach_to,
+                        text=button_label,
+                        command=button_functions[index],
+                        width=100,
+                        anchor="center"
+                    )
+                    button.grid(row=index, column=0, columnspan=3,
+                                padx=5, pady=5)
 
     def __beep_boop(self) -> None:
         print("Button Pressed!")
@@ -178,7 +273,8 @@ class DataChunk():
         ret_frame = ctk.CTkFrame(attach_main,
                                  fg_color=LIGHTMODE_GRAY if self.root.settings
                                  .getSettingValue("lightmode")
-                                 .lower() == "true" else DARKMODE_GRAY)
+                                 .lower() == "true" else DARKMODE_GRAY,
+                                 )
         header_frame = ctk.CTkFrame(ret_frame, fg_color="transparent")
         header_frame.grid(row=0, column=0, padx=5, pady=(5, 0), sticky="ew")
 

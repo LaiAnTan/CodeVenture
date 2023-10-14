@@ -7,7 +7,8 @@ from src.backend.activity.ac_classes.ac_activity import Activity
 
 class CompletedDB():
     def __init__(self, ac_id, ac_type, fields: str) -> None:
-        self.db_name = f"completed"
+
+        self.db_name = "completed"
 
         # what the hell is this
         # self.root = os.path.split(os.path.split(os.path.split(os.path.split(os.path.dirname(__file__))[0])[0])[0])[0]
@@ -17,9 +18,6 @@ class CompletedDB():
         self.db_path = os.path.join(self.modulePath, f"{self.db_name}.db")
         self.db_fields = fields
         self.db_idfield = fields.split(",")[0].split()[0].strip()
-
-        print(self.modulePath)
-        print(self.db_path)
 
         self.db_placeholder = f"({','.join(['?' for _ in self.db_fields.split(',')])})"
 
