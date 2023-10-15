@@ -16,6 +16,15 @@ class Activity(ABC):
         Challenge = 2
         Quiz = 3
 
+        def getSubScript(self):
+            match self.value:
+                case 1:
+                    return 'MD'
+                case 2:
+                    return 'CH'
+                case 3:
+                    return 'QZ'
+
     def	__init__(self, filename: str, ac_type: AType) -> None:
         self.ModulePath = f"{ROOT_DIR}/{self.activity_storage}/{ac_type.name}/{filename}"
         self.content: list[str] = []

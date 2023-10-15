@@ -61,7 +61,7 @@ class ImageEntryForm(EntryForm):
         FileDialogButton.grid(row=0, column=4, padx=5, pady=5)
 
         PreviewFrame = ctk.CTkFrame(self.content, width=self.subwidth, height=self.subheight)
-        PreviewFrame.grid(row=2, column=0, padx=5, pady=5)
+        PreviewFrame.grid(row=1, column=0, padx=5, pady=5)
 
         self.PreviewLabel = ctk.CTkLabel(
             PreviewFrame, 
@@ -71,9 +71,8 @@ class ImageEntryForm(EntryForm):
         )
         self.PreviewLabel.grid(row=0, column=0, padx=5, pady=5)
 
-    ## maan i already ahve one in image label, why do i need another one
-    ## oh wait its cause the one i have is width only, not a set area
     def ratio_resizing(self, image: Image, max_height, max_width):
+        """Resizes an image so that its height and width are within the set range"""
         width, height = image.size
 
         if width < max_width and height < max_height:
@@ -86,16 +85,17 @@ class ImageEntryForm(EntryForm):
         return int(width / percent), int(height / percent)
 
     def PromptFileDialog(self):
+        """Prompts a file dialog for user to choose the file, then displayes the image"""
         file_path = ctk.filedialog.askopenfilename()
         self.PreviewImage(file_path)
 
     def PreviewImage(self, file_path):
-        directory = file_path
         if not file_path:
             return
-        file_format = file_path.split('.')
+        directory = file_path
+        file_format = file_path.split('.')[-1]
 
-        if len(file_format) < 2 or file_format[-1] not in ['jpeg', 'png', 'jpg']:
+        if file_format not in ['jpeg', 'png', 'jpg']:
             print('LOG: Invalid File Format for Images')
             txt_c = 'red'
             name = 'Invalid File Format'

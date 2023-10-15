@@ -18,8 +18,8 @@ class CompletedDB():
         self.db_fields = fields
         self.db_idfield = fields.split(",")[0].split()[0].strip()
 
-        print(self.modulePath)
-        print(self.db_path)
+        # print(self.modulePath)
+        # print(self.db_path)
 
         self.db_placeholder = f"({','.join(['?' for _ in self.db_fields.split(',')])})"
 

@@ -22,7 +22,7 @@ class EntryForm(ctk.CTkFrame):
         ## the main place to input data
         ## for paragraph, the textbox
         ## for image, the entry for file directory
-        ## for code, uhh idk i think about it later
+        ## for code, the ide's screen
         self.ContentEntryForm = None
 
     def SetFrames(self):
@@ -46,19 +46,29 @@ class EntryForm(ctk.CTkFrame):
         remove_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
     def deleteSelf(self):
+        """Remove ownself from parent
+        - Sets focus to the next (or previous, if deleted one was the last element) Entry Frame
+        - Scrolls the content frame to ensure focused entry is in frame"""
+        next_index = self.parent.content_frames.index(self)
         self.parent.content_frames.remove(self)
         self.grid_forget()
 
-        match self.type:
-            case "image":
-                self.parent.imagecount -= 1
-            case "code":
-                self.parent.codecount -= 1
+        if self.parent.content_frames:
+            scroll_to = next_index / len(self.parent.content_frames)
+            if scroll_to >= 1:
+                scroll_to = (next_index - 1) / (len(self.parent.content_frames) + 1)
+        else:
+            scroll_to = 0
 
         try:
-            self.parent.content_frames[-1].ContentEntryForm.focus()
+            self.parent.content_frames[next_index].ContentEntryForm.focus()
         except IndexError:
-            self.parent.focus()
+            if self.parent.content_frames:
+                self.parent.content_frames[-1].ContentEntryForm.focus()
+            else:
+                self.parent.focus()
+
+        self.parent.ScrollContentFrame(scroll_to)
 
     @abstractmethod
     def SetContent(self):
