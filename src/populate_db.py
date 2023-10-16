@@ -12,7 +12,7 @@ def import_data_from_csv(filename) -> list[tuple]:
     and converts it into a list of tuples for database insertion
     """
     with open(filename, newline='') as csvfile:
-        csv_reader = csv.reader(csvfile)
+        csv_reader = csv.reader(csvfile, delimiter=":")
         ret = [row for row in csv_reader]
     return ret
 

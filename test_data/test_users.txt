@@ -1,3 +1,3 @@
-james,lebron,student
-john,imjohn,educator
-admin,admin,admin
+testuser:$argon2id$v=19$m=65536,t=3,p=4$+yE2wC4QAju+0BayAvGrGQ$leVx9jdMuDn893RG9xyvjMHA1oAa1tnVMll/ttGxwjY:student
+john:imjohn:educator
+admin:admin:admin

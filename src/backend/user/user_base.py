@@ -1,5 +1,7 @@
 
 from abc import ABC
+from argon2 import PasswordHasher, exceptions
+
 from ..database.database_user import UserDB
 
 
@@ -40,15 +42,20 @@ class User(ABC):
         Tries to match pw_input with password from db
         """
         db = UserDB()
+
+        ph = PasswordHasher()
+
         user_pw = db.fetch_attr("password", self.getUsername())
-        if user_pw == None: # user not in database
+        if user_pw is None:  # user not in database
             return False
-        elif user_pw == pw_input: # login success
+
+        try:
+            ph.verify(user_pw, pw_input)
             self.login_status = True
             self.user_type = db.fetch_attr("user_type", self.getUsername())
             print(self.user_type)
             return True
-        else: # login failed
+        except exceptions.InvalidHashError:  # login failed
             return False
 
     def logout(self) -> bool:

@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from argon2 import PasswordHasher
 
 from .ui_app import App
 from .ui_std_window_gen import loginPage
@@ -27,7 +28,9 @@ def registerHandler(username: str, password: str, confirm_pw: str,
     if username == password:
         return (False, "Username cannot be password")
 
-    db.add_entry((username, password, user_type))
+    ph = PasswordHasher()
+
+    db.add_entry((username, ph.hash(password), user_type))
 
     # match user_type:
 
