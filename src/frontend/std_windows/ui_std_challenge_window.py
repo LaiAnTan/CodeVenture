@@ -124,7 +124,8 @@ class ChallangeWindow(ActivityWindow):
             360,
             self.ac.id.lower(),
             self.std.username,
-            self.ac.ModulePath
+            self.ac.ModulePath,
+            self.codeentry
         )
         self.shittyIDE.grid(row=0, column=0, padx=5, pady=5)
 
@@ -262,7 +263,7 @@ class ChallangeWindow(ActivityWindow):
                     text=f"Test {index} -- OK!",
                     text_color="limegreen",
                     font=ctk.CTkFont(
-                        "Noto Sans Mono",
+                        "Arial",
                         size=20
                     ),
                     width=frame_width - 10,
@@ -276,7 +277,7 @@ class ChallangeWindow(ActivityWindow):
                     text=f"Test {index} -- KO!",
                     text_color="red",
                     font=ctk.CTkFont(
-                        "Noto Sans Mono",
+                        "Arial",
                         size=20
                     ),
                     width=frame_width - 10,
@@ -294,7 +295,7 @@ class ChallangeWindow(ActivityWindow):
             text=f"Test {correct_cases}/{cases} passed!",
             text_color="yellow",
             font=ctk.CTkFont(
-                "Noto Sans Mono",
+                "Arial",
                 size=20
             ),
             width=frame_width - 10,
@@ -307,7 +308,7 @@ class ChallangeWindow(ActivityWindow):
     def StudentSubmission(self):
         print("Submitting code attempt")
         codecontent = self.shittyIDE.getContents()
-        self.completion_database.updateStudentCode(self.std.username, self.percentage, codecontent);
+        self.completion_database.updateStudentCode(self.std.username, self.percentage, codecontent)
         displayActivitySelections(self.root, self.std)
 
 if __name__ == "__main__":
