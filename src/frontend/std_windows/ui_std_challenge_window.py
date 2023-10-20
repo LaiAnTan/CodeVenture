@@ -143,11 +143,13 @@ class ChallangeWindow(ActivityWindow):
 
         # footer end ------------------------------------------
 
-    def ImageHandler(self, source, content, max_img_width, attach_frame):
+    def ImageHandler(self, source, content, 
+                     max_img_height, max_img_width, attach_frame):
         if source.img.get(content):
             ret_widget = ImageLabel(
                 attach_frame,
                 f"{source.ModulePath}/{source.img[content]}",
+                max_img_height - 15,
                 max_img_width - 50,
             )
         else:
@@ -180,6 +182,7 @@ class ChallangeWindow(ActivityWindow):
                     paragraph = self.ImageHandler(
                         self.ac,
                         content[1],
+                        200, # change height value later
                         frame_width,
                         self.displayed_frame
                     )
@@ -232,6 +235,7 @@ class ChallangeWindow(ActivityWindow):
                     paragraph = self.ImageHandler(
                         self.ac.hints,
                         content[1],
+                        1600, # TODO: Change the height value
                         frame_width,
                         self.displayed_frame
                     )
@@ -307,7 +311,7 @@ class ChallangeWindow(ActivityWindow):
 
     def StudentSubmission(self):
         print("Submitting code attempt")
-        codecontent = self.shittyIDE.getContents()
+        codecontent = self.shittyIDE.getCodeContent()
         self.completion_database.updateStudentCode(self.std.username, self.percentage, codecontent)
         displayActivitySelections(self.root, self.std)
 

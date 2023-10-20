@@ -10,6 +10,7 @@ import customtkinter as ctk
 import subprocess
 
 from .imagelabel import ImageLabel
+from config import ROOT_DIR
 
 class CodeRunner(ctk.CTkFrame):
     def __init__(self, master, max_img_width, code_name, activity_folder) -> None:
@@ -27,7 +28,7 @@ class CodeRunner(ctk.CTkFrame):
             self.HeaderFrame.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
             self.CodeFrame = ctk.CTkFrame(self)
-            self.CodeFrame.grid(row=1, column=0, padx=5, pady=5,)
+            self.CodeFrame.grid(row=1, column=0, padx=5, pady=5)
 
             self.RunButtonFrame = ctk.CTkFrame(self)
             self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
@@ -52,6 +53,7 @@ class CodeRunner(ctk.CTkFrame):
         ret_widget = ImageLabel(
             self.CodeFrame,
             f"{self.code_folder}/temp",
+            1600, # TODO: Change the height value later
             self.max_width,
             True
         )

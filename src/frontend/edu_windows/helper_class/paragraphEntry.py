@@ -8,7 +8,7 @@ class ParagraphEntryForm(EntryForm):
         self.type = "paragraph"
         self.SetFrames()
 
-    def SetContent(self):
+    def SetContentFrame(self):
         self.ContentEntryForm = ctk.CTkTextbox(
             self.content,
             height=self.height * 0.95,
@@ -27,10 +27,24 @@ class ParagraphEntryForm(EntryForm):
         self.ContentEntryForm.insert(ctk.INSERT, content)
 
     def getData(self):
-        return self.ContentEntryForm.get("0.0", ctk.END).strip()
+        """returns data input into the frame in the following format
+        
+        (type, data keyed into the paragraph)"""
+        return (
+            self.type,
+            self.ContentEntryForm.get("0.0", ctk.END).strip()
+        )
+
+    def peek(self):
+        """Check if there are content in the main entry form 
+
+        Returns false if its empty"""
+        return self.ContentEntryForm.get("0.0", ctk.END).strip() != ""
+
+    ## helper functions
 
     def RemoveSelf(self, placeholder):
-        if self.getData() == "":
+        if not self.peek():
             self.deleteSelf()
 
     def goNextChunk(self, placeholder, content=None):
@@ -49,7 +63,7 @@ class ParagraphEntryForm(EntryForm):
         if next_index != -1 and next_index == self_index + 1:
             next_chunk: ParagraphEntryForm = self.parent.content_frames[next_index]
             ## next chunk is empty, just use this one
-            if next_chunk.getData() == "":
+            if next_chunk.peek():
                 next_chunk.insertData(extracted_data)
                 next_chunk.focus()
                 self.parent.ScrollContentFrame(self_index / len(self.parent.content_frames))

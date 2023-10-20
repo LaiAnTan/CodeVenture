@@ -127,8 +127,11 @@ class IDE(ctk.CTkFrame):
         )
         RunButton.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
-    def getContents(self):
-        return self.IDETextBox.get("0.0", "end")
+    def getCodeContent(self):
+        return self.IDETextBox.get("0.0", "end").strip()
+
+    def getInputContent(self):
+        return self.InputTextBox.get("0.0", "end").strip()
 
     def RunTestCases(self, testcases):
         ## open file and dump all data inside

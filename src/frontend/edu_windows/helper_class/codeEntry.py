@@ -4,23 +4,44 @@ from ...std_windows.helper_class.ide import IDE
 from os import path
 
 class CodeEntryForm(EntryForm):
-    def __init__(self, master, parent, height, width):
+    def __init__(self, master, parent, height, width, data: tuple[str] | None=None):
         super().__init__(master, parent, height, width)
 
         self.type = "code"
         self.subwidth = self.width
 
+        self.previous_data = data
+
         self.SetFrames()
 
-    def SetContent(self):
+    def SetContentFrame(self):
         self.content.rowconfigure(0, weight=1)
         self.content.columnconfigure((0, 1), weight=1)
 
-        self.ImportFrame = ctk.CTkFrame(self.content)
-        self.ImportFrame.grid(row=0, column=1, padx=5, pady=5, sticky="new")
+        ImportFrame = ctk.CTkFrame(self.content)
+        ImportFrame.grid(row=0, column=1, padx=5, pady=5, sticky="new")
+
+        IDEFrame = ctk.CTkFrame(self.content)
+        IDEFrame.grid(row=0, column=0, padx=5, pady=5)
+
+        nameFrame = ctk.CTkFrame(IDEFrame, corner_radius=0)
+        nameFrame.grid(row=0, column=0, sticky='ew')
+
+        nameLabel = ctk.CTkLabel(
+            nameFrame,
+            text='Code\'s name '
+        )
+        nameLabel.grid(row=0, column=0, padx=5, pady=5, sticky='e')
+
+        self.nameVar = ctk.StringVar()
+        nameEntry = ctk.CTkEntry(
+            nameFrame,
+            textvariable=self.nameVar
+        )
+        nameEntry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
         self.ide = IDE(
-            self.content,
+            IDEFrame,
             self.subwidth - 245,
             self.height,
             "tmp",
@@ -28,23 +49,28 @@ class CodeEntryForm(EntryForm):
             '.',
             None
         )
-        self.ide.grid(row=0, column=0, padx=5, pady=5)
+        self.ide.grid(row=1, column=0, padx=5, pady=5)
 
         self.ContentEntryForm = self.ide.IDETextBox
 
         importCode = ctk.CTkButton(
-            self.ImportFrame,
+            ImportFrame,
             text='Import Python Code From File',
             command=self.GetCodeFromFile
         )
         importCode.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
         importInput = ctk.CTkButton(
-            self.ImportFrame,
+            ImportFrame,
             text='Import Input File From File',
             command=self.GetInputFromFile
         )
         importInput.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
+
+        if self.previous_data is not None:
+            self.nameVar.set(self.previous_data[1])
+            self.ide.InsertContent('0.0', self.previous_data[2], 1)
+            self.ide.InsertContent('0.0', self.previous_data[3], 2)
 
     def GetCodeFromFile(self):
         file_path = ctk.filedialog.askopenfilename()
@@ -79,3 +105,15 @@ class CodeEntryForm(EntryForm):
         self.ide.InsertContent("0.0", content, 2)
         self.ide.setInputFrame()
         self.ide.InputTextBox.focus()
+
+
+    def getData(self):
+        """returns data input into the frame in the following format
+        
+        (type, code name, code content, input code content)"""
+        return (
+            self.type,
+            self.nameVar.get().strip(),
+            self.ide.getCodeContent(),
+            self.ide.getInputContent()
+        )

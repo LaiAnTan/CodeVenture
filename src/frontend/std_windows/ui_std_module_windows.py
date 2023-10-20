@@ -49,6 +49,7 @@ class ModuleWindow(ActivityWindow):
                 case Module.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
+                        200, # TODO: Change the Height Value
                         paragraph_frame_width,
                         paragraph_frame
                     )
@@ -73,11 +74,12 @@ class ModuleWindow(ActivityWindow):
 
     # helper functions
 
-    def ImageHandler(self, content, max_img_width, attach_to):
+    def ImageHandler(self, content, max_img_height, max_img_width, attach_to):
         if self.ac.img.get(content):
             ret_widget = ImageLabel(
                 attach_to,
                 f"{self.ac.ModulePath}/{self.ac.img[content]}",
+                max_img_height - 50,
                 max_img_width - 50,
             )
         else:
@@ -92,11 +94,11 @@ class ModuleWindow(ActivityWindow):
     def CodeHandler(self, content, max_img_width, attach_to):
         if self.ac.code.get(content):
             ret_widget = CodeRunner(
-                            attach_to,
-                            max_img_width - 30,
-                            self.ac.code[content],
-                            self.ac.ModulePath
-                            )
+                attach_to,
+                max_img_width - 30,
+                self.ac.code[content],
+                self.ac.ModulePath
+            )
         else:
             ret_widget = ctk.CTkLabel(
                 attach_to,

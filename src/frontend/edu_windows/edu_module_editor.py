@@ -1,19 +1,26 @@
 import customtkinter as ctk
 import os
+from PIL import Image
+from config import ASSET_FOLDER
 
 from ..ui_app import App
 from .edu_activity_editor import ActivityEditor
 from ...backend.activity.ac_classes.ac_module import Activity, Module
 
-from .helper_class.imageEntry import ImageEntryForm
 from .helper_class.paragraphEntry import ParagraphEntryForm
-from .helper_class.codeEntry import CodeEntryForm
+from .helper_class.assetPreview import AssetPreview
+from .helper_class.assetWindow import AssetWindow
+
+from ...backend.factory.ModuleFactory import ModuleFactory
 
 class ModuleEditor(ActivityEditor):
     def __init__(self, master: App, width, height, existing_module: Module=None):
         super().__init__(master, width, height, Activity.AType['Module'], existing_module)
 
         self.entry_height = self.content_data_height
+        self.content_frames = []
+
+        self.assets = []
 
         self.SetFrames()
     
@@ -28,6 +35,17 @@ class ModuleEditor(ActivityEditor):
         )
         add_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
+        asset_button = ctk.CTkButton(
+            ContentHeader,
+            image=ctk.CTkImage(
+                Image.open(f'{ASSET_FOLDER}/asset_folder.png')
+            ),
+            text='Assets',
+            width=100,
+            command=self.show_asset_window
+        )
+        asset_button.pack(side=ctk.RIGHT, padx=5, pady=5)
+
         option_label = ctk.CTkLabel(
             ContentHeader,
             text='Type: ',
@@ -35,7 +53,7 @@ class ModuleEditor(ActivityEditor):
         option_label.pack(side=ctk.LEFT, padx=5, pady=5)
 
         self.chosen_para_type = ctk.StringVar(value='Paragraph')
-        self.para_types = ['Paragraph', 'Picture', 'Code Snippet']
+        self.para_types = ['Paragraph', 'Asset']
         add_options = ctk.CTkOptionMenu(
             ContentHeader,
             values=self.para_types,
@@ -76,16 +94,24 @@ class ModuleEditor(ActivityEditor):
         )
         last_index.pack(side=ctk.LEFT, padx=5, pady=5)
 
-        self.content_frames: list[ParagraphEntryForm] = []
         self.entry_frame_height = self.content_data_height * 0.55
         self.content_entry_frame = ctk.CTkScrollableFrame(
             self.content_data,
             width=self.content_width + 5,
             height=self.entry_frame_height
         )
-        self.entry_widget_heigth = self.entry_frame_height * 0.55
-        self.entry_widget_width = self.content_width - 15
+        self.content_entry_frame.columnconfigure(0, weight=1)
         self.content_entry_frame.grid(row=1, column=0, padx=5, pady=5)
+
+        self.entry_widget_heigth = self.entry_frame_height * 0.65
+        self.entry_widget_width = self.content_width - 15
+
+
+    ## helper functions
+
+    def show_asset_window(self):
+        asset_window = AssetWindow(self, 800, 700, self.assets)
+        self.master.winfo_toplevel().wait_window(asset_window)
 
     def AddEntryPoint(self):
         """Adds an certain type of entry form in a certain position
@@ -95,6 +121,7 @@ class ModuleEditor(ActivityEditor):
         if not self.index_value.get():
             self.index_value.set('1')
             return
+
         index = int(self.index_value.get()) - 1
         to_add = self.chosen_para_type.get()
 
@@ -106,19 +133,13 @@ class ModuleEditor(ActivityEditor):
                     self.entry_widget_heigth,
                     self.entry_widget_width,
                 )
-            case 'Picture':
-                entry_form = ImageEntryForm(
+            case 'Asset':
+                entry_form = AssetPreview(
                     self.content_entry_frame,
                     self,
-                    self.entry_widget_heigth,
                     self.entry_widget_width,
-                )
-            case 'Code Snippet':
-                entry_form = CodeEntryForm(
-                    self.content_entry_frame,
-                    self,
                     self.entry_widget_heigth,
-                    self.entry_widget_width,
+                    self.assets
                 )
 
         entry_form.ContentEntryForm.focus()
@@ -140,19 +161,26 @@ class ModuleEditor(ActivityEditor):
     def Regrid_Components(self):
         """Remove all frame in container for entry frames
         Then, reattach them onto the frame
-        
-        Use when there are changes in the ordering of self.content_frames"""
+
+        Use when there are changes in the ordering of self.content_frames
+        (removal or addition)"""
         for children in self.content_entry_frame.winfo_children():
             children.grid_forget()
-    
+
         for index, components in enumerate(self.content_frames):
-            components.grid(row=index, column=0, padx=5, pady=5)
+            self.content_entry_frame.rowconfigure(index, weight=1)
+            components.grid(row=index, column=0, padx=5, pady=5, sticky='ew')
+
+    def GetContentData(self):
+        return [x.getData() for x in self.content_frames]
 
     def ExportData(self):
         print('LOG: Exporting...')
+        header = self.GetHeaderData()
+        content = self.GetContentData()
 
-        data_file = 'hi'
-
+        ModuleFactory(header, content).build_Module()
+        print('Export Complete!')
 
 if __name__ == "__main__":
     master = App()
