@@ -159,7 +159,7 @@ class ActivityEditor(ctk.CTkFrame, ABC):
 
         tag_entry = ctk.CTkLabel(
             second_row,
-            text="idk when is this getting implemented"
+            text="TODO: Implement Tag Choosing"
         )
         tag_entry.grid(row=0, column=4, padx=5, pady=5)
 
@@ -176,12 +176,12 @@ class ActivityEditor(ctk.CTkFrame, ABC):
         )
         description_label.grid(row=0, column=1, padx=5, pady=5, sticky='n')
 
-        description_entry = ctk.CTkTextbox(
+        self.description_entry = ctk.CTkTextbox(
             thirdrow,
             width=self.content_width - 115,
             height=self.header_data_height * 0.3
         )
-        description_entry.grid(row=0, column=2, padx=5, pady=5, sticky='ew')
+        self.description_entry.grid(row=0, column=2, padx=5, pady=5, sticky='ew')
 
     @abstractmethod
     def ContentData(self):
@@ -190,6 +190,24 @@ class ActivityEditor(ctk.CTkFrame, ABC):
     @abstractmethod
     def ExportData(self):
         pass
+
+    @abstractmethod
+    def GetContentData(self):
+        pass
+
+    def GetHeaderData(self):
+        """Returns header data in the format of
+        
+        [id, type_num, name, difficulty_index, tags, description]"""
+        return [
+            "MD0001", # temporary, please remember to change
+            # self.id_variable.get(),
+            self.ac_type.value,
+            self.name_variable.get(),
+            self.difficulty_value.get(),
+            ["py001", 'py002', 'py004'],
+            self.description_entry.get("0.0", ctk.END)
+        ]
 
     ## helper function
 
@@ -210,7 +228,9 @@ class ActivityEditor(ctk.CTkFrame, ABC):
 
     def GetEmptyActivityID(self):
         id_list = ActivityDB().getListID(self.ac_type.value)
-        print(id_list)
+
+        # print(id_list)
+
         ## first 2 will be the type, last 3 is the value
         id_list = [int(x[2:]) for x in id_list]
         id_list.sort()

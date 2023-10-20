@@ -1,7 +1,7 @@
 import sqlite3 as sql
 import os
 
-from config import ROOT_DIR
+from config import ACTIVITY_DIR
 from src.backend.activity.ac_classes.ac_activity import Activity
 
 
@@ -12,7 +12,7 @@ class CompletedDB():
         # what the hell is this
         # self.root = os.path.split(os.path.split(os.path.split(os.path.split(os.path.dirname(__file__))[0])[0])[0])[0]
 
-        self.modulePath = f"{ROOT_DIR}/{Activity.activity_storage}/{ac_type.name}/{ac_id}"
+        self.modulePath = f"{ACTIVITY_DIR}/{ac_type.name}/{ac_id}"
 
         self.db_path = os.path.join(self.modulePath, f"{self.db_name}.db")
         self.db_fields = fields

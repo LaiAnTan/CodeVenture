@@ -5,18 +5,17 @@ from config import ASSET_DIR
 from os import path
 
 class ImageEntryForm(EntryForm):
-    def __init__(self, master, parent, height, width):
+    def __init__(self, master, parent, height, width, data=None):
         super().__init__(master, parent, height, width)
 
         self.type = "image"
         self.subwidth = self.width - 20
         self.subheight = self.height - 10
-
         self.max_image_height = self.subheight + 60
-
+        self.previous_data = data
         self.SetFrames()
 
-    def SetContent(self):
+    def SetContentFrame(self):
         DirectoryAndNameFrame = ctk.CTkFrame(self.content, width=self.subwidth)
         DirectoryAndNameFrame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
@@ -70,6 +69,23 @@ class ImageEntryForm(EntryForm):
             height=self.subheight
         )
         self.PreviewLabel.grid(row=0, column=0, padx=5, pady=5)
+
+        if self.previous_data is not None:
+            self.DirectoryVar.set(self.previous_data[2])
+            self.NameVar.set(self.previous_data[1])
+            self.PreviewImage(self.previous_data[2])
+
+    def getData(self):
+        """returns data input into the frame in the following format 
+        
+        (type, image name, image directory)"""
+        return (
+            self.type,
+            self.NameVar.get(),
+            self.DirectoryVar.get()
+        )
+
+    ## helper functions
 
     def ratio_resizing(self, image: Image, max_height, max_width):
         """Resizes an image so that its height and width are within the set range"""

@@ -1,11 +1,9 @@
 import os
 from enum import Enum
 from abc import ABC, abstractmethod
-from config import ROOT_DIR
+from config import ACTIVITY_DIR, DATA_FILE
 
 class Activity(ABC):
-    activity_storage = "storeroom"
-
     class Content_Type(Enum):
         Paragraph = 0
         Image = 1
@@ -26,13 +24,13 @@ class Activity(ABC):
                     return 'QZ'
 
     def	__init__(self, filename: str, ac_type: AType) -> None:
-        self.ModulePath = f"{ROOT_DIR}/{self.activity_storage}/{ac_type.name}/{filename}"
+        self.ModulePath = f"{ACTIVITY_DIR}/{ac_type.name}/{filename}"
         self.content: list[str] = []
         self.footer: list[str] = []
         self.type = ac_type
         self.img = {}
         self.code = {}
-        self.data_file = "data.dat"
+        self.data_file = DATA_FILE
 
         ## header values
         self.id = "null"

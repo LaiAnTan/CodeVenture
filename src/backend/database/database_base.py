@@ -58,6 +58,9 @@ class DBBase(object):
         # connection and cursor
         cls.conn = sqlite3.connect(cls.db_path)
         cls.cursor = cls.conn.cursor()
+
+        # actually we abit funny one hor, why no init new db if dh db
+        cls.new_db()
         return cls._instance
 
     @classmethod
@@ -109,7 +112,7 @@ class DBBase(object):
         """
         if cls.fetch_attr(cls.db_idfield, data_id) is None:
             raise cls.EntryNotFoundException
-        cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {{cls.db_idfield}: data_id})
+        cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {cls.db_idfield: data_id})
         cls.conn.commit()
 
     @classmethod
