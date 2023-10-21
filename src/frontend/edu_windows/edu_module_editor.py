@@ -113,6 +113,11 @@ class ModuleEditor(ActivityEditor):
         asset_window = AssetWindow(self, 800, 700, self.assets)
         self.master.winfo_toplevel().wait_window(asset_window)
 
+        # refresh all asset window
+        for content in self.content_entry_frame.winfo_children():
+            if isinstance(content, AssetPreview):
+                content.refreshPreview()
+
     def AddEntryPoint(self):
         """Adds an certain type of entry form in a certain position
         
@@ -179,7 +184,7 @@ class ModuleEditor(ActivityEditor):
         header = self.GetHeaderData()
         content = self.GetContentData()
 
-        ModuleFactory(header, content).build_Module()
+        ModuleFactory(header, content, self.assets).build_Module()
         print('Export Complete!')
 
 if __name__ == "__main__":

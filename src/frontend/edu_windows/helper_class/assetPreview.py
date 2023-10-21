@@ -100,7 +100,9 @@ class AssetPreview(EntryForm):
         self.width = width
         self.height = height
 
-        self.assets = asset_list
+        self.assets : list[tuple[str]] = asset_list
+        self.displaying_value = -1
+        self.error = False
         self.SetFrames()
 
 
@@ -141,10 +143,23 @@ class AssetPreview(EntryForm):
     def display_Selection(self):
         selection = AssetSelectionScreen(self, 450, 700, self.assets)
         self.master.winfo_toplevel().wait_window(selection)
-        displaying_value = selection.get_Selection()
-        print(displaying_value)
-        if displaying_value is None:
+
+        self.displaying_value = selection.get_Selection()
+        if self.displaying_value is None:
             return 
+
+        self.refreshPreview()
+
+    def refreshPreview(self):
+        if self.displaying_value is None:
+            return self.display_default()
+        if self.error is True:
+            return self.displayError()
+
+        try:
+            self.assets.index(self.displaying_value)
+        except ValueError:
+            return self.displayError()
 
         for children in self.content.winfo_children():
             children.grid_forget()
@@ -158,7 +173,7 @@ class AssetPreview(EntryForm):
         )
         asset_name_label.pack(side=ctk.LEFT, padx=(10, 5), pady=5)
 
-        asset_name_var = ctk.StringVar(value=displaying_value[1])
+        asset_name_var = ctk.StringVar(value=self.displaying_value[1])
         asset_name = ctk.CTkEntry(
             header_frame,
             width=140,
@@ -169,7 +184,7 @@ class AssetPreview(EntryForm):
 
         asset_type = ctk.CTkLabel(
             header_frame,
-            text=f'Type: {displaying_value[0].capitalize()}'
+            text=f'Type: {self.displaying_value[0].capitalize()}'
         )
         asset_type.pack(side=ctk.LEFT, padx=5, pady=5)
 
@@ -185,20 +200,53 @@ class AssetPreview(EntryForm):
         previewframe.rowconfigure(0, weight=1)
         previewframe.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
-        match displaying_value[0]:
+        match self.displaying_value[0]:
             case 'code':
                 preview_label = CodeBufferRunner(
                     previewframe,
                     self.width - 15,
-                    displaying_value[1],
-                    displaying_value[2],
-                    displaying_value[3]
+                    self.displaying_value[1],
+                    self.displaying_value[2],
+                    self.displaying_value[3]
                 )
             case 'image':
                 preview_label = ImageLabel(
                     previewframe,
-                    displaying_value[2],
+                    self.displaying_value[2],
                     self.height - 45,
                     self.width - 15,
                 )
         preview_label.grid(row=0, column=0, padx=5, pady=5)
+
+    def displayError(self):
+        self.error = True
+
+        for children in self.content.winfo_children():
+            children.grid_forget()
+
+        header = ctk.CTkFrame(self.content)
+        header.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
+
+        header.rowconfigure(0, weight=1)
+        header.columnconfigure((0, 1), weight=1)
+
+        label = ctk.CTkLabel(
+            header,
+            text="ERROR: Asset is removed from asset set, please choose another one!",
+            text_color='red'
+        )
+        label.pack(side=ctk.LEFT, padx=5, pady=5)
+
+        self.button = ctk.CTkButton(
+            header,
+            text='Select another asset',
+            command=self.display_Selection
+        )
+        self.button.pack(side=ctk.RIGHT, padx=5, pady=5)
+
+
+    def getData(self):
+        return (
+            'asset',
+            self.displaying_value
+        )

@@ -59,7 +59,7 @@ class ActivityEditor(ctk.CTkFrame, ABC):
 
         submit_button = ctk.CTkButton(
             self.header,
-            text="Finish and Save",
+            text="Finish and Export",
             command=self.ExportData
         )
         submit_button.pack(side=ctk.RIGHT, padx=5, pady=5)
@@ -227,6 +227,8 @@ class ActivityEditor(ctk.CTkFrame, ABC):
             return self.GetEmptyActivityID()
 
     def GetEmptyActivityID(self):
+        """Gets the next empty ActivityID based on the list of ActivityIDs from the database
+        Used for auto indexing activities"""
         id_list = ActivityDB().getListID(self.ac_type.value)
 
         # print(id_list)

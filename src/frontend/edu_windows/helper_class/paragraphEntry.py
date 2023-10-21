@@ -62,7 +62,7 @@ class ParagraphEntryForm(EntryForm):
         # check next one
         if next_index != -1 and next_index == self_index + 1:
             next_chunk: ParagraphEntryForm = self.parent.content_frames[next_index]
-            ## next chunk is empty, just use this one
+            # next chunk is empty, just use this one
             if next_chunk.peek():
                 next_chunk.insertData(extracted_data)
                 next_chunk.focus()
@@ -82,7 +82,7 @@ class ParagraphEntryForm(EntryForm):
         self.parent.Regrid_Components()
         new.insertData(content)
         new.ContentEntryForm.focus()
-        self.parent.ScrollContentFrame((where - 1) / len(self.parent.content_frames))
+        self.parent.ScrollContentFrame((where) / len(self.parent.content_frames))
         return "break"
     
     def PasteData(self, placeholder):
