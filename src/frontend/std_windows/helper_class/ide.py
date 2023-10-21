@@ -5,6 +5,9 @@ import customtkinter as ctk
 
 import subprocess
 
+from .textboxWithPlaceholder import TextBox_Placeholder
+from config import DEFAULT_IDE_MESSAGE, DEFAULT_INPUT_MESSAGE
+
 class IDE(ctk.CTkFrame):
     def __init__(self, master, width, height, code_name, id, activity_folder, content=None) -> None:
         super().__init__(master)
@@ -60,13 +63,14 @@ class IDE(ctk.CTkFrame):
             size=12,
         )
 
-        self.IDETextBox = ctk.CTkTextbox(
+        self.IDETextBox = TextBox_Placeholder(
             self.IDEContent,
             width=self.max_width,
             height=self.max_height,
             font=font,
             tabs=font.measure("    "),
-            wrap=ctk.WORD
+            wrap=ctk.WORD,
+            placeholder=DEFAULT_IDE_MESSAGE
         )
 
         if self.previous_input is not None:
@@ -78,13 +82,14 @@ class IDE(ctk.CTkFrame):
             size=12,
         )
 
-        self.InputTextBox = ctk.CTkTextbox(
+        self.InputTextBox = TextBox_Placeholder(
             self.IDEContent,
             width=self.max_width,
             height=self.max_height,
             font=font,
             tabs=font.measure("    "),
-            wrap=ctk.WORD
+            wrap=ctk.WORD,
+            placeholder=DEFAULT_INPUT_MESSAGE
         )
 
     def setInputFrame(self):

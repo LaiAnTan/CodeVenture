@@ -81,6 +81,7 @@ class CodeEntryForm(EntryForm):
         if len(file_name.split('.')) < 2 or extension != 'py':
             content = 'Invalid File Type'
         else:
+            self.nameVar.set(file_name.split('.')[0])
             with open(file_path) as file:
                 content = ''.join(file.readlines())
 
