@@ -28,13 +28,6 @@ class ModuleEditor(ActivityEditor):
         ContentHeader = ctk.CTkFrame(self.content_data)
         ContentHeader.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        add_button = ctk.CTkButton(
-            ContentHeader,
-            text="Add Entry Form",
-            command=lambda : self.AddEntryPoint()
-        )
-        add_button.pack(side=ctk.RIGHT, padx=5, pady=5)
-
         asset_button = ctk.CTkButton(
             ContentHeader,
             image=ctk.CTkImage(
@@ -44,13 +37,15 @@ class ModuleEditor(ActivityEditor):
             width=100,
             command=self.show_asset_window
         )
-        asset_button.pack(side=ctk.RIGHT, padx=5, pady=5)
+        asset_button.pack(side=ctk.LEFT, padx=5, pady=5)
 
-        option_label = ctk.CTkLabel(
+        add_button = ctk.CTkButton(
             ContentHeader,
-            text='Type: ',
+            text="Add Entry Form At the End!",
+            width=220,
+            command=lambda : self.AddEntryPoint()
         )
-        option_label.pack(side=ctk.LEFT, padx=5, pady=5)
+        add_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
         self.chosen_para_type = ctk.StringVar(value='Paragraph')
         self.para_types = ['Paragraph', 'Asset']
@@ -59,40 +54,13 @@ class ModuleEditor(ActivityEditor):
             values=self.para_types,
             variable=self.chosen_para_type
         )
-        add_options.pack(side=ctk.LEFT)
+        add_options.pack(side=ctk.RIGHT, padx=(5, 40), pady=5)
 
-        index_label = ctk.CTkLabel(
+        option_label = ctk.CTkLabel(
             ContentHeader,
-            text='Position: '
+            text='Type: ',
         )
-        index_label.pack(side=ctk.LEFT, padx=(20, 0), pady=5)
-
-        first_index = ctk.CTkButton(
-            ContentHeader,
-            text='First',
-            command=lambda : self.index_value.set('1'),
-            width=10
-        )
-        first_index.pack(side=ctk.LEFT, padx=5, pady=5)
-
-        vcmd = self.register(lambda P : (str.isdigit(P) and int(P) < 1000 and int(P) > 0) or P == '')
-        self.index_value = ctk.StringVar(value='1')
-        index_entry = ctk.CTkEntry(
-            ContentHeader,
-            width=40,
-            validate='key',
-            validatecommand=(vcmd, '%P'),
-            textvariable=self.index_value
-        )
-        index_entry.pack(side=ctk.LEFT, padx=5, pady=5)
-
-        last_index = ctk.CTkButton(
-            ContentHeader,
-            text='Last',
-            command=lambda : self.index_value.set(str(len(self.content_frames) + 1)),
-            width=10
-        )
-        last_index.pack(side=ctk.LEFT, padx=5, pady=5)
+        option_label.pack(side=ctk.RIGHT, padx=5, pady=5)
 
         self.entry_frame_height = self.content_data_height * 0.55
         self.content_entry_frame = ctk.CTkScrollableFrame(
@@ -119,15 +87,9 @@ class ModuleEditor(ActivityEditor):
                 content.refreshPreview()
 
     def AddEntryPoint(self):
-        """Adds an certain type of entry form in a certain position
+        """Adds an certain type of entry form at the end of the window
         
-        type is retrive from add_options CtkOptionMenu
-        index is retrive from index_entry CtkEntry"""
-        if not self.index_value.get():
-            self.index_value.set('1')
-            return
-
-        index = int(self.index_value.get()) - 1
+        type is retrive from add_options CtkOptionMenu"""
         to_add = self.chosen_para_type.get()
 
         match to_add:
@@ -148,13 +110,10 @@ class ModuleEditor(ActivityEditor):
                 )
 
         entry_form.ContentEntryForm.focus()
-        if index >= len(self.content_frames):
-            self.content_frames.append(entry_form)
-        else:
-            self.content_frames.insert(index, entry_form)
+        self.content_frames.append(entry_form)
 
         self.Regrid_Components()
-        self.ScrollContentFrame(index / len(self.content_frames))
+        self.ScrollContentFrame(1)
 
     def ScrollContentFrame(self, how_much: float):
         """Processes all idle and pending task

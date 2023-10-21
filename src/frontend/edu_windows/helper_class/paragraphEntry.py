@@ -63,10 +63,10 @@ class ParagraphEntryForm(EntryForm):
         if next_index != -1 and next_index == self_index + 1:
             next_chunk: ParagraphEntryForm = self.parent.content_frames[next_index]
             # next chunk is empty, just use this one
-            if next_chunk.peek():
+            if not next_chunk.peek():
                 next_chunk.insertData(extracted_data)
                 next_chunk.focus()
-                self.parent.ScrollContentFrame(self_index / len(self.parent.content_frames))
+                self.parent.ScrollContentFrame(next_index / len(self.parent.content_frames))
                 return "break"
 
         return self.makeNewInstance(self_index + 1, extracted_data)

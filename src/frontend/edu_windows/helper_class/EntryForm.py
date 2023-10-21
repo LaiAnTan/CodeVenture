@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from abc import ABC, abstractmethod
-from .ConfirmationWindow import ConfirmationWindow
-
+from .confirmationWindow import ConfirmationWindow
+from .entryAdder import EntryAdder
 
 class EntryForm(ctk.CTkFrame):
     def __init__(self, master, parent, height, width):
@@ -14,22 +14,33 @@ class EntryForm(ctk.CTkFrame):
         self.height = height
         self.width = width
 
-        self.rowconfigure((0, 1), weight=1)
+        self.rowconfigure((0, 1, 2), weight=1)
         self.columnconfigure(0, weight=1)
 
         self.header = ctk.CTkFrame(self, width, height=15)
-        self.header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        self.header.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
         self.content = ctk.CTkFrame(self, width, height=height - 15)
-        self.content.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
+        self.content.grid(row=2, column=0, padx=5, pady=5, sticky='ew')
 
         ## the main place to input data
         self.ContentEntryForm = None
 
-    def SetFrames(self):
+    def get_IndexInstance(self):
+        """
+        """
+        for index, x in enumerate(self.parent.content_frames):
+            if x is self:
+                return index
+        return -1
+
+    def SetFrames(self, no_entry_adder: bool = False):
         """Builds both Header and Content Frame"""
         self.SetHeader()
         self.SetContentFrame()
+
+        if not no_entry_adder:
+            self.SetEntryAdder()
 
     def SetHeader(self):
         cool_label = ctk.CTkLabel(
@@ -83,6 +94,10 @@ class EntryForm(ctk.CTkFrame):
     @abstractmethod
     def getData(self):
         pass
+
+    def SetEntryAdder(self):
+        entry_adder = EntryAdder(self, self, self.parent, 45, self.width)
+        entry_adder.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
     def focus(self):
         self.ContentEntryForm.focus()

@@ -12,7 +12,7 @@ class CodeEntryForm(EntryForm):
 
         self.previous_data = data
 
-        self.SetFrames()
+        self.SetFrames(True)
 
     def SetContentFrame(self):
         self.content.rowconfigure(0, weight=1)

@@ -101,7 +101,7 @@ class AssetPreview(EntryForm):
         self.height = height
 
         self.assets : list[tuple[str]] = asset_list
-        self.displaying_value = -1
+        self.displaying_value = None
         self.error = False
         self.SetFrames()
 
@@ -147,6 +147,7 @@ class AssetPreview(EntryForm):
         self.displaying_value = selection.get_Selection()
         if self.displaying_value is None:
             return 
+        self.error = False
 
         self.refreshPreview()
 

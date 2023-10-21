@@ -13,7 +13,7 @@ class ImageEntryForm(EntryForm):
         self.subheight = self.height - 10
         self.max_image_height = self.subheight + 60
         self.previous_data = data
-        self.SetFrames()
+        self.SetFrames(True)
 
     def SetContentFrame(self):
         DirectoryAndNameFrame = ctk.CTkFrame(self.content, width=self.subwidth)
