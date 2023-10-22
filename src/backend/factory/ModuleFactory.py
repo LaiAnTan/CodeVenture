@@ -5,6 +5,7 @@ from ..database.database_base import DBBase
 import shutil as sht
 import os
 
+
 class ModuleFactory(ActivityFactory):
     def __init__(self, header, content, assets) -> None:
         self.header = header

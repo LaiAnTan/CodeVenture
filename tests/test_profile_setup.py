@@ -5,6 +5,7 @@ import os
 p = os.path.abspath(os.path.join(".."))
 sys.path.append(p)
 
+# flake8: noqa
 from src.frontend.ui_student_profile_setup import profileSetupHandler
 from src.backend.database.database_student import StudentDB
 from src.backend.user.user_student import Student

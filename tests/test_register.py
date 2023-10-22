@@ -5,10 +5,17 @@ import os
 p = os.path.abspath(os.path.join(".."))
 sys.path.append(p)
 
+# flake8: noqa
 from src.frontend.ui_register import registerHandler
+from src.backend.database.database_user import UserDB
 
 
 class TestRegisterHandler(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.udb = UserDB()
+
     def test_empty_fields(self):
         """
         Test when one or more registration fields are empty.
@@ -27,7 +34,7 @@ class TestRegisterHandler(unittest.TestCase):
         """
         Test when the provided username is already taken.
         """
-        result = registerHandler("testuser", "password", "password", "student")
+        result = registerHandler("teststd", "password", "password", "student")
         self.assertEqual(result, (False, "Username already taken"))
 
     def test_username_password_match(self):
@@ -50,6 +57,16 @@ class TestRegisterHandler(unittest.TestCase):
         """
         result = registerHandler("new_user", "password", "password", "educator")
         self.assertEqual(result, (True, "Register Successful"))
+
+    @classmethod
+    def tearDown(cls):
+        """
+        Tries to remove database test entry after every test
+        """
+        try:
+            cls.udb.remove_entry("new_user")
+        except UserDB.EntryNotFoundException:
+            pass
 
 if __name__ == '__main__':
     unittest.main()
