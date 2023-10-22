@@ -17,13 +17,17 @@ from config import LIGHTMODE_GRAY, DARKMODE_GRAY
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
 
 
-class SelectionScreen():
+class SelectionScreen(ctk.CTkFrame):
 
     def __init__(self, student, attach: App) -> None:
+        super().__init__(attach.main_frame)
+
         self.student = student
         self.activity_database = ab.ActivityDB()
         self.root = attach
         self.results = search_database("")
+
+        self.attach_elements()
 
     def return_to_studentMenu(self):
         from ..ui_std_window_gen import studentMenuPage
@@ -35,7 +39,7 @@ class SelectionScreen():
 
         # header
 
-        header = ctk.CTkFrame(self.root.main_frame, fg_color="transparent")
+        header = ctk.CTkFrame(self, fg_color="transparent")
         header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         # search bar
@@ -112,7 +116,7 @@ class SelectionScreen():
 
         # content
 
-        content = ctk.CTkFrame(self.root.main_frame, height=450,
+        content = ctk.CTkFrame(self, height=450,
                                fg_color="transparent")
         content.grid(row=1, column=0, padx=5, pady=5)
 

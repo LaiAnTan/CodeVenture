@@ -27,9 +27,11 @@ class StudentMenuWindow(ctk.CTkFrame):
         @param main_attach: main tkinter object containing root frame.
         @return None
         """
-        super().__init__(main_attach.main_frame)
+        super().__init__(main_attach.main_frame, fg_color='transparent')
         self.student = student
         self.root = main_attach
+
+        self.attach_elements()
 
     def attach_elements(self) -> None:
         """
@@ -40,7 +42,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         # header frame
 
         header_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=self.header_height,
             fg_color="transparent"
@@ -116,7 +118,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         # main content frame
 
         content_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=self.full_content_height,
             fg_color="transparent"

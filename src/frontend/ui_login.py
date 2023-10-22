@@ -13,11 +13,13 @@ from ..backend.user.user_student import Student
 class LoginWindow(ctk.CTkFrame):
 
     def __init__(self, main_attach: App):
-        super().__init__(main_attach.main_frame)
+        super().__init__(main_attach.main_frame, fg_color='transparent')
         self.username = None
         self.password = None
         self.user = User(None)
         self.root = main_attach
+
+        self.attach_elements()
 
     def getUsername(self):
         return self.username
@@ -32,7 +34,7 @@ class LoginWindow(ctk.CTkFrame):
         # title frame
 
         title_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=full_width,
             height=40,
             fg_color="transparent"
@@ -80,7 +82,7 @@ class LoginWindow(ctk.CTkFrame):
         # entry frame
 
         entry_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=full_width,
             height=100,
             fg_color="transparent"
@@ -165,7 +167,7 @@ class LoginWindow(ctk.CTkFrame):
         # buttons frame
 
         button_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=full_width,
             height=20,
             fg_color="transparent"
