@@ -7,11 +7,6 @@ class UserDB(DBBase):
     Singleton class that handles users database operations
     """
 
-    """
-    I do not know why we need 2 parameters
-    I do not know what is placeholder for
-    I do not know why am i doing this
-    """
     @classmethod
     def __new__(cls, placeholder=None):
         return super(UserDB, cls).__new__("users",
