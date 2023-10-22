@@ -59,6 +59,7 @@ class App():
         previous = cls.history[-1]
 
         cls.clean_frame()
+        previous.refresh()
         cls.change_frame(previous)
 
     @classmethod
@@ -68,8 +69,14 @@ class App():
     @classmethod
     def change_frame(cls, new_frame):
         """Changes frame of App
+        Call App().clean_frame beforehand to remove existing 
+        windows
+
+        make sure new_frame's master is App or App.main_frame
+
         
-        make sure new_frame's master is App or App.main_frame"""
+        Please call this if you want to change the frame of the App, do
+        not attempt to grid it by yourself, the back buttons depend on this"""
         cls.add_to_history(new_frame)
         new_frame.grid(row=0, column=0)
         cls.main_frame.grid(row=0, column=0)

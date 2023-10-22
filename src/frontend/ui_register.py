@@ -2,6 +2,7 @@ import customtkinter as ctk
 from argon2 import PasswordHasher
 
 from .ui_app import App
+from .ui_app_frame import App_Frame
 from .ui_std_window_gen import loginPage
 from ..backend.database.database_user import UserDB
 
@@ -35,15 +36,17 @@ def registerHandler(username: str, password: str, confirm_pw: str,
     return (True, "Register Successful")
 
 
-class RegisterWindow(ctk.CTkFrame):
+class RegisterWindow(App_Frame):
 
     full_width = 450
 
-    def __init__(self, main_attach: App):
-        super().__init__(main_attach.main_frame, fg_color='transparent')
-        self.root = main_attach
+    def __init__(self):
+        super().__init__()
 
         self.attach_elements()
+
+    def refresh_variables(self):
+        pass
 
     def attach_elements(self):
 
@@ -281,7 +284,7 @@ class RegisterWindow(ctk.CTkFrame):
         )
 
         def loginButtonEvent():
-            loginPage(self.root)
+            loginPage()
 
         login_button = ctk.CTkButton(button_frame,
                                      text="Back to Login",

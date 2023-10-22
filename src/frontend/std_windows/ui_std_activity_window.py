@@ -1,8 +1,9 @@
 
 import customtkinter as ctk
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from ..ui_app import App
+from ..ui_app_frame import App_Frame
 from ...backend.activity.ac_classes.ac_activity import Activity
 from ...backend.user.user_student import Student
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
@@ -10,18 +11,23 @@ from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 from .helper_class.code_runner import CodeRunner
 from .helper_class.imagelabel import ImageLabel
 
-class ActivityWindow(ctk.CTkFrame):
+class ActivityWindow(App_Frame, ABC):
 
-    def __init__(self, activity: Activity, student: Student, main_attach: App):
-        super().__init__(main_attach.main_frame)
-        self.root = main_attach
-
+    def __init__(self, activity: Activity, student: Student):
+        super().__init__()
         self.ac = activity
         self.std = student
         self.completion_database = ActivityDictionary().getDatabase(self.ac.id)
         
         self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
 
+    def refresh_variables(self):
+        self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
+
+    def attach_elements(self):
+        self.SetFrames()
+
+    def SetFrames(self):
         self.header_frame = ctk.CTkFrame(self)
         self.header_frame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
@@ -31,7 +37,6 @@ class ActivityWindow(ctk.CTkFrame):
         self.footer_frame = ctk.CTkFrame(self)
         self.footer_frame.grid(row=2, column=0, padx=5, pady=5)
 
-    def SetFrames(self):
         self.SetHeader()
         self.SetContent()
         self.SetFooter()
