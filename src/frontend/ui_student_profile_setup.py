@@ -20,7 +20,7 @@ def profileSetupHandler(student: Student, full_name: str, email: str, dob: str,
     """
 
     sdb = StudentDB()
-    print(full_name, email, dob, profile_pic_path)
+    # print(full_name, email, dob, profile_pic_path)
 
     if full_name == "" or email == "" or dob == "" or profile_pic_path == "":
         return (False, "One or more fields incomplete")

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 from ..backend.settings.settings import Settings
+from config import ROOT_DIR
 
 
 class App():
@@ -27,7 +28,7 @@ class App():
     main.minsize(width, height)
     main.maxsize(width, height)
 
-    settings = Settings("settings.conf")
+    settings = Settings(f"{ROOT_DIR}/settings.conf")
 
     if settings.getSettingValue("lightmode").lower() == "false":
         ctk.set_appearance_mode("dark")
@@ -44,7 +45,7 @@ class App():
 
     @classmethod
     def __new__(cls, placeholder=None):
-        if cls._instance == None:
+        if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
