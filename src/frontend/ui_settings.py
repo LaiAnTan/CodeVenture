@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from argon2 import PasswordHasher
+from argon2 import PasswordHasher, exceptions
 
 from .ui_std_window_gen import studentMenuPage
 from .ui_app import App
@@ -17,7 +17,7 @@ def changePasswordHandler(student: Student, old_password: str,
     """
     db = UserDB()
 
-    current_pw = db.fetch_attr("password", student.getUsername())
+    current_pw_hash = db.fetch_attr("password", student.getUsername())
 
     if old_password == "" or new_password == "" or confirm_password == "":
         return (False, "One or more fields empty")
@@ -28,10 +28,12 @@ def changePasswordHandler(student: Student, old_password: str,
     if new_password != confirm_password:
         return (False, "Passwords do not match")
 
-    if current_pw != old_password:
-        return (False, "Wrong password")
-
     ph = PasswordHasher()
+
+    try:
+        ph.verify(current_pw_hash, old_password)
+    except exceptions.VerifyMismatchError:
+        return (False, "Wrong password")
 
     db.update_attr("password", student.getUsername(), ph.hash(new_password))
 
