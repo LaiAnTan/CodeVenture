@@ -1,4 +1,9 @@
 import unittest
+import sys
+import os
+
+p = os.path.abspath(os.path.join(".."))
+sys.path.append(p)
 
 from src.frontend.ui_register import registerHandler
 
