@@ -1,6 +1,7 @@
 import sqlite3 as sqlite3
 import os
 
+from config import DATABASE_DIR
 
 class DBBase(object):
 
@@ -17,7 +18,7 @@ class DBBase(object):
     cursor = "placeholder text"
 
     _instance = None
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    BASE_DIR = DATABASE_DIR
 
     class DuplicateEntryException(Exception):
         """Called when trying to add entry that already exists in the
