@@ -22,16 +22,20 @@ DATA_FILE = 'data.dat'
 DATABASE_FOLDER = 'database'
 DATABASE_DIR = f'{ROOT_DIR}/{DATABASE_FOLDER}'
 
-DEFAULT_IDE_MESSAGE = \
-"""This is the IDE window
+DEFAULT_IDE_MESSAGE = """
+This is the IDE window
 
-You can write your code here, then click on input button to write some input for your code to run with
+You can write your code here, then click on input button to write some input\
+for your code to run with
 
 Use this like how you would use any normal Python Editor!"""
 
-DEFAULT_INPUT_MESSAGE = \
-"""This is the Input window
+DEFAULT_INPUT_MESSAGE = """
+This is the Input window
 
-You would write the input for your code to run with, for codes which requires input from your keyboard.
+You would write the input for your code to run with, for codes which requires\
+input from your keyboard.
 
-Each input must be seperated by a Enter key, if your output states "Reached EOF", that means you do not have enough input!"""
+Each input must be seperated by a Enter key, if your output states\
+"Reached EOF", that means you do not have enough input!
+"""
