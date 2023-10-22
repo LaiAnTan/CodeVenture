@@ -11,8 +11,9 @@ This project was developed following the waterfall model, where all documents
 - Coding Modules, Quizzes, Challenges
 - Functional IDE
 - Accounts system w/ database
-- Statistics tracker
 - User Interface
+- Fully Customizable Modular Activities with Inbuilt Editor
+- Statistics tracker (Coming Soon)
 
 ## Dependencies
 
