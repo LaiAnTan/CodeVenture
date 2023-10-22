@@ -46,7 +46,7 @@ class CodeRunner(ctk.CTkFrame):
                 file.read(),
                 PythonLexer(),
                 ImageFormatter(
-                    font_name="Arial",
+                    font_name="Helvetica",
                     font_size=12
                 ),
                 outfile=f"{self.code_folder}/temp"
@@ -123,7 +123,7 @@ class CodeRunner(ctk.CTkFrame):
             wraplength=self.max_width - 70,
             anchor="w",
             justify="left",
-            font=ctk.CTkFont("Arial", size=11),
+            font=ctk.CTkFont("Helvetica", size=11),
             bg_color="black",
             text_color=font_color
         )

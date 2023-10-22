@@ -59,7 +59,7 @@ class IDE(ctk.CTkFrame):
 
     def InitIDEWindow(self):
         font = ctk.CTkFont(
-            "Arial",
+            "Helvetica",
             size=12,
         )
 
@@ -78,7 +78,7 @@ class IDE(ctk.CTkFrame):
 
     def InitInputFrame(self):
         font = ctk.CTkFont(
-            "Arial",
+            "Helvetica",
             size=12,
         )
 
@@ -171,7 +171,7 @@ class IDE(ctk.CTkFrame):
             wraplength=max_width,
             anchor="w",
             justify="left",
-            font=ctk.CTkFont("Arial", size=11),
+            font=ctk.CTkFont("Helvetica", size=11),
             bg_color="black",
             text_color=word_color
         )

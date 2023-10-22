@@ -248,7 +248,7 @@ class ChallangeWindow(ActivityWindow):
                     text=f"Test {index} -- OK!",
                     text_color="limegreen",
                     font=ctk.CTkFont(
-                        "Arial",
+                        "Helvetica",
                         size=20
                     ),
                     width=frame_width - 10,
@@ -262,7 +262,7 @@ class ChallangeWindow(ActivityWindow):
                     text=f"Test {index} -- KO!",
                     text_color="red",
                     font=ctk.CTkFont(
-                        "Arial",
+                        "Helvetica",
                         size=20
                     ),
                     width=frame_width - 10,
@@ -280,7 +280,7 @@ class ChallangeWindow(ActivityWindow):
             text=f"Test {correct_cases}/{cases} passed!",
             text_color="yellow",
             font=ctk.CTkFont(
-                "Arial",
+                "Helvetica",
                 size=20
             ),
             width=frame_width - 10,
