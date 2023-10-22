@@ -39,9 +39,25 @@ class App():
 
     @classmethod
     def clean_frame(cls):
-        cls.main_frame.place_forget()
+        """Call this before adding new frames
+        
+        remove all frames from the App's main frame
+        
+        DO NOT call this after adding your new frame"""
+        # cls.main_frame.place_forget() # i dont think this is doing anything?
+        cls.main_frame.grid_forget() # THIS is the one that is doing something
+        # but that breaks so :P
         for widgets in cls.main_frame.winfo_children():
             widgets.destroy()
+
+    @classmethod
+    def change_frame(cls, new_frame):
+        """Changes frame of App
+        
+        make sure new_frame's master is App or App.main_frame"""
+        new_frame.grid(row=0, column=0)
+
+        cls.main_frame.grid(row=0, column=0)
 
     @classmethod
     def __new__(cls, placeholder=None):
@@ -56,4 +72,7 @@ class App():
 
 if __name__ == "__main__":
     test = App()
+    test2 = App()
+    print(test2 is test)
+
     test.mainloop()

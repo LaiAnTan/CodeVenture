@@ -5,9 +5,10 @@ from .ui_app import App
 from .ui_std_window_gen import registerPage, studentMenuPage, subscribePage, \
     studentProfileSetupPage
 
+from .ui_edu_window_gen import editor_prompt
+
 from ..backend.user.user_base import User
 from ..backend.user.user_student import Student
-
 
 class LoginWindow(ctk.CTkFrame):
 
@@ -201,7 +202,8 @@ class LoginWindow(ctk.CTkFrame):
                             studentMenuPage(self.root, s)
 
                     case "educator":
-                        return
+                        editor_prompt()
+
                     case "admin":
                         return
                     case _:
