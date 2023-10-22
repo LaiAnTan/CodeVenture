@@ -92,3 +92,6 @@ def sort_results(results: list[tuple[str]], mode: str, option: str):
         s = [x for _, x in sorted(zip(weights, results), reverse=True)]
 
     return s
+
+if __name__ == "main":
+    print(search_database("hello"))
