@@ -100,7 +100,7 @@ class SubscribeWindow(ctk.CTkFrame):
             pady=10
         )
 
-        def validateSubButtonEvent():
+        def validateSubButtonEvent() -> None:
             code = sub_code.get()
             if code == "99999":
                 sdb = StudentDB()

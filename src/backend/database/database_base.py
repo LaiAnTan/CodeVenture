@@ -109,7 +109,7 @@ class DBBase(object):
         """
         if cls.fetch_attr(cls.db_idfield, data_id) is None:
             raise cls.EntryNotFoundException
-        cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {{cls.db_idfield}: data_id})
+        cls.cursor.execute(f"DELETE FROM {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {cls.db_idfield: data_id})
         cls.conn.commit()
 
     @classmethod

@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from argon2 import PasswordHasher
 
 from .ui_std_window_gen import studentMenuPage
 from .ui_app import App
@@ -30,7 +31,10 @@ def changePasswordHandler(student: Student, old_password: str,
     if current_pw != old_password:
         return (False, "Wrong password")
 
-    db.update_attr("password", student.getUsername(), new_password)
+    ph = PasswordHasher()
+
+    db.update_attr("password", student.getUsername(), ph.hash(new_password))
+
     return (True, "Password Change Successful")
 
 

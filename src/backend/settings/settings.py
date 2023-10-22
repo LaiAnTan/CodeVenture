@@ -1,4 +1,6 @@
 
+from config import ROOT_DIR
+
 
 class Settings:
 
@@ -11,6 +13,8 @@ class Settings:
         Parses the file specified in config_file, into a list of settings.
         """
         self.config_file = config_file
+
+        print(self.config_file)
 
         with open(config_file, "r") as file:
             self.data = file.readlines()
@@ -40,3 +44,5 @@ class Settings:
 
         with open(self.config_file, "w") as file:
             file.writelines(self.data)
+
+
