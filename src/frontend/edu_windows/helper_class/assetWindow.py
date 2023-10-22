@@ -100,8 +100,6 @@ class AssetWindow(ctk.CTkToplevel):
         )
 
     def save_data(self):
-        self.assets.clear()
-
         error_status = [x.getError() for x in self.content_frames]
         error_messages = []
 
@@ -113,6 +111,7 @@ class AssetWindow(ctk.CTkToplevel):
             self.master.winfo_toplevel().wait_window(error_window)
             return
 
+        self.assets.clear()
         self.assets.extend([x.getData() for x in self.content_frames])
         self.destroy()
 
