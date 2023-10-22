@@ -3,10 +3,11 @@ import customtkinter as ctk
 from .ui_std_window_gen import loginPage, profilePage, settingsPage
 from src.frontend.ui_activity_tile import ActivityTile
 from .ui_app import App
+from .ui_app_frame import App_Frame
 from ..backend.user.user_student import Student
 
 
-class StudentMenuWindow(ctk.CTkFrame):
+class StudentMenuWindow(App_Frame):
 
     """
     Frame class for displaying the student menu with tkinter.
@@ -19,7 +20,7 @@ class StudentMenuWindow(ctk.CTkFrame):
     full_content_height = 460 - header_height
     half_content_height = full_content_height / 2
 
-    def __init__(self, student: Student, main_attach: App) -> None:
+    def __init__(self, student: Student) -> None:
         """
         Initializes the class.
 
@@ -27,11 +28,13 @@ class StudentMenuWindow(ctk.CTkFrame):
         @param main_attach: main tkinter object containing root frame.
         @return None
         """
-        super().__init__(main_attach.main_frame, fg_color='transparent')
+        super().__init__()
         self.student = student
-        self.root = main_attach
 
         self.attach_elements()
+
+    def refresh_variables(self):
+        pass
 
     def attach_elements(self) -> None:
         """
@@ -60,7 +63,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         )
 
         def logoutButtonEvent():
-            loginPage(self.root)
+            loginPage()
 
         logout_button = ctk.CTkButton(
             header_frame,
@@ -76,7 +79,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         )
 
         def settingsButtonEvent():
-            settingsPage(self.root, self.student)
+            settingsPage(self.student)
 
         settings_button = ctk.CTkButton(
             header_frame,
@@ -92,7 +95,7 @@ class StudentMenuWindow(ctk.CTkFrame):
         )
 
         def profileButtonEvent():
-            profilePage(self.root, self.student)
+            profilePage(self.student)
 
         profile_button = ctk.CTkButton(
             header_frame,
@@ -168,7 +171,6 @@ class StudentMenuWindow(ctk.CTkFrame):
                                      ac_tile_height,
                                      self.student,
                                      recommended_frame,
-                                     self.root
                                      )
 
         recommended_1.attach_elements()
@@ -183,7 +185,6 @@ class StudentMenuWindow(ctk.CTkFrame):
                                      ac_tile_height,
                                      self.student,
                                      recommended_frame,
-                                     self.root
                                      )
 
         recommended_2.attach_elements()
@@ -198,7 +199,6 @@ class StudentMenuWindow(ctk.CTkFrame):
                                      ac_tile_height,
                                      self.student,
                                      recommended_frame,
-                                     self.root
                                      )
 
         recommended_3.attach_elements()
@@ -231,7 +231,7 @@ class StudentMenuWindow(ctk.CTkFrame):
             buttons_frame,
             width=40,
             text="All Activities",
-            command=lambda: displayActivitySelections(self.root, self.student)
+            command=lambda: displayActivitySelections(self.student)
         )
 
         all_activities.grid(

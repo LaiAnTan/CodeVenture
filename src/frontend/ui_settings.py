@@ -3,6 +3,7 @@ from argon2 import PasswordHasher
 
 from .ui_std_window_gen import studentMenuPage
 from .ui_app import App
+from .ui_app_frame import App_Frame
 from ..backend.user.user_student import Student
 from ..backend.database.database_user import UserDB
 
@@ -38,7 +39,7 @@ def changePasswordHandler(student: Student, old_password: str,
     return (True, "Password Change Successful")
 
 
-class SettingsWindow(ctk.CTkFrame):
+class SettingsWindow(App_Frame):
 
     header_height = 20
     full_width = 600
@@ -46,12 +47,13 @@ class SettingsWindow(ctk.CTkFrame):
     full_content_height = 460 - header_height
     half_content_height = full_content_height / 2
 
-    def __init__(self, student: Student, main_attach: App):
-        super().__init__(main_attach.main_frame, fg_color='transparent')
-        self.student = student
-        self.root = main_attach
+    def __init__(self, student: Student):
+        super().__init__()
 
         self.attach_elements()
+
+    def refresh_variables(self):
+        pass
 
     def attach_elements(self):
 
@@ -83,7 +85,7 @@ class SettingsWindow(ctk.CTkFrame):
         )
 
         def backButtonEvent():
-            studentMenuPage(self.root, self.student)
+            studentMenuPage(self.student)
 
         back_button = ctk.CTkButton(
             header_frame,
@@ -152,14 +154,14 @@ class SettingsWindow(ctk.CTkFrame):
             if appearance_toggler_status.get() == 1:
                 ctk.set_appearance_mode("light")
                 ctk.set_default_color_theme("blue")
-                self.root.settings.updateSetting("lightmode", "true")
+                App().settings.updateSetting("lightmode", "true")
 
             else:
                 ctk.set_appearance_mode("dark")
                 ctk.set_default_color_theme("dark-blue")
-                self.root.settings.updateSetting("lightmode", "false")
+                App().settings.updateSetting("lightmode", "false")
 
-            self.root.main.update_idletasks()
+            App().main.update_idletasks()
 
         appearance_toggler = ctk.CTkSwitch(
             toggle_appearance_mode_frame,
@@ -170,7 +172,7 @@ class SettingsWindow(ctk.CTkFrame):
             command=lambda: appearanceTogglerEvent(),
         )
 
-        if self.root.settings.getSettingValue("lightmode").lower() == "true":
+        if App().settings.getSettingValue("lightmode").lower() == "true":
             print("lightmode enabled")
             appearance_toggler.select()
 

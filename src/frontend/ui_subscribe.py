@@ -1,22 +1,25 @@
 import customtkinter as ctk
 
 from src.frontend.ui_app import App
+from .ui_app_frame import App_Frame
 from src.frontend.ui_std_window_gen import loginPage
 from src.backend.user.user_student import Student
 from src.backend.database.database_student import StudentDB
 
 
-class SubscribeWindow(ctk.CTkFrame):
+class SubscribeWindow(App_Frame):
 
     full_width = 450
     half_width = full_width / 2
 
-    def __init__(self, student: Student, main_attach: App):
-        super().__init__(main_attach.main_frame, fg_color='transparent')
+    def __init__(self, student: Student):
+        super().__init__()
         self.student = student
-        self.root = main_attach
 
         self.attach_elements()
+
+    def refresh_variables(self):
+        pass
 
     def attach_elements(self):
 
@@ -109,7 +112,7 @@ class SubscribeWindow(ctk.CTkFrame):
                 sdb.update_attr("subscription", self.student.getUsername(), 1)
                 sdb.update_attr("subscription_end", self.student.getUsername(),
                                 "hehe")
-                loginPage(self.root)
+                loginPage()
 
         validate_sub_button = ctk.CTkButton(
             entry_frame,
@@ -164,7 +167,7 @@ class SubscribeWindow(ctk.CTkFrame):
         )
 
         def backToLoginButtonEvent():
-            loginPage(self.root)
+            loginPage()
 
         back_to_login_button = ctk.CTkButton(
             button_frame,

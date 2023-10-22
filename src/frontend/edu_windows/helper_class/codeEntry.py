@@ -12,7 +12,7 @@ class CodeEntryForm(EntryForm):
 
         self.previous_data = data
 
-        self.SetFrames(True)
+        self.SetFrames(no_entry_adder=True)
 
     def SetContentFrame(self):
         self.content.rowconfigure(0, weight=1)
@@ -68,6 +68,7 @@ class CodeEntryForm(EntryForm):
         importInput.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
         if self.previous_data is not None:
+            self.error = False
             self.nameVar.set(self.previous_data[1])
             self.ide.InsertContent('0.0', self.previous_data[2], 1)
             self.ide.InsertContent('0.0', self.previous_data[3], 2)

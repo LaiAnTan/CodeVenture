@@ -4,9 +4,7 @@ import os
 
 from ..ui_app import App
 from ..ui_app import App
-from ..ui_std_window_gen import displayActivitySelections
 from .helper_class.ide import IDE
-from .helper_class.imagelabel import ImageLabel
 from .helper_class.code_runner import CodeRunner
 from .ui_std_activity_window import ActivityWindow
 from ...backend.activity.ac_classes.ac_challenge import Challange
@@ -16,8 +14,8 @@ from ...backend.user.user_student import Student
 
 class ChallangeWindow(ActivityWindow):
 
-    def __init__(self, challenge: Challange, student: Student, a: App):
-        super().__init__(challenge, student, a)
+    def __init__(self, challenge: Challange, student: Student):
+        super().__init__(challenge, student)
         self.attempted_count = 0
         self.suceeded = False
         self.percentage = 0
@@ -28,6 +26,11 @@ class ChallangeWindow(ActivityWindow):
         self.shittyIDE = None
 
         self.SetFrames()
+    
+    def refresh_variables(self):
+        super().refresh_variables()
+
+        self.codeentry = self.completion_database.getStudentCode(self.std.username)
 
     def SetContent(self):
         self.SetMainContent()
@@ -294,7 +297,7 @@ class ChallangeWindow(ActivityWindow):
         print("Submitting code attempt")
         codecontent = self.shittyIDE.getCodeContent()
         self.completion_database.updateStudentCode(self.std.username, self.percentage, codecontent)
-        displayActivitySelections(self.root, self.std)
+        App().go_back_history()
 
 if __name__ == "__main__":
     from ..ui_app import App

@@ -7,7 +7,7 @@ from ...backend.user.user_student import Student
 from ...backend.activity.ac_classes.ac_quiz import Quiz, Question
 
 
-class QuestionFrame(ctk.CTkFrame, ):
+class QuestionFrame(ctk.CTkFrame):
     def __init__(self, master: ctk.CTkFrame, parent_window,
                  question: Question, max_width, 
                  previous_selection: ctk.IntVar,
@@ -64,13 +64,15 @@ class QuestionFrame(ctk.CTkFrame, ):
 
 
 class QuizWindow(ActivityWindow):
-    def __init__(self, quiz: Quiz, student: Student, main_attach: App):
-        super().__init__(quiz, student, main_attach)
+    def __init__(self, quiz: Quiz, student: Student):
+        super().__init__(quiz, student)
         self.ac: Quiz
 
         self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
-        self.InitializeQnAFrame()
         self.SetFrames()
+
+    def refresh_variables(self):
+        self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
 
     def InitializeQnAFrame(self):
         self.qna_width = 450
@@ -84,6 +86,7 @@ class QuizWindow(ActivityWindow):
         self.qna_frame.grid(row=0, column=0, padx=5, pady=5)
 
     def SetContent(self):
+        self.InitializeQnAFrame()
         self.SetMainContent()
         self.SetSidebar()
 
@@ -200,7 +203,7 @@ class QuizWindow(ActivityWindow):
         student_answer = ",".join([str(x.get()) for x in self.stdanswer])
         self.completion_database.updateStudentAnswer(self.std.username, student_answer)
         print("Final Student Answer", student_answer)
-        displayActivitySelections(self.root, self.std)
+        App().go_back_history()
 
 if __name__ == "__main__":
     from ..ui_app import App

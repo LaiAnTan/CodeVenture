@@ -15,7 +15,7 @@ def main() -> None:
     reset_databases()
     populate_databases()
     a = App()
-    wingen.loginPage(a)
+    wingen.loginPage()
     a.mainloop()
 
 

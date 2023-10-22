@@ -1,15 +1,21 @@
 import customtkinter as ctk
 from ..ui_app import App
-from .edu_module_editor import ModuleEditor
+from ..ui_app_frame import App_Frame
 
-class EditorWindow(ctk.CTkFrame):
-    def __init__(self, master: App):
-        super().__init__(master.main_frame)
-
-        self.root = master
-        
+class EditorWindow(App_Frame):
+    def __init__(self):
+        super().__init__()
         self.rowconfigure(0, weight=1)
 
+        self.SetFrames()
+
+    def refresh_variables(self):
+        pass
+
+    def attach_elements(self):
+        self.SetFrames()
+
+    def SetFrames(self):
         self.header = ctk.CTkFrame(self)
         self.header.rowconfigure(0, weight=1)
         self.header.columnconfigure(0, weight=1)
@@ -20,9 +26,6 @@ class EditorWindow(ctk.CTkFrame):
         self.content.columnconfigure(0, weight=1)
         self.content.grid(row=1, column=0, sticky="ew")
 
-        self.SetFrames()
-
-    def SetFrames(self):
         font = ctk.CTkFont(
             "Helvatica",
             size=24

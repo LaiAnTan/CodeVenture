@@ -6,7 +6,7 @@ def dispatcher(option, existing_activity):
 
     match option:
         case 'Module':
-            App().change_frame(ModuleEditor(App(), 800, 650, existing_activity))
+            App().change_frame(ModuleEditor(800, 650, existing_activity))
         case 'Quiz':
             raise NotImplementedError
         case 'Challange':
@@ -16,4 +16,4 @@ def editor_prompt():
     from .edu_windows.edu_edit_option import EditorWindow
 
     App().clean_frame()
-    App().change_frame(EditorWindow(App()))
+    App().change_frame(EditorWindow())
