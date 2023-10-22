@@ -16,12 +16,10 @@ from ...backend.factory.ModuleFactory import ModuleFactory
 from .helper_class.errorWindow import ErrorWindow
 
 class ModuleEditor(ActivityEditor):
-    def __init__(self, master: App, width, height, existing_module: Module=None):
-        super().__init__(master, width, height, Activity.AType['Module'], existing_module)
+    def __init__(self, width, height, existing_module: Module=None):
+        super().__init__(width, height, Activity.AType['Module'], existing_module)
 
-        self.entry_height = self.content_data_height
         self.content_frames = []
-
         self.assets = []
 
         self.SetFrames()
@@ -81,7 +79,7 @@ class ModuleEditor(ActivityEditor):
 
     def show_asset_window(self):
         asset_window = AssetWindow(self, 800, 700, self.assets)
-        self.master.winfo_toplevel().wait_window(asset_window)
+        self.winfo_toplevel().wait_window(asset_window)
 
         # refresh all asset window
         for content in self.content_entry_frame.winfo_children():
@@ -151,7 +149,7 @@ class ModuleEditor(ActivityEditor):
                 error_messages.append((index + 1, error_ret[1]))
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages, 'export Module')
-            self.master.winfo_toplevel().wait_window(error_window)
+            self.winfo_toplevel().wait_window(error_window)
             return
 
         header = self.GetHeaderData()

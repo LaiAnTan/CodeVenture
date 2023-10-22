@@ -7,8 +7,8 @@ from .edu_activity_editor import ActivityEditor
 from ...backend.activity.ac_classes.ac_challenge import Activity, Challange
 
 class ChallangeEditor(ActivityEditor):
-    def __init__(self, master: App, width, height, existing_module: Activity = None):
-        super().__init__(master, width, height, Activity.AType['Challenge'], existing_module)
+    def __init__(self, width, height, existing_module: Activity = None):
+        super().__init__(width, height, Activity.AType['Challenge'], existing_module)
 
         self.SetFrames()
 

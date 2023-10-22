@@ -1,11 +1,12 @@
 import customtkinter as ctk
 
 from ..ui_app import App
+from ..ui_app_frame import App_Frame
 from ...backend.activity.ac_classes.ac_activity import Activity
 from ...backend.database.database_activity import ActivityDB
 from abc import abstractmethod, ABC
 
-class ActivityEditor(ctk.CTkFrame, ABC):
+class ActivityEditor(App_Frame, ABC):
     def __init__(self, width, height, type: Activity.AType, activity: Activity=None):
         super().__init__()
         self.ac = activity
@@ -26,8 +27,15 @@ class ActivityEditor(ctk.CTkFrame, ABC):
         self.name_variable = ctk.StringVar()
         self.difficulty_value = ctk.IntVar(value=1)
 
+    def refresh_variables(self):
+        pass
+
+    def attach_elements(self):
+        self.SetFrames()
+
+    def SetFrames(self):
         header_height = 15
-        self.header = ctk.CTkFrame(self, width=width, height=header_height)
+        self.header = ctk.CTkFrame(self, width=self.max_width, height=header_height)
         self.header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         self.content_width = self.max_width
@@ -39,7 +47,6 @@ class ActivityEditor(ctk.CTkFrame, ABC):
         self.content = ctk.CTkFrame(self, width=self.content_width, height=self.content_height)
         self.content.grid(row=1, column=0, padx=5, pady=5)
 
-    def SetFrames(self):
         self.SetHeader()
         self.SetContent()
 

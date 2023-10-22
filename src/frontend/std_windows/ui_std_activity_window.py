@@ -1,6 +1,6 @@
 
 import customtkinter as ctk
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from ..ui_app import App
 from ..ui_app_frame import App_Frame
@@ -11,7 +11,7 @@ from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 from .helper_class.code_runner import CodeRunner
 from .helper_class.imagelabel import ImageLabel
 
-class ActivityWindow(App_Frame):
+class ActivityWindow(App_Frame, ABC):
 
     def __init__(self, activity: Activity, student: Student):
         super().__init__()
