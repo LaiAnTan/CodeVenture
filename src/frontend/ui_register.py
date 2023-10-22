@@ -32,19 +32,6 @@ def registerHandler(username: str, password: str, confirm_pw: str,
 
     db.add_entry((username, ph.hash(password), user_type))
 
-    # match user_type:
-
-    #     case "student":
-    #         sdb = StudentDB()
-    #         sdb.add_entry((username, "none", "none", 0, "none", "none",
-    #                        "none", "none", "none"))
-    #     case "educator":
-    #         pass
-    #     case "admin":
-    #         pass
-    #     case _:
-    #         raise AssertionError("Unknown user type")
-
     return (True, "Register Successful")
 
 
@@ -53,15 +40,17 @@ class RegisterWindow(ctk.CTkFrame):
     full_width = 450
 
     def __init__(self, main_attach: App):
-        super().__init__(main_attach.main_frame)
+        super().__init__(main_attach.main_frame, fg_color='transparent')
         self.root = main_attach
+
+        self.attach_elements()
 
     def attach_elements(self):
 
         # title frame
 
         title_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=40,
             fg_color="transparent"
@@ -109,7 +98,7 @@ class RegisterWindow(ctk.CTkFrame):
         # entry frame
 
         entry_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=100,
             fg_color="transparent"
@@ -243,7 +232,7 @@ class RegisterWindow(ctk.CTkFrame):
         # buttons frame
 
         button_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=20,
             fg_color="transparent"

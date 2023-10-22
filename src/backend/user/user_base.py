@@ -55,7 +55,7 @@ class User(ABC):
             self.user_type = db.fetch_attr("user_type", self.getUsername())
             print(self.user_type)
             return True
-        except exceptions.InvalidHashError:  # login failed
+        except exceptions.VerifyMismatchError:  # login failed
             return False
 
     def logout(self) -> bool:

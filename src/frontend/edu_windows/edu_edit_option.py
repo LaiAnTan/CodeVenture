@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from ..ui_app import App
+from .edu_module_editor import ModuleEditor
 
 class EditorWindow(ctk.CTkFrame):
     def __init__(self, master: App):
@@ -57,13 +58,13 @@ class EditorWindow(ctk.CTkFrame):
     def newActivity(self):
         option = self.chosen.get()
         print(f"{option} chosed")
-        index = self.values.index(option)
-        print(index)
+
+        from ..ui_edu_window_gen import dispatcher
+        dispatcher(option, None)
 
 if __name__ == "__main__":
     master = App()
     editwin = EditorWindow(master)
     editwin.grid(row=0, column=0)
-
     master.main_frame.grid(row=0, column=0)
     master.mainloop()

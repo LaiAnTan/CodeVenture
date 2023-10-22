@@ -66,7 +66,8 @@ class ActivityEditor(ctk.CTkFrame, ABC):
 
         back_button = ctk.CTkButton(
             self.header,
-            text="Back"
+            text="Back",
+            command=lambda : App().go_back_history()
         )
         back_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 

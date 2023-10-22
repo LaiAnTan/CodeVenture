@@ -1,1 +1,1 @@
-testuser:Test User:test@gmail.com:1:20/20/2024:30/12/1984:none:none:none
+teststd:Test Student:teststd@gmail.com:1:20/20/2024:30/12/1984:none:none:none

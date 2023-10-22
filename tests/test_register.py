@@ -7,6 +7,7 @@ sys.path.append(p)
 
 from src.frontend.ui_register import registerHandler
 
+
 class TestRegisterHandler(unittest.TestCase):
     def test_empty_fields(self):
         """
