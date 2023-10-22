@@ -2,6 +2,7 @@ from .backend.database.database_user import UserDB
 from .backend.database.database_student import StudentDB
 from .backend.database.database_activity import ActivityDB
 from .backend.activity.ac_database.db_ac_completed import ActivityDictionary
+from config import ROOT_DIR
 import csv
 # from database_educator import EducatorDB
 
@@ -23,11 +24,11 @@ def populate_databases():
     """
 
     # change test data filenames here
-    test_users_filename = "test_data/test_users.txt"
-    test_students_filename = "test_data/test_students.txt"
+    test_users_filename = f"{ROOT_DIR}/test_data/test_users.txt"
+    test_students_filename = f"{ROOT_DIR}/test_data/test_students.txt"
     test_educators_filename = "test_data/test_educators.txt"
     test_admins_filename = "test_data/test_admins.txt"
-    test_activities_filename = "test_data/test_activities.txt"
+    test_activities_filename = f"{ROOT_DIR}/test_data/test_activities.txt"
 
     # init databases
     db = UserDB()
@@ -60,5 +61,4 @@ def populate_databases():
                 continue
 
     ActivityDictionary()
-
     print("Populated databases")

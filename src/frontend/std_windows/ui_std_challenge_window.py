@@ -120,10 +120,12 @@ class ChallangeWindow(ActivityWindow):
 
         self.shittyIDE = IDE(
             sidebar_frame,
-            sidebar_width,
+            sidebar_width - 30,
+            360,
             self.ac.id.lower(),
             self.std.username,
-            self.ac.ModulePath
+            self.ac.ModulePath,
+            self.codeentry
         )
         self.shittyIDE.grid(row=0, column=0, padx=5, pady=5)
 
@@ -140,22 +142,6 @@ class ChallangeWindow(ActivityWindow):
         submit_button.grid(row=0, column=0, padx=0, pady=0)
 
         # footer end ------------------------------------------
-
-    def ImageHandler(self, source, content, max_img_width, attach_frame):
-        if source.img.get(content):
-            ret_widget = ImageLabel(
-                attach_frame,
-                f"{source.ModulePath}/{source.img[content]}",
-                max_img_width - 50,
-            )
-        else:
-            ret_widget = ctk.CTkLabel(
-                attach_frame,
-                text=f"Error displaying image {content}",
-                width=max_img_width,
-                wraplength=max_img_width - 10,
-            )
-        return ret_widget
 
     def QuestionFrames(self, frame_width):
         for widget in self.displayed_frame.winfo_children():
@@ -176,8 +162,8 @@ class ChallangeWindow(ActivityWindow):
 
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
-                        self.ac,
                         content[1],
+                        200, # change height value later
                         frame_width,
                         self.displayed_frame
                     )
@@ -228,10 +214,11 @@ class ChallangeWindow(ActivityWindow):
 
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
-                        self.ac.hints,
                         content[1],
+                        1600, # TODO: Change the height value
                         frame_width,
-                        self.displayed_frame
+                        self.displayed_frame,
+                        self.ac.hints
                     )
 
             paragraph.grid(row=index, column=0, padx=5, pady=5)
@@ -261,7 +248,7 @@ class ChallangeWindow(ActivityWindow):
                     text=f"Test {index} -- OK!",
                     text_color="limegreen",
                     font=ctk.CTkFont(
-                        "Noto Sans Mono",
+                        "Arial",
                         size=20
                     ),
                     width=frame_width - 10,
@@ -275,7 +262,7 @@ class ChallangeWindow(ActivityWindow):
                     text=f"Test {index} -- KO!",
                     text_color="red",
                     font=ctk.CTkFont(
-                        "Noto Sans Mono",
+                        "Arial",
                         size=20
                     ),
                     width=frame_width - 10,
@@ -293,7 +280,7 @@ class ChallangeWindow(ActivityWindow):
             text=f"Test {correct_cases}/{cases} passed!",
             text_color="yellow",
             font=ctk.CTkFont(
-                "Noto Sans Mono",
+                "Arial",
                 size=20
             ),
             width=frame_width - 10,
@@ -305,8 +292,8 @@ class ChallangeWindow(ActivityWindow):
 
     def StudentSubmission(self):
         print("Submitting code attempt")
-        codecontent = self.shittyIDE.getContents()
-        self.completion_database.updateStudentCode(self.std.username, self.percentage, codecontent);
+        codecontent = self.shittyIDE.getCodeContent()
+        self.completion_database.updateStudentCode(self.std.username, self.percentage, codecontent)
         displayActivitySelections(self.root, self.std)
 
 if __name__ == "__main__":
@@ -314,6 +301,6 @@ if __name__ == "__main__":
 
     ActivityDictionary()
     main = App()
-    ChallangeWindow(Challange("CH0001"), Student("test_student"), main).Attach()
+    ChallangeWindow(Challange("CH0001"), Student("james"), main).Attach()
     main.main_frame.grid(row=0, column=0)
     main.mainloop()

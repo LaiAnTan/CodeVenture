@@ -10,6 +10,7 @@ import customtkinter as ctk
 import subprocess
 
 from .imagelabel import ImageLabel
+from config import ROOT_DIR
 
 class CodeRunner(ctk.CTkFrame):
     def __init__(self, master, max_img_width, code_name, activity_folder) -> None:
@@ -19,6 +20,7 @@ class CodeRunner(ctk.CTkFrame):
         self.activity_folder = activity_folder
 
         self.code_folder = f"{self.activity_folder}/{self.code_name}"
+        self.runnable = os.path.isfile(f'{self.code_folder}/input')
 
         if master != None:
             super().__init__(master)
@@ -27,11 +29,12 @@ class CodeRunner(ctk.CTkFrame):
             self.HeaderFrame.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
             self.CodeFrame = ctk.CTkFrame(self)
-            self.CodeFrame.grid(row=1, column=0, padx=5, pady=5,)
+            self.CodeFrame.grid(row=1, column=0, padx=5, pady=5)
 
-            self.RunButtonFrame = ctk.CTkFrame(self)
-            self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
-            self.RunButtonFrame.columnconfigure(0, weight=1)
+            if self.runnable:
+                self.RunButtonFrame = ctk.CTkFrame(self)
+                self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+                self.RunButtonFrame.columnconfigure(0, weight=1)
 
             self.outputFrame = ctk.CTkFrame(self)
 
@@ -43,7 +46,7 @@ class CodeRunner(ctk.CTkFrame):
                 file.read(),
                 PythonLexer(),
                 ImageFormatter(
-                    font_name="Noto Sans Mono",
+                    font_name="Arial",
                     font_size=12
                 ),
                 outfile=f"{self.code_folder}/temp"
@@ -52,6 +55,7 @@ class CodeRunner(ctk.CTkFrame):
         ret_widget = ImageLabel(
             self.CodeFrame,
             f"{self.code_folder}/temp",
+            1600, # TODO: Change the height value later
             self.max_width,
             True
         )
@@ -68,13 +72,14 @@ class CodeRunner(ctk.CTkFrame):
         )
         title.grid(row=0, column=0, padx=5)
 
-        RunButton = ctk.CTkButton(
-            self.RunButtonFrame,
-            text="Run",
-            command=self.RunCode,
-            height=10
-        )
-        RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        if self.runnable:
+            RunButton = ctk.CTkButton(
+                self.RunButtonFrame,
+                text="Run",
+                command=self.RunCode,
+                height=10
+            )
+            RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         CodeContent = self.DisplayCodeline_FromFile()
         CodeContent.grid(row=0, column=0, padx=5, pady=5)
@@ -118,7 +123,7 @@ class CodeRunner(ctk.CTkFrame):
             wraplength=self.max_width - 70,
             anchor="w",
             justify="left",
-            font=ctk.CTkFont("Noto Sans Mono", size=11),
+            font=ctk.CTkFont("Arial", size=11),
             bg_color="black",
             text_color=font_color
         )

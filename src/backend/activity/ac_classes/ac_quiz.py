@@ -3,8 +3,8 @@ from .ac_activity import Activity
 class Question():
     def __init__(self, question_block: list[str]):
         self.id = question_block.pop(0).split('|')[1]
-        self.prompt = []
-        self.options = []
+        self.prompt: list[str] = []
+        self.options: list[str] = []
 
         self.__get_values(question_block)
 
@@ -41,7 +41,7 @@ class Question():
         return self.id
     
     def get_Prompt(self):
-        return "\n".join(self.prompt)
+        return self.prompt
     
     def get_Options(self):
         return self.options
@@ -55,6 +55,7 @@ class Quiz(Activity):
 
         super().__init__(filename, Activity.AType["Quiz"])
         self.read_mf_read()
+        self.ParseSources()
         self.__init_Questions()
         self.__getAnswers()
 
