@@ -30,7 +30,8 @@ All dependencies can be found [here](requirements.txt)
 List of test accounts:
 |Account Name|Account Password|Account Type|
 |------------|----------------|------------|
-|testuser    |testuser        |Student     |
+|teststd     |teststd         |Student     |
+|testedu     |testedu         |Educator    |
 
 Code to bypass Subscription Paywall: ```99999```
 

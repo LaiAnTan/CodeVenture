@@ -26,16 +26,12 @@ def populate_databases():
     # change test data filenames here
     test_users_filename = f"{ROOT_DIR}/test_data/test_users.txt"
     test_students_filename = f"{ROOT_DIR}/test_data/test_students.txt"
-    test_educators_filename = "test_data/test_educators.txt"
-    test_admins_filename = "test_data/test_admins.txt"
     test_activities_filename = f"{ROOT_DIR}/test_data/test_activities.txt"
 
     # init databases
     db = UserDB()
     sdb = StudentDB()
     adb = ActivityDB()
-    # edb = EducatorDB()
-    # adb = AdminDB()
 
     # add more as time goes on
     database_list = [db, sdb, adb]

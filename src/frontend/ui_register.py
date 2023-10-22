@@ -32,19 +32,6 @@ def registerHandler(username: str, password: str, confirm_pw: str,
 
     db.add_entry((username, ph.hash(password), user_type))
 
-    # match user_type:
-
-    #     case "student":
-    #         sdb = StudentDB()
-    #         sdb.add_entry((username, "none", "none", 0, "none", "none",
-    #                        "none", "none", "none"))
-    #     case "educator":
-    #         pass
-    #     case "admin":
-    #         pass
-    #     case _:
-    #         raise AssertionError("Unknown user type")
-
     return (True, "Register Successful")
 
 
