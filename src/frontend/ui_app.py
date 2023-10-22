@@ -12,6 +12,8 @@ class App():
 
     main = ctk.CTk()
 
+    history = []
+
     main_frame = ctk.CTkFrame(
             main,
             width=width,
@@ -48,15 +50,28 @@ class App():
         cls.main_frame.grid_forget() # THIS is the one that is doing something
         # but that breaks so :P
         for widgets in cls.main_frame.winfo_children():
-            widgets.destroy()
+            widgets.grid_forget()
+
+    @classmethod
+    def go_back_history(cls):
+        # remove current frame from history (removed forever)
+        cls.history.pop()
+        previous = cls.history[-1]
+
+        cls.clean_frame()
+        cls.change_frame(previous)
+
+    @classmethod
+    def add_to_history(cls, frame):
+        cls.history.append(frame)
 
     @classmethod
     def change_frame(cls, new_frame):
         """Changes frame of App
         
         make sure new_frame's master is App or App.main_frame"""
+        cls.add_to_history(new_frame)
         new_frame.grid(row=0, column=0)
-
         cls.main_frame.grid(row=0, column=0)
 
     @classmethod

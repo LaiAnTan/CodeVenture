@@ -31,17 +31,12 @@ class ActivityWindow(ctk.CTkFrame):
         self.footer_frame = ctk.CTkFrame(self)
         self.footer_frame.grid(row=2, column=0, padx=5, pady=5)
 
-    def Attach(self):
-        self.grid(row=0, column=0)
-
     def SetFrames(self):
         self.SetHeader()
         self.SetContent()
         self.SetFooter()
 
     def SetHeader(self):
-        from ..ui_std_window_gen import displayActivitySelections
-
         name = ctk.CTkLabel(
             self.header_frame,
             text=f"{self.ac.id} {self.ac.title}"
@@ -51,7 +46,7 @@ class ActivityWindow(ctk.CTkFrame):
         back_button = ctk.CTkButton(
             self.header_frame,
             text="Back",
-            command=lambda: displayActivitySelections(self.root, self.std),
+            command=lambda: App().go_back_history(),
             width=20
         )
         back_button.pack(side=ctk.RIGHT, padx=5, pady=5)

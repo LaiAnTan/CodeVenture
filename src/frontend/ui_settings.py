@@ -47,16 +47,18 @@ class SettingsWindow(ctk.CTkFrame):
     half_content_height = full_content_height / 2
 
     def __init__(self, student: Student, main_attach: App):
-        super().__init__(main_attach.main_frame)
+        super().__init__(main_attach.main_frame, fg_color='transparent')
         self.student = student
         self.root = main_attach
+
+        self.attach_elements()
 
     def attach_elements(self):
 
         # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=self.header_height
         )
@@ -86,7 +88,7 @@ class SettingsWindow(ctk.CTkFrame):
         back_button = ctk.CTkButton(
             header_frame,
             text="Back",
-            command=lambda: backButtonEvent(),
+            command=lambda: App().go_back_history(),
             width=20
         )
 
@@ -101,7 +103,7 @@ class SettingsWindow(ctk.CTkFrame):
         # main content frame
 
         content_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=self.full_content_height,
             fg_color="transparent"

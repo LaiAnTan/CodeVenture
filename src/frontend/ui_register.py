@@ -53,15 +53,17 @@ class RegisterWindow(ctk.CTkFrame):
     full_width = 450
 
     def __init__(self, main_attach: App):
-        super().__init__(main_attach.main_frame)
+        super().__init__(main_attach.main_frame, fg_color='transparent')
         self.root = main_attach
+
+        self.attach_elements()
 
     def attach_elements(self):
 
         # title frame
 
         title_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=40,
             fg_color="transparent"
@@ -109,7 +111,7 @@ class RegisterWindow(ctk.CTkFrame):
         # entry frame
 
         entry_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=100,
             fg_color="transparent"
@@ -243,7 +245,7 @@ class RegisterWindow(ctk.CTkFrame):
         # buttons frame
 
         button_frame = ctk.CTkFrame(
-            self.root.main_frame,
+            self,
             width=self.full_width,
             height=20,
             fg_color="transparent"
