@@ -8,12 +8,12 @@ UP_LEVEL|0.5,0.2
 HEADER-END
 
 CONTENT-START
-Produce a Python Program that prints out "i honestly dont know..."
+Produce a Python Program that prints out: "Hello World!"
 Example Output:
 <IMG-CONT>IMG001
 CONTENT-END
 
 SOURCES-START
 IMG-CONT-START
-IMG001-amongus.png
+IMG001-helloworld.png
 IMG-CONT-END

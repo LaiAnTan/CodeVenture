@@ -4,7 +4,7 @@ from .database_base import DBBase
 
 class ActivityDB(DBBase):
     """
-    sex man
+    Singleton class that handles activity database operations
     """
 
     class field(Enum):
