@@ -3,10 +3,8 @@ from ..ui_app import App
 from .edu_module_editor import ModuleEditor
 
 class EditorWindow(ctk.CTkFrame):
-    def __init__(self, master: App):
+    def __init__(self):
         super().__init__(master.main_frame)
-
-        self.root = master
         
         self.rowconfigure(0, weight=1)
 

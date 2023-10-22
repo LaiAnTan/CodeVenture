@@ -1,12 +1,11 @@
 
 import customtkinter as ctk
-from ..ui_app import App
 from tkcalendar import Calendar
 
 
 class DatePickerWindow(ctk.CTkToplevel):
 
-    def __init__(self, a: App, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.width = 400
         self.height = 300

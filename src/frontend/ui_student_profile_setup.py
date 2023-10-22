@@ -4,6 +4,7 @@ import customtkinter as ctk
 from datetime import datetime
 
 from src.frontend.ui_app import App
+from .ui_app_frame import App_Frame
 from src.frontend.ui_std_window_gen import subscribePage, \
     datePickerTopLevelPage
 from src.backend.database.database_student import StudentDB
@@ -39,22 +40,24 @@ def profileSetupHandler(student: Student, full_name: str, email: str, dob: str,
     return (True, "Profile setup sucessful")
 
 
-class StudentProfileSetupWindow(ctk.CTkFrame):
+class StudentProfileSetupWindow(App_Frame):
 
     profile_pic_dir_path = "pfp"
     full_width = 450
     half_width = full_width / 2
 
-    def __init__(self, student: Student, main_attach: App):
-        super().__init__(main_attach.main_frame, fg_color='transparent')
+    def __init__(self, student: Student):
+        super().__init__()
         self.student = student
-        self.root = main_attach
         self.full_name = ""
         self.email = ""
         self.dob = ""
         self.profile_pic_path = ""
 
         self.attach_elements()
+
+    def refresh_variables(self):
+        pass
 
     def attach_elements(self):
 
@@ -63,9 +66,9 @@ class StudentProfileSetupWindow(ctk.CTkFrame):
                 os.remove(self.profile_pic_path)
             except FileNotFoundError:
                 pass
-            self.root.main.destroy()
+            App().main.destroy()
 
-        self.root.main.protocol("WM_DELETE_WINDOW", lambda: deleteProfilePic())
+        App().main.protocol("WM_DELETE_WINDOW", lambda: deleteProfilePic())
 
         # title frame
 
@@ -191,7 +194,7 @@ class StudentProfileSetupWindow(ctk.CTkFrame):
         )
 
         def dateOfBirthButtonEvent():
-            date = datePickerTopLevelPage(self.root)
+            date = datePickerTopLevelPage()
             self.dob = date
             date_of_birth_button.configure(
                 text=date
@@ -288,8 +291,8 @@ class StudentProfileSetupWindow(ctk.CTkFrame):
             ret = profileSetupHandler(self.student, self.full_name, self.email,
                                       self.dob, self.profile_pic_path)
             if ret[0] is True:
-                self.root.main.protocol("", "")
-                subscribePage(self.root, self.student)
+                App().main.protocol("", "")
+                subscribePage(self.student)
             else:
                 profile_setup_failed_label.configure(text=ret[1],
                                                      text_color="#FF0000")

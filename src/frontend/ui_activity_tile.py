@@ -20,15 +20,14 @@ class ActivityTile(ctk.CTkFrame):
     font = ("Helvetica", 12)
 
     def __init__(self, id: str, width: int, height: int, student: Student,
-                 master: ctk.CTkFrame, main_attach: App):
+                 master: ctk.CTkFrame):
         super().__init__(master,
                          width=width,
                          height=height,
                          fg_color=LIGHTMODE_GRAY if
-                         main_attach.settings.getSettingValue("lightmode")
+                         App().settings.getSettingValue("lightmode")
                          .lower() == "true" else DARKMODE_GRAY
                          )
-        self.root = main_attach
         self.master_frame = master  # master frame is not root.main_frame
         self.id = id
         self.student = student
@@ -96,7 +95,7 @@ class ActivityTile(ctk.CTkFrame):
         # quick access button
 
         def quickButtonEvent():
-            dispatcher(self.id, self.type, self.root, self.student)
+            dispatcher(self.id, self.type, self.student)
 
         quick_button = ctk.CTkButton(self,
                                      text="Go",

@@ -2,63 +2,63 @@ from src.frontend.ui_app import App
 from src.backend.user.user_student import Student
 
 
-def loginPage(a: App):
+def loginPage():
     from .ui_login import LoginWindow
-    a.clean_frame()
-    a.change_frame(LoginWindow(a))
+    App().clean_frame()
+    App().change_frame(LoginWindow())
 
 
-def registerPage(a: App):
+def registerPage():
     from .ui_register import RegisterWindow
-    a.clean_frame()
-    a.change_frame(RegisterWindow(a))
+    App().clean_frame()
+    App().change_frame(RegisterWindow())
 
 
-def studentMenuPage(a: App, student: Student):
+def studentMenuPage(student: Student):
     from .ui_student_menu import StudentMenuWindow
-    a.clean_frame()
-    a.change_frame(StudentMenuWindow(student, a))
+    App().clean_frame()
+    App().change_frame(StudentMenuWindow(student))
 
 
-def profilePage(a: App, student: Student):
+def profilePage(student: Student):
     from .ui_profile import ProfileWindow
-    a.clean_frame()
-    a.change_frame(ProfileWindow(student, a))
+    App().clean_frame()
+    App().change_frame(ProfileWindow(student))
 
 
-def settingsPage(a: App, student: Student):
+def settingsPage(student: Student):
     from .ui_settings import SettingsWindow
-    a.clean_frame()
-    a.change_frame(SettingsWindow(student, a))
+    App().clean_frame()
+    App().change_frame(SettingsWindow(student))
 
 
-def subscribePage(a: App, student: Student):
+def subscribePage(student: Student):
     from .ui_subscribe import SubscribeWindow
-    a.clean_frame()
-    a.change_frame(SubscribeWindow(student, a))
+    App().clean_frame()
+    App().change_frame(SubscribeWindow(student))
 
 
-def studentProfileSetupPage(a: App, student: Student):
+def studentProfileSetupPage(student: Student):
     from .ui_student_profile_setup import StudentProfileSetupWindow
-    a.clean_frame()
-    a.change_frame(StudentProfileSetupWindow(student, a))
+    App().clean_frame()
+    App().change_frame(StudentProfileSetupWindow(student))
 
 
-def datePickerTopLevelPage(a: App):
+def datePickerTopLevelPage():
     from .helper_windows.ui_date_picker import DatePickerWindow
-    date_picker = DatePickerWindow(a)
+    date_picker = DatePickerWindow()
     date_picker.show_window()
     date_picker.wait_window()
     return date_picker.getSelectedDate()
 
 
-def displayActivitySelections(a: App, student: Student):
+def displayActivitySelections(student: Student):
     from .std_windows.ui_std_selection_window import SelectionScreen
-    a.clean_frame()
-    a.change_frame(SelectionScreen(student, a))
+    App().clean_frame()
+    App().change_frame(SelectionScreen(student))
 
 
-def dispatcher(activityID, activityType, a: App, student: Student):
+def dispatcher(activityID, activityType, student: Student):
     from .std_windows.ui_std_challenge_window import ChallangeWindow
     from .std_windows.ui_std_quiz_window import QuizWindow
     from .std_windows.ui_std_module_window import ModuleWindow
@@ -68,11 +68,11 @@ def dispatcher(activityID, activityType, a: App, student: Student):
     from src.backend.activity.ac_classes.ac_quiz import Quiz
     from src.backend.activity.ac_classes.ac_challenge import Challange
 
-    a.clean_frame()
+    App().clean_frame()
     match activityType:
         case Activity.AType.Module.value:
-            App().change_frame(ModuleWindow(Module(activityID), student, a))
+            App().change_frame(ModuleWindow(Module(activityID), student))
         case Activity.AType.Quiz.value:
-            App().change_frame(QuizWindow(Quiz(activityID), student, a))
+            App().change_frame(QuizWindow(Quiz(activityID), student))
         case Activity.AType.Challenge.value:
-            App().change_frame(ChallangeWindow(Challange(activityID), student, a))
+            App().change_frame(ChallangeWindow(Challange(activityID), student))

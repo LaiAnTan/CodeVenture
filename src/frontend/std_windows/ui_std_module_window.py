@@ -11,8 +11,8 @@ from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
 class ModuleWindow(ActivityWindow):
 
-    def __init__(self, module: Module, student: Student, main_attach: App):
-        super().__init__(module, student, main_attach)
+    def __init__(self, module: Module, student: Student):
+        super().__init__(module, student)
 
         self.SetFrames()
 
@@ -75,7 +75,7 @@ class ModuleWindow(ActivityWindow):
     def StudentCompletion(self):
         print("Adding Student Entry into backend.database...")
         self.completion_database.addStudentEntry((self.std.username,))
-        displayActivitySelections(self.root, self.std)
+        App().go_back_history()
 
 if __name__ == "__main__":
     from ..ui_app import App

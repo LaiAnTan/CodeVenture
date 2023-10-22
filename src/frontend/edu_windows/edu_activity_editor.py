@@ -6,10 +6,8 @@ from ...backend.database.database_activity import ActivityDB
 from abc import abstractmethod, ABC
 
 class ActivityEditor(ctk.CTkFrame, ABC):
-    def __init__(self, master: App, width, height, type: Activity.AType, activity: Activity=None):
-        super().__init__(master.main_frame, width=width, height=height)
-        self.root = master
-
+    def __init__(self, width, height, type: Activity.AType, activity: Activity=None):
+        super().__init__()
         self.ac = activity
 
         self.editing = False

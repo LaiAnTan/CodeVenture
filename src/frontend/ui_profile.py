@@ -1,11 +1,12 @@
 import customtkinter as ctk
 
 from .ui_app import App
+from .ui_app_frame import App_Frame
 from ..backend.user.user_student import Student
 from .ui_std_window_gen import studentMenuPage
 
 
-class ProfileWindow(ctk.CTkFrame):
+class ProfileWindow(App_Frame):
 
     header_height = 20
     full_width = 450
@@ -13,12 +14,14 @@ class ProfileWindow(ctk.CTkFrame):
     full_content_height = 460 - header_height
     half_content_height = full_content_height / 2
 
-    def __init__(self, student: Student, main_attach: App):
-        super().__init__(main_attach.main_frame, fg_color='transparent')
+    def __init__(self, student: Student):
+        super().__init__()
         self.student = student
-        self.root = main_attach
 
         self.attach_elements()
+
+    def refresh_variables(self):
+        pass
 
     def attach_elements(self):
 
@@ -36,7 +39,7 @@ class ProfileWindow(ctk.CTkFrame):
         )
 
         def backButtonEvent():
-            studentMenuPage(self.root, self.student)
+            studentMenuPage(self.student)
 
         back_button = ctk.CTkButton(
             header_frame,

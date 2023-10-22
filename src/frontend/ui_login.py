@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 from .ui_app import App
+from .ui_app_frame import App_Frame
 
 from .ui_std_window_gen import registerPage, studentMenuPage, subscribePage, \
     studentProfileSetupPage
@@ -10,14 +11,13 @@ from .ui_edu_window_gen import editor_prompt
 from ..backend.user.user_base import User
 from ..backend.user.user_student import Student
 
-class LoginWindow(ctk.CTkFrame):
+class LoginWindow(App_Frame):
 
-    def __init__(self, main_attach: App):
-        super().__init__(main_attach.main_frame, fg_color='transparent')
+    def __init__(self):
+        super().__init__()
         self.username = None
         self.password = None
         self.user = User(None)
-        self.root = main_attach
 
         self.attach_elements()
 
@@ -26,6 +26,11 @@ class LoginWindow(ctk.CTkFrame):
 
     def getPassword(self):
         return self.password
+
+    def refresh_variables(self):
+        self.username = None
+        self.password = None
+        self.user = User(None)
 
     def attach_elements(self):
 
@@ -197,11 +202,11 @@ class LoginWindow(ctk.CTkFrame):
 
                         if s.getProfileSetupStatus() is True:
                             print("hehe")
-                            studentProfileSetupPage(self.root, s)
+                            studentProfileSetupPage(s)
                         elif s.isSubscribed() is False:
-                            subscribePage(self.root, s)
+                            subscribePage(s)
                         else:
-                            studentMenuPage(self.root, s)
+                            studentMenuPage(s)
 
                     case "educator":
                         editor_prompt()
@@ -237,7 +242,7 @@ class LoginWindow(ctk.CTkFrame):
         )
 
         def registerButtonEvent():
-            registerPage(self.root)
+            registerPage()
 
         register_button = ctk.CTkButton(
             button_frame,

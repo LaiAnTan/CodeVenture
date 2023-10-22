@@ -3,6 +3,7 @@ import customtkinter as ctk
 import src.backend.database.database_activity as ab
 
 from ..ui_app import App
+from ..ui_app_frame import App_Frame
 from ...backend.activity.ac_classes.ac_activity import Activity
 from ...backend.user.user_student import Student
 
@@ -17,21 +18,23 @@ from config import LIGHTMODE_GRAY, DARKMODE_GRAY
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
 
 
-class SelectionScreen(ctk.CTkFrame):
+class SelectionScreen(App_Frame):
 
-    def __init__(self, student, attach: App) -> None:
-        super().__init__(attach.main_frame)
+    def __init__(self, student) -> None:
+        super().__init__()
 
         self.student = student
         self.activity_database = ab.ActivityDB()
-        self.root = attach
         self.results = search_database("")
 
         self.attach_elements()
 
+    def refresh_variables(self):
+        self.results = search_database("")
+
     def return_to_studentMenu(self):
         from ..ui_std_window_gen import studentMenuPage
-        studentMenuPage(self.root, self.student)
+        studentMenuPage(self.student)
 
     def attach_elements(self):
 
@@ -164,7 +167,7 @@ class SelectionScreen(ctk.CTkFrame):
             widgets.destroy()
 
         for index, module in enumerate(ids):
-            ret = DataChunk(module, max_width - 40, self.root,
+            ret = DataChunk(module, max_width - 40,
                             self.student).generateChunk(attach_to)
             ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
 
@@ -355,10 +358,9 @@ class SelectionScreen(ctk.CTkFrame):
 
 
 class DataChunk():
-    def __init__(self, activity_id, width, root: App, student: Student):
+    def __init__(self, activity_id, width, student: Student):
         self.activity = activity_id
         self.widget_width = width
-        self.root = root
         self.student = student
 
     def GetData(self):
@@ -371,7 +373,7 @@ class DataChunk():
         self.GetData()
 
         ret_frame = ctk.CTkFrame(attach_main,
-                                 fg_color=LIGHTMODE_GRAY if self.root.settings
+                                 fg_color=LIGHTMODE_GRAY if App().settings
                                  .getSettingValue("lightmode")
                                  .lower() == "true" else DARKMODE_GRAY,
                                  )
@@ -415,8 +417,7 @@ class DataChunk():
             content_frame,
             text="Review" if student_done else "Attempt",
             width=50,
-            command=lambda: dispatcher(self.id, self.type, self.root,
-                                       self.student)
+            command=lambda: dispatcher(self.id, self.type, self.student)
         )
         run_button.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
 
