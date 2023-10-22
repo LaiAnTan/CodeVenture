@@ -2,6 +2,7 @@ import unittest
 
 from src.frontend.ui_register import registerHandler
 
+
 class TestRegisterHandler(unittest.TestCase):
     def test_empty_fields(self):
         """

@@ -1,10 +1,11 @@
+import csv
+from argon2 import PasswordHasher
+
 from .backend.database.database_user import UserDB
 from .backend.database.database_student import StudentDB
 from .backend.database.database_activity import ActivityDB
 from .backend.activity.ac_database.db_ac_completed import ActivityDictionary
 from config import ROOT_DIR
-import csv
-# from database_educator import EducatorDB
 
 
 def import_data_from_csv(filename) -> list[tuple]:
@@ -40,12 +41,17 @@ def populate_databases():
     students = import_data_from_csv(test_students_filename)
     activity = import_data_from_csv(test_activities_filename)
 
+    # hash the passwords
+    ph = PasswordHasher()
+    for i, user in enumerate(users):
+        users[i][1] = ph.hash(user[1])
+
     # add more as time goes on (corespond to database_list)
     entries_list = [users, students, activity]
 
     # init .db files
     for database in database_list:
-        if database.db_exists() == False:
+        if database.db_exists() is False:
             database.new_db()
 
     # populate

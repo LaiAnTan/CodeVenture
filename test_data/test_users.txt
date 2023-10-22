@@ -1,3 +1,2 @@
-teststd:$argon2id$v=19$m=65536,t=3,p=4$pDQagh6/BLtJ2qTWn9fbEA$akkHZbJOx/aWi2AwjgEplVhpp7BBSMBRTT88eFPjOe8:student
-testedu:$argon2id$v=19$m=65536,t=3,p=4$ADTBraXnO3E88EogADP9KA$Yaf0taY/Et7uKsSpNk7l36krRxAVc9XyUGoCVRXrkWU:educator
-admin:admin:admin
+teststd:teststd:student
+testedu:testedu:educator
