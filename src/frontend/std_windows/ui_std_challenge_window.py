@@ -143,24 +143,6 @@ class ChallangeWindow(ActivityWindow):
 
         # footer end ------------------------------------------
 
-    def ImageHandler(self, source, content, 
-                     max_img_height, max_img_width, attach_frame):
-        if source.img.get(content):
-            ret_widget = ImageLabel(
-                attach_frame,
-                f"{source.ModulePath}/{source.img[content]}",
-                max_img_height - 15,
-                max_img_width - 50,
-            )
-        else:
-            ret_widget = ctk.CTkLabel(
-                attach_frame,
-                text=f"Error displaying image {content}",
-                width=max_img_width,
-                wraplength=max_img_width - 10,
-            )
-        return ret_widget
-
     def QuestionFrames(self, frame_width):
         for widget in self.displayed_frame.winfo_children():
             widget.destroy()
@@ -180,7 +162,6 @@ class ChallangeWindow(ActivityWindow):
 
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
-                        self.ac,
                         content[1],
                         200, # change height value later
                         frame_width,
@@ -233,11 +214,11 @@ class ChallangeWindow(ActivityWindow):
 
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
-                        self.ac.hints,
                         content[1],
                         1600, # TODO: Change the height value
                         frame_width,
-                        self.displayed_frame
+                        self.displayed_frame,
+                        self.ac.hints
                     )
 
             paragraph.grid(row=index, column=0, padx=5, pady=5)

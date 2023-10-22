@@ -10,18 +10,25 @@ HEADER-END
 CONTENT-START
 QUESTION|0
 This is Question 0
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tempus gravida ipsum. In commodo, tellus a ultricies auctor, erat erat faucibus felis, eget ultrices lacus neque id lectus. Curabitur et urna suscipit, semper urna consequat, condimentum risus. Pellentesque placerat tincidunt lacus, porta ornare orci lobortis id. Nullam sed ornare quam. In sit amet ligula arcu. Etiam condimentum imperdiet pulvinar. Ut non dapibus odio, sit amet sagittis mi. Morbi cursus ante at erat sollicitudin, a aliquam purus mattis. In hac habitasse platea dictumst. Ut in nulla enim. Sed turpis tortor, bibendum posuere condimentum quis, rhoncus eu nunc.
+
+Curabitur malesuada mauris felis, at viverra ante volutpat sit amet. Aliquam pharetra arcu id blandit lobortis. Integer sed orci elit. Integer iaculis quam odio, in tempor ex blandit blandit. Nullam fermentum luctus nisi, quis aliquet urna commodo vitae. Ut in est porta, blandit ipsum vel, efficitur urna. Cras at fermentum justo. Ut aliquam lectus purus, lobortis pretium justo accumsan eu. Aenean id pharetra dolor, quis pretium metus. Sed nec nisi pulvinar, tincidunt sem nec, maximus tortor. Ut laoreet sagittis augue, vel gravida ex facilisis ut. Sed nec purus velit. Nam eget bibendum ipsum.
+
+Proin laoreet lorem nec tincidunt lobortis. Nullam eu mattis elit, sed iaculis lorem. Cras at diam ut urna lacinia placerat consequat quis nisi. Nullam cursus metus ut fermentum malesuada. Nunc at nulla neque. Nam faucibus congue urna in suscipit. Suspendisse dictum lorem et sem hendrerit, eu dictum nisi pretium.
 OPTION
 OPTION A|OPTION B|OPTION C|OPTION D
 QUESTION-END
 
 QUESTION|1
 This is Question 1
+<CODE-CONT>CD001
 OPTION
 OPTION A|OPTION B|OPTION C|OPTION D
 QUESTION-END
 
 QUESTION|2
 This is Question 2
+<IMG-CONT>IMG001
 OPTION
 OPTION A|OPTION B|OPTION C|OPTION D
 QUESTION-END
@@ -47,11 +54,10 @@ CONTENT-END
 
 SOURCES-START
 IMG-CONT-START
-IMG001-amongus.png
-IMG002-amongus2.png
+IMG001-test.jpg
 IMG-CONT-END
 
 CODE-CONT-START
-CD001-test.py
+CD001-test
 CODE-CONT-END
 SOURCES-END

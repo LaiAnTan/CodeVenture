@@ -1,11 +1,15 @@
 import customtkinter as ctk
-from .EntryForm import EntryForm
+from .entryForm import EntryForm
 from _tkinter import TclError
 
 class ParagraphEntryForm(EntryForm):
     def __init__(self, master, parent, height, width):
         super().__init__(master, parent, height, width)
         self.type = "paragraph"
+
+        self.error = False
+        self.error_msg = ''
+
         self.SetFrames()
 
     def SetContentFrame(self):

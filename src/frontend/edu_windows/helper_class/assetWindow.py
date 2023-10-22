@@ -1,6 +1,7 @@
 import customtkinter as ctk
-from .imageEntry import ImageEntryForm
+from .imageEntry import ImageEntryForm, EntryForm
 from .codeEntry import CodeEntryForm
+from .errorWindow import ErrorWindow
 
 class AssetWindow(ctk.CTkToplevel):
     def __init__(self, master, height, width, assets) -> None:
@@ -8,7 +9,7 @@ class AssetWindow(ctk.CTkToplevel):
         self.master = master
 
         self.assets = assets
-        self.content_frames = []
+        self.content_frames: list[EntryForm] = []
 
         self.height = height
         self.width = width
@@ -20,17 +21,15 @@ class AssetWindow(ctk.CTkToplevel):
         self.focus_set()
         self.grab_set()
 
-        self.resizable(False, False)
+        self.resizable(0, 0)
         self.geometry(f"{width}x{height}")
         self.title("Available Assets")
 
-        self.header = ctk.CTkFrame(self, width=width, height=55)
+        self.header = ctk.CTkFrame(self)
         self.header.grid(row=0, column=0, sticky='ew')
 
-        self.content_frame = ctk.CTkFrame(self, width=width, height=height - 55)
-        self.content_frame.grid(row=1, column=0)
-
-        self.protocol("WM_DELETE_WINDOW", self.save_data)
+        self.content_frame = ctk.CTkFrame(self)
+        self.content_frame.grid(row=1, column=0, sticky='ew')
 
         self.set_Frames()
 
@@ -44,14 +43,7 @@ class AssetWindow(ctk.CTkToplevel):
             text="Save and Exit",
             command=self.save_data
         )
-        save_and_quit.pack(side=ctk.LEFT, padx=(10, 5), pady=5)
-
-        add_new = ctk.CTkButton(
-            self.header,
-            text="Add New Asset",
-            command=self.add_new_asset
-        )
-        add_new.pack(side=ctk.RIGHT, padx=5, pady=5)
+        save_and_quit.pack(side=ctk.RIGHT, padx=5, pady=5)
 
         self.chosen_type = ctk.StringVar(value='Picture')
         asset_type = ['Picture', 'Code Snippet']
@@ -60,7 +52,14 @@ class AssetWindow(ctk.CTkToplevel):
             values=asset_type,
             variable=self.chosen_type
         )
-        type.pack(side=ctk.RIGHT, padx=(5, 10), pady=5)
+        type.pack(side=ctk.LEFT, padx=(5, 20), pady=5)
+
+        add_new = ctk.CTkButton(
+            self.header,
+            text="Add New Asset",
+            command=self.add_new_asset
+        )
+        add_new.pack(side=ctk.LEFT, padx=5, pady=5)
 
     def set_Content(self):
         self.asset_frame = ctk.CTkScrollableFrame(
@@ -102,10 +101,19 @@ class AssetWindow(ctk.CTkToplevel):
 
     def save_data(self):
         self.assets.clear()
+
+        error_status = [x.getError() for x in self.content_frames]
+        error_messages = []
+
+        for index, error_ret in enumerate(error_status):
+            if error_ret[0] is True:
+                error_messages.append((index + 1, error_ret[1]))
+        if error_messages:
+            error_window = ErrorWindow(self, 450, 550, error_messages, 'save assets')
+            self.master.winfo_toplevel().wait_window(error_window)
+            return
+
         self.assets.extend([x.getData() for x in self.content_frames])
-
-        # print(self.assets)
-
         self.destroy()
 
     def add_new_asset(self):

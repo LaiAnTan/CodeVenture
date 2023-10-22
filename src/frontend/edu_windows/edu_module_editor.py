@@ -13,6 +13,8 @@ from .helper_class.assetWindow import AssetWindow
 
 from ...backend.factory.ModuleFactory import ModuleFactory
 
+from .helper_class.errorWindow import ErrorWindow
+
 class ModuleEditor(ActivityEditor):
     def __init__(self, master: App, width, height, existing_module: Module=None):
         super().__init__(master, width, height, Activity.AType['Module'], existing_module)
@@ -140,6 +142,18 @@ class ModuleEditor(ActivityEditor):
 
     def ExportData(self):
         print('LOG: Exporting...')
+
+        error_status = [x.getError() for x in self.content_frames]
+        error_messages = []
+
+        for index, error_ret in enumerate(error_status):
+            if error_ret[0] is True:
+                error_messages.append((index + 1, error_ret[1]))
+        if error_messages:
+            error_window = ErrorWindow(self, 450, 550, error_messages, 'export Module')
+            self.master.winfo_toplevel().wait_window(error_window)
+            return
+
         header = self.GetHeaderData()
         content = self.GetContentData()
 

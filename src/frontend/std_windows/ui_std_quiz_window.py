@@ -6,26 +6,47 @@ from ..ui_std_window_gen import displayActivitySelections
 from ...backend.user.user_student import Student
 from ...backend.activity.ac_classes.ac_quiz import Quiz, Question
 
-class QuestionFrame(ctk.CTkFrame):
-    def __init__(self, question: Question, max_width, previous_selection: ctk.IntVar, master: ctk.CTkFrame) -> None:
+class QuestionFrame(ctk.CTkFrame, ):
+    def __init__(self, master: ctk.CTkFrame, parent_window,
+                 question: Question, max_width, 
+                 previous_selection: ctk.IntVar,
+                 ) -> None:
         super().__init__(master)
 
+        self.parent = parent_window
         self.question = question
         self.max_width = max_width
         self.previous_selection = previous_selection
 
+        self.prompt = self.question.get_Prompt()
+
         self.prompt_frame = ctk.CTkFrame(self)
         self.prompt_frame.grid(row=0, column=0, padx=5, pady=5)
 
-        self.prompt = ctk.CTkLabel(
-            self.prompt_frame,
-            text=self.question.get_Prompt(),
-            width=self.max_width,
-            wraplength=self.max_width - 10,
-            anchor="w",
-            justify="left",
-        )
-        self.prompt.grid(row=0, column=0, padx=5, pady=5)
+        for index, prompt in enumerate(self.prompt):
+            if "IMG-CONT" in prompt:
+                self.prompt = self.parent.ImageHandler(
+                    prompt.removeprefix('<IMG-CONT>'),
+                    200, # TODO: Change this value
+                    self.max_width,
+                    self.prompt_frame
+                )
+            elif "CODE-CONT" in prompt:
+                self.prompt = self.parent.CodeHandler(
+                    prompt.removeprefix('<CODE-CONT>'),
+                    self.max_width,
+                    self.prompt_frame
+                )
+            else:
+                self.prompt = ctk.CTkLabel(
+                    self.prompt_frame,
+                    text=prompt,
+                    width=self.max_width,
+                    wraplength=self.max_width - 10,
+                    anchor="w",
+                    justify="left",
+                )
+            self.prompt.grid(row=index, column=0, padx=5, pady=5)
 
         self.options_frame = ctk.CTkFrame(self)
         self.options_frame.grid(row=1, column=0, padx=5, pady=5)
@@ -126,12 +147,24 @@ class QuizWindow(ActivityWindow):
     def showAllQuestions(self):
         self.RefreshQnAFrame()
         for index, questions in enumerate(self.ac.questions):
-            q_frame = QuestionFrame(questions, self.question_width, self.stdanswer[index], self.qna_frame)
+            q_frame = QuestionFrame(
+                self.qna_frame,
+                self,
+                questions,
+                self.question_width,
+                self.stdanswer[index]
+            )
             q_frame.grid(row=index, column=0, padx=5, pady=5)
 
     def showOneQuestion(self, index):
         self.RefreshQnAFrame()
-        q_frame = QuestionFrame(self.ac.questions[index], self.question_width, self.stdanswer[index], self.qna_frame)
+        q_frame = QuestionFrame(
+            self.qna_frame,
+            self,
+            self.ac.questions[index],
+            self.question_width,
+            self.stdanswer[index]
+        )
         q_frame.grid(row=0, column=0, padx=5, pady=5)
 
     def checkAnswers(self, questionStatusFrame: ctk.CTkFrame, max_width):
@@ -170,7 +203,7 @@ class QuizWindow(ActivityWindow):
 
 if __name__ == "__main__":
     from ..ui_app import App
-    from backend.activity.ac_database.db_ac_completed import ActivityDictionary
+    from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
     ActivityDictionary()
     main = App()

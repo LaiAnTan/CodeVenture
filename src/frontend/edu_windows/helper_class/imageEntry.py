@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from .EntryForm import EntryForm
+from .entryForm import EntryForm
 from PIL import Image, UnidentifiedImageError
 from config import ASSET_DIR
 from os import path
@@ -105,6 +105,26 @@ class ImageEntryForm(EntryForm):
         file_path = ctk.filedialog.askopenfilename()
         self.PreviewImage(file_path)
 
+    def ErrorImage(self, error_msg, original_dir):
+        self.error = True
+        self.error_msg = error_msg
+
+        self.PreviewLabel.configure(
+            text='',
+            image=ctk.CTkImage(
+                Image.open(f'{ASSET_DIR}/cant_display_image.png'),
+                size=(65, 65)
+            )
+        )
+
+        self.DirectoryEntry.configure(text_color='red')
+        self.DirectoryVar.set(original_dir)
+
+        self.NameEntry.configure(text_color='red')
+        self.NameVar.set('Invalid File Format')
+
+        return "break"
+
     def PreviewImage(self, file_path):
         if not file_path:
             return
@@ -113,10 +133,7 @@ class ImageEntryForm(EntryForm):
 
         if file_format not in ['jpeg', 'png', 'jpg']:
             print('LOG: Invalid File Format for Images')
-            txt_c = 'red'
-            name = 'Invalid File Format'
-            previewimage = Image.open(f'{ASSET_DIR}/cant_display_image.png')
-            size = (65, 65)
+            return self.ErrorImage('Error in Image Attachment - Invalid File Format', directory)
         else:
             txt_c = 'black'
             name = path.split(file_path)[-1].split('.')[0]
@@ -125,8 +142,9 @@ class ImageEntryForm(EntryForm):
                 previewimage = Image.open(directory)
                 size=self.ratio_resizing(previewimage, self.max_image_height, self.subwidth)
             except (FileNotFoundError, UnidentifiedImageError):
-                previewimage = Image.open(f'{ASSET_DIR}/cant_display_image.png')
-                size = (65, 65)
+                return self.ErrorImage('Error in Image Asset - Unable to Open File', directory)
+
+        self.error = False
 
         self.PreviewLabel.configure(
             text='',

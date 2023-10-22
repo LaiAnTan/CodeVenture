@@ -23,12 +23,14 @@ class EntryForm(ctk.CTkFrame):
         self.content = ctk.CTkFrame(self, width, height=height - 15)
         self.content.grid(row=2, column=0, padx=5, pady=5, sticky='ew')
 
+        self.error = True
+        self.error_msg = 'Entry Frame is left unused, Remove if not needed'
+
         ## the main place to input data
         self.ContentEntryForm = None
 
     def get_IndexInstance(self):
-        """
-        """
+        """Returns which positon itself is in the parent's frame"""
         for index, x in enumerate(self.parent.content_frames):
             if x is self:
                 return index
@@ -108,3 +110,9 @@ class EntryForm(ctk.CTkFrame):
             if frames.type == self.type:
                 return (self_index + 1) + x
         return -1
+    
+    def getError(self):
+        return (
+            self.error,
+            self.error_msg
+        )

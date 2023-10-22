@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from .EntryForm import EntryForm
+from .entryForm import EntryForm
 from ...std_windows.helper_class.ide import IDE
 from os import path
 
@@ -79,11 +79,14 @@ class CodeEntryForm(EntryForm):
         file_name = path.split(file_path)[-1]
         extension = file_name.split('.')[-1]
         if len(file_name.split('.')) < 2 or extension != 'py':
-            content = 'Invalid File Type'
+            content = 'Invalid File Type, Please only import python files'
+            self.error = True
+            self.error_msg = 'Error in Code Entry - Invalid File Type for Code Import'
         else:
             self.nameVar.set(file_name.split('.')[0])
             with open(file_path) as file:
                 content = ''.join(file.readlines())
+            self.error = False
 
         self.ide.ClearContent(1)
         self.ide.InsertContent("0.0", content, 1)
@@ -99,8 +102,11 @@ class CodeEntryForm(EntryForm):
             with open(file_path) as file:
                 try:
                     content = ''.join(file.readlines())
+                    self.error = False
                 except UnicodeDecodeError:
-                    content = 'Invalid File Type, Please Input Text Files only!'
+                    content = 'Invalid File Type, Please import Text Files only!'
+                    self.error = True
+                    self.error_msg = 'Error in Code Entry - Invalid File Type for Code Input Import'
 
         self.ide.ClearContent(2)
         self.ide.InsertContent("0.0", content, 2)

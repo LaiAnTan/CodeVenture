@@ -3,9 +3,7 @@ import customtkinter as ctk
 
 from ..ui_app import App
 from ..ui_std_window_gen import displayActivitySelections
-from .helper_class.code_runner import CodeRunner
-from .helper_class.imagelabel import ImageLabel
-from ..std_windows.ui_std_activity_window import ActivityWindow
+from .ui_std_activity_window import ActivityWindow
 from ...backend.user.user_student import Student
 from ...backend.activity.ac_classes.ac_module import Module
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
@@ -73,40 +71,6 @@ class ModuleWindow(ActivityWindow):
         submit_button.grid(row=0, column=0, padx=0, pady=0)
 
     # helper functions
-
-    def ImageHandler(self, content, max_img_height, max_img_width, attach_to):
-        if self.ac.img.get(content):
-            ret_widget = ImageLabel(
-                attach_to,
-                f"{self.ac.ModulePath}/{self.ac.img[content]}",
-                max_img_height - 50,
-                max_img_width - 50,
-            )
-        else:
-            ret_widget = ctk.CTkLabel(
-                attach_to,
-                text=f"Error displaying image {content}",
-                width=max_img_width,
-                wraplength=max_img_width - 10,
-            )
-        return ret_widget
-    
-    def CodeHandler(self, content, max_img_width, attach_to):
-        if self.ac.code.get(content):
-            ret_widget = CodeRunner(
-                attach_to,
-                max_img_width - 30,
-                self.ac.code[content],
-                self.ac.ModulePath
-            )
-        else:
-            ret_widget = ctk.CTkLabel(
-                attach_to,
-                text=f"Error displaying code {content}",
-                width=max_img_width,
-                wraplength=max_img_width - 10,
-            )
-        return ret_widget
 
     def StudentCompletion(self):
         print("Adding Student Entry into backend.database...")

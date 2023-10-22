@@ -17,7 +17,7 @@ class EntryAdder(ctk.CTkFrame):
 
         add_button = ctk.CTkButton(
             self,
-            text="Add Entry Form",
+            text="Add An Entry Widget Above",
             command=lambda : self.AddEntryPoint()
         )
         add_button.pack(side=ctk.RIGHT, padx=5, pady=5)

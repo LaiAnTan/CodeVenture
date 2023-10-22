@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from .assetWindow import AssetWindow
-from .EntryForm import EntryForm
+from .entryForm import EntryForm
 from ...std_windows.helper_class.imagelabel import ImageLabel
 from .codeFromBuffer import CodeBufferRunner
 
@@ -68,25 +68,14 @@ class AssetSelectionScreen(AssetWindow):
 
         for index, asset in enumerate(self.assets):
             self.description_frames.rowconfigure(index, weight=1)
-            match asset[0]:
-                case 'image':
-                    data_repr = AssetSelectionScreen.DescriptionMessage(
-                        self.description_frames,
-                        self,
-                        self.entry_widget_width,
-                        35,
-                        asset[1],
-                        asset
-                    )
-                case 'code':
-                    data_repr = AssetSelectionScreen.DescriptionMessage(
-                        self.description_frames,
-                        self,
-                        self.entry_widget_width,
-                        35,
-                        asset[1],
-                        asset
-                    )
+            data_repr = AssetSelectionScreen.DescriptionMessage(
+                self.description_frames,
+                self,
+                self.entry_widget_width,
+                35,
+                asset[1],
+                asset
+            )
             data_repr.grid(row=index, column=0, padx=10, pady=10, sticky='new')
 
     def get_Selection(self):
@@ -102,7 +91,6 @@ class AssetPreview(EntryForm):
 
         self.assets : list[tuple[str]] = asset_list
         self.displaying_value = None
-        self.error = False
         self.SetFrames()
 
 
@@ -221,6 +209,7 @@ class AssetPreview(EntryForm):
 
     def displayError(self):
         self.error = True
+        self.error_msg = 'Invalid Asset Selected'
 
         for children in self.content.winfo_children():
             children.grid_forget()

@@ -71,6 +71,9 @@ class ActivityEditor(ctk.CTkFrame, ABC):
         back_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
     def SetContent(self):
+        self.content.rowconfigure((0, 1), weight=1)
+        self.content.columnconfigure(0, weight=1)
+
         self.header_data = ctk.CTkFrame(
             self.content,
             width=self.content_width,

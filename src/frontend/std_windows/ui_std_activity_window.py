@@ -7,6 +7,8 @@ from ...backend.activity.ac_classes.ac_activity import Activity
 from ...backend.user.user_student import Student
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
+from .helper_class.code_runner import CodeRunner
+from .helper_class.imagelabel import ImageLabel
 
 class ActivityWindow(ctk.CTkFrame):
 
@@ -16,9 +18,9 @@ class ActivityWindow(ctk.CTkFrame):
 
         self.ac = activity
         self.std = student
-        self.completion_database = ActivityDictionary.getDatabase(self.ac.id)
+        self.completion_database = ActivityDictionary().getDatabase(self.ac.id)
         
-        self.done = self.completion_database.StudentEntryExist(self.std.name)
+        self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
 
         self.header_frame = ctk.CTkFrame(self)
         self.header_frame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
@@ -61,3 +63,45 @@ class ActivityWindow(ctk.CTkFrame):
     @abstractmethod
     def SetFooter(self):
         pass
+
+    # HELPER FUNCTIONS
+
+    def ImageHandler(self, content, max_img_height, max_img_width, attach_to, source=None):
+        if source is None:
+            source = self.ac
+        
+        if source.img.get(content):
+            ret_widget = ImageLabel(
+                attach_to,
+                f"{source.ModulePath}/{source.img[content]}",
+                max_img_height - 50,
+                max_img_width - 50,
+            )
+        else:
+            ret_widget = ctk.CTkLabel(
+                attach_to,
+                text=f"Error displaying image {content}",
+                width=max_img_width,
+                wraplength=max_img_width - 10,
+            )
+        return ret_widget
+
+    def CodeHandler(self, content, max_img_width, attach_to, source=None):
+        if source is None:
+            source = self.ac
+
+        if source.code.get(content):
+            ret_widget = CodeRunner(
+                attach_to,
+                max_img_width - 30,
+                source.code[content],
+                source.ModulePath
+            )
+        else:
+            ret_widget = ctk.CTkLabel(
+                attach_to,
+                text=f"Error displaying code {content}",
+                width=max_img_width,
+                wraplength=max_img_width - 10,
+            )
+        return ret_widget
