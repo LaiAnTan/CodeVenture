@@ -4,14 +4,22 @@ from PIL import Image
 
 from config import ASSET_FOLDER
 
+from .refreshScrollFrame import RefreshableScrollableFrame, RSFWidget
+
 class EntryAdder(ctk.CTkFrame):
     """may god forgive me for what im about to do
     
     this widget allows EntryForm objects to make a new instance in the main editor instance
     The new instance is placed ABOVE the object (there is a button to add at the bottom)"""
-    def __init__(self, master, attached_form, main_editor, height, width):
+    def __init__(self,
+                 master: RSFWidget,
+                 attached_form: RefreshableScrollableFrame, 
+                 main_editor,
+                 height, 
+                 width):
         super().__init__(master, width=width, height=height)
 
+        self.master = master
         self.parent = attached_form
         self.main_editor = main_editor
 
@@ -47,31 +55,30 @@ class EntryAdder(ctk.CTkFrame):
         from .paragraphEntry import ParagraphEntryForm
         from .assetPreview import AssetPreview
 
-        index_to_add = self.parent.get_IndexInstance()
+        index_to_add = self.master.get_index_instance()
         to_add = self.chosen_para_type.get()
 
         match to_add:
             case 'Paragraph':
                 entry_form = ParagraphEntryForm(
-                    self.main_editor.content_entry_frame,
+                    self.parent,
                     self.main_editor,
                     self.main_editor.entry_widget_heigth,
                     self.main_editor.entry_widget_width,
                 )
             case 'Asset':
                 entry_form = AssetPreview(
-                    self.main_editor.content_entry_frame,
+                    self.parent,
                     self.main_editor,
                     self.main_editor.entry_widget_width,
                     self.main_editor.entry_widget_heigth,
                     self.main_editor.assets
                 )
 
-        entry_form.ContentEntryForm.focus()
-        self.main_editor.content_frames.insert(index_to_add, entry_form)
-
-        self.main_editor.Regrid_Components()
-        self.main_editor.ScrollContentFrame((index_to_add) / len(self.main_editor.content_frames))
+        entry_form.focus()
+        self.parent.add_element_specific(index_to_add, entry_form)
+        self.parent.refresh_elements()
+        self.parent.scroll_frame(index_to_add / self.parent.get_tracking_no())
 
 if __name__ == "__main__":
     from ...ui_app import App

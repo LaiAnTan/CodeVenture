@@ -34,8 +34,11 @@ class ActivityEditor(App_Frame, ABC):
         self.SetFrames()
 
     def SetFrames(self):
+        self.rowconfigure((0, 1), weight=1)
+        self.columnconfigure(0, weight=1)
+
         header_height = 15
-        self.header = ctk.CTkFrame(self, width=self.max_width, height=header_height)
+        self.header = ctk.CTkFrame(self, height=header_height)
         self.header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         self.content_width = self.max_width
@@ -98,11 +101,16 @@ class ActivityEditor(App_Frame, ABC):
         self.ContentData()
 
     def HeaderData(self):
+        self.header_data.rowconfigure((0,1,2), weight=1)
+        self.header_data.columnconfigure(0, weight=1)
+
         ## first row
         first_row = ctk.CTkFrame(
             self.header_data, 
             corner_radius=0
         )
+        first_row.rowconfigure(0, weight=1)
+        first_row.columnconfigure(3, weight=1)
         first_row.grid(row=0, column=0, sticky="ew")
 
         id_label = ctk.CTkLabel(
@@ -127,10 +135,9 @@ class ActivityEditor(App_Frame, ABC):
 
         title_entry = ctk.CTkEntry(
             first_row,
-            width=420,
             textvariable=self.name_variable
         )
-        title_entry.grid(row=0, column=3, padx=5, pady=5)
+        title_entry.grid(row=0, column=3, padx=5, pady=5, sticky='ew')
 
         ## second row
         second_row = ctk.CTkFrame(
@@ -177,20 +184,21 @@ class ActivityEditor(App_Frame, ABC):
             self.header_data,
             corner_radius=0
         )
-        thirdrow.grid(row=2, column=0, sticky='ew')
+        thirdrow.rowconfigure(0, weight=1)
+        thirdrow.columnconfigure(1, weight=1)
+        thirdrow.grid(row=2, column=0, sticky='sew')
 
         description_label = ctk.CTkLabel(
             thirdrow,
             text=f'{self.ac_type_name}\'s Description: '
         )
-        description_label.grid(row=0, column=1, padx=5, pady=5, sticky='n')
+        description_label.grid(row=0, column=0, padx=5, pady=5, sticky='n')
 
         self.description_entry = ctk.CTkTextbox(
             thirdrow,
-            width=self.content_width - 115,
             height=self.header_data_height * 0.3
         )
-        self.description_entry.grid(row=0, column=2, padx=5, pady=5, sticky='ew')
+        self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
     @abstractmethod
     def ContentData(self):

@@ -3,8 +3,8 @@ from .entryForm import EntryForm
 from _tkinter import TclError
 
 class ParagraphEntryForm(EntryForm):
-    def __init__(self, master, parent, height, width):
-        super().__init__(master, parent, height, width)
+    def __init__(self, master, main_editor, height, width):
+        super().__init__(master, main_editor, height, width)
         self.type = "paragraph"
 
         self.error = False
@@ -19,6 +19,8 @@ class ParagraphEntryForm(EntryForm):
             width=self.width - 15,
             wrap="word"
         )
+        self.set_focus_widget(self.ContentEntryForm)
+
         self.setContentFormEvent()
         self.ContentEntryForm.grid(row=0, column=0, padx=5, pady=5)
     
@@ -49,11 +51,11 @@ class ParagraphEntryForm(EntryForm):
 
     def RemoveSelf(self, placeholder):
         if not self.peek():
-            self.deleteSelf()
+            self.delete_self(False)
 
     def goNextChunk(self, placeholder, content=None):
         # get self index
-        self_index = self.parent.content_frames.index(self)
+        self_index = self.get_index_instance()
 
         if content is None:
             # grab content of current chunk
@@ -65,30 +67,30 @@ class ParagraphEntryForm(EntryForm):
         next_index = self.getNextSimilarType()
         # check next one
         if next_index != -1 and next_index == self_index + 1:
-            next_chunk: ParagraphEntryForm = self.parent.content_frames[next_index]
+            next_chunk = self.parent_frame.get_subframe(next_index)
             # next chunk is empty, just use this one
             if not next_chunk.peek():
                 next_chunk.insertData(extracted_data)
                 next_chunk.focus()
-                self.parent.ScrollContentFrame(next_index / len(self.parent.content_frames))
+                self.parent_frame.scroll_frame(next_index / self.parent_frame.get_tracking_no())
                 return "break"
 
         return self.makeNewInstance(self_index + 1, extracted_data)
 
     def makeNewInstance(self, where, content):
         new = ParagraphEntryForm(
-            self.parent.content_entry_frame,
-            self.parent,
+            self.parent_frame,
+            self.main_editor,
             self.height,
             self.width,
         )
-        self.parent.content_frames.insert(where, new)
-        self.parent.Regrid_Components()
         new.insertData(content)
-        new.ContentEntryForm.focus()
-        self.parent.ScrollContentFrame((where) / len(self.parent.content_frames))
+        new.focus()
+        self.parent_frame.add_element_specific(where, new)
+        self.parent_frame.refresh_elements()
+        self.parent_frame.scroll_frame(where / self.parent_frame.get_tracking_no())
         return "break"
-    
+
     def PasteData(self, placeholder):
         try:
             value = self.winfo_toplevel().clipboard_get().strip()
@@ -97,7 +99,7 @@ class ParagraphEntryForm(EntryForm):
             return "break"
 
         first = 1
-        current_index = self.parent.content_frames.index(self)
+        current_index = self.get_index_instance()
         current_chunk = self
         for line in value.split('\n'):
             line = line.strip()
@@ -110,7 +112,7 @@ class ParagraphEntryForm(EntryForm):
             else:
                 current_chunk.goNextChunk(None, line.strip())
                 current_index += 1
-                current_chunk = self.parent.content_frames[current_index]
+                current_chunk = self.parent_frame.get_subframe(current_index)
 
-        current_chunk.ContentEntryForm.focus()
+        current_chunk.focus()
         return "break"

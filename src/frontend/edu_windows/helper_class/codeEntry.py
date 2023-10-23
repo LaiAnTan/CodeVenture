@@ -4,12 +4,11 @@ from ...std_windows.helper_class.ide import IDE
 from os import path
 
 class CodeEntryForm(EntryForm):
-    def __init__(self, master, parent, height, width, data: tuple[str] | None=None):
-        super().__init__(master, parent, height, width)
+    def __init__(self, master, main_editor, height, width, data: tuple[str] | None=None):
+        super().__init__(master, main_editor, height, width)
 
         self.type = "code"
         self.subwidth = self.width
-
         self.previous_data = data
 
         self.SetFrames(no_entry_adder=True)
@@ -49,9 +48,9 @@ class CodeEntryForm(EntryForm):
             '.',
             None
         )
+        self.set_focus_widget(self.ide)
         self.ide.grid(row=1, column=0, padx=5, pady=5)
 
-        self.ContentEntryForm = self.ide.IDETextBox
 
         importCode = ctk.CTkButton(
             ImportFrame,
