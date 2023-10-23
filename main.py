@@ -11,9 +11,7 @@ def main() -> None:
 
     @return None
     """
-    if len(sys.argv) == 2 and sys.argv[1] == "--no-reset":
-        pass
-    else:
+    if len(sys.argv) == 2 and sys.argv[1] == "--reset":
         reset_databases()
     populate_databases()
     a = App()
