@@ -2,7 +2,7 @@ HEADER-START
 A_ID|QZ0000
 TITLE|This is A Test Quiz
 DIFFICULTY|*****
-TAG|py001,py002
+TAG|functions,variables
 ACHIEVEMENT|ac001
 UP_LEVEL|0.5,0.2
 HEADER-END

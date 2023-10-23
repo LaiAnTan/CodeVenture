@@ -209,8 +209,7 @@ class ActivityEditor(App_Frame, ABC):
         
         [id, type_num, name, difficulty_index, tags, description]"""
         return [
-            "MD0001", # temporary, please remember to change
-            # self.id_variable.get(),
+            self.id_variable.get(),
             self.ac_type.value,
             self.name_variable.get(),
             self.difficulty_value.get(),
