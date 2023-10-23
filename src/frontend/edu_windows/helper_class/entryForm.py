@@ -15,14 +15,19 @@ class EntryForm(RSFWidget):
         self.height = height
         self.width = width
 
-        self.rowconfigure((0, 1, 2), weight=1)
+        self.rowconfigure((0, 1), weight=1)
         self.columnconfigure(0, weight=1)
 
-        self.header = ctk.CTkFrame(self, width, height=15)
-        self.header.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+        entryform = ctk.CTkFrame(self)
+        entryform.grid(row=1, column=0, sticky='ew')
+        entryform.rowconfigure((0, 1), weight=1)
+        entryform.columnconfigure(0, weight=1)
 
-        self.content = ctk.CTkFrame(self, width, height=height - 15)
-        self.content.grid(row=2, column=0, padx=5, pady=5, sticky='ew')
+        self.header = ctk.CTkFrame(entryform)
+        self.header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+
+        self.content = ctk.CTkFrame(entryform)
+        self.content.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
         self.error = True
         self.error_msg = 'Entry Frame is left unused, Remove if not needed'
@@ -75,7 +80,7 @@ class EntryForm(RSFWidget):
                                  self.main_editor, 
                                  45,
                                  self.width)
-        entry_adder.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
+        entry_adder.grid(row=0, column=0, pady=5, sticky='ew')
 
     def getNextSimilarType(self):
         parent_tracking = self.parent_frame.get_tracking_list()

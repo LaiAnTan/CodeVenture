@@ -129,7 +129,7 @@ class AssetPreview(EntryForm):
 
     def display_Selection(self):
         selection = AssetSelectionScreen(self, 450, 700, self.assets)
-        self.master.winfo_toplevel().wait_window(selection)
+        self.winfo_toplevel().wait_window(selection)
 
         self.displaying_value = selection.get_Selection()
         if self.displaying_value is None:

@@ -103,7 +103,7 @@ class AssetWindow(ctk.CTkToplevel):
                 error_messages.append((index + 1, error_ret[1]))
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages, 'save assets')
-            self.master.winfo_toplevel().wait_window(error_window)
+            self.winfo_toplevel().wait_window(error_window)
             return
 
         self.assets.clear()

@@ -74,7 +74,7 @@ class RefreshableScrollableFrame(ctk.CTkScrollableFrame):
         
         for index, components in enumerate(self.tracking):
             self.rowconfigure(index, weight=1)
-            components.grid(row=index, column=0, padx=5, pady=5, sticky='ew')
+            components.grid(row=index, column=0, sticky='ew')
 
     def remove_element(self, to_remove: RSFWidget) -> None:
         self.tracking.remove(to_remove)
