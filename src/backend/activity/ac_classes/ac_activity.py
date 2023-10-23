@@ -27,6 +27,7 @@ class Activity():
         self.ModulePath = f"{ACTIVITY_DIR}/{ac_type.name}/{filename}"
         self.content: list[str] = []
         self.footer: list[str] = []
+        self.headerbuffer: list[str] = []
         self.type = ac_type
         self.img = {}
         self.code = {}
@@ -111,45 +112,41 @@ class Activity():
 
         # print(self.content)
 
-    def	__get_Headers(self, file):
-        for line in file:
-            line = line.strip('\n')
-            if line == "HEADER-END":
-                break
+    def ParseHeader(self):
+        for line in self.headerbuffer:
+            kwarg = line.split('|')
 
-            stuff = line.split("|")
-
-            if len(stuff) < 2:
+            if len(kwarg) < 2:
                 self.warnings.append(
                     (
                         'HEADER',
-                        f'Keyword {stuff[0]} has no content'
+                        f'Keyword {kwarg[0]} has no content'
                     )
                 )
                 continue
 
-            if stuff[1] == '':
+            if kwarg[1] == '':
                 self.warnings.append(
                     (
                         'HEADER',
-                        f'Keyword {stuff[0]} content is empty!'
+                        f'Keyword {kwarg[0]} content is empty!'
                     )
                 )
 
-            match stuff[0]:
+            match kwarg[0]:
                 case "ID":
-                    self.id = stuff[1]
+                    self.id = kwarg[1]
                 case "TITLE":
-                    self.title = stuff[1]
+                    self.title = kwarg[1]
                 case "DIFFICULTY":
-                    self.difficulty = stuff[1].count('*')
+                    self.difficulty = kwarg[1].count('*')
                 case "TAG":
-                    self.tag = [x.strip() for x in stuff[1].split(',')]
+                    self.tag = [x.strip() for x in kwarg[1].split(',')]
                 case _:
                     self.warnings.append(
                         (
                             'HEADER',
-                            f'Unidentified Keyword {{{stuff[0]}}}'
+                            f'Unidentified Keyword {{{kwarg[0]}}}'
                         )
                     )
 
@@ -167,6 +164,13 @@ class Activity():
                     f'Header field is incomplete, missing {str(missing_names).strip("[]")}'
                 )
             )
+
+    def	__get_Headers(self, file):
+        for line in file:
+            line = line.strip('\n')
+            if line == "HEADER-END":
+                break
+            self.headerbuffer.append(line)
 
     def	__get_Content(self, file):
         for line in file:

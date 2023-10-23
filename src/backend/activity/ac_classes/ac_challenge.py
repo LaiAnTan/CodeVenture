@@ -18,6 +18,7 @@ class Challange(Activity):
         super().__init__(filename, Activity.AType["Challenge"])
 
         self.read_data_file()
+        self.ParseHeader()
         self.ParseContent()
         self.ParseSources()
 

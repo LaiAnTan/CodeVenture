@@ -55,6 +55,7 @@ class Quiz(Activity):
 
         super().__init__(filename, Activity.AType["Quiz"])
         self.read_data_file()
+        self.ParseHeader()
         self.ParseSources()
         self.__init_Questions()
         self.__getAnswers()

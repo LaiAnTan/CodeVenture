@@ -25,6 +25,7 @@ class TestModuleParsing(unittest.TestCase):
 
     def test_getHeader_return_value(self) -> None:
         ac_test = self.set_up_test_activity_fast('TEST000')
+        ac_test.ParseHeader()
         header = ac_test.getHeaders()
 
         # getHeader returns a tuple with 4 values [id, title, difficulty, tags]
@@ -45,6 +46,7 @@ class TestModuleParsing(unittest.TestCase):
         Nothing special, just a valid header
         """
         ac_test = self.set_up_test_activity_fast('TEST000')
+        ac_test.ParseHeader()
 
         test_header = ac_test.getHeaders()
         self.assertEqual(
@@ -65,6 +67,7 @@ class TestModuleParsing(unittest.TestCase):
         Test invalid keyword in header
         """
         ac_test = self.set_up_test_activity_fast('INVD000')
+        ac_test.ParseHeader()
 
         test_warnings = ac_test.getWarning()
 
@@ -87,6 +90,7 @@ class TestModuleParsing(unittest.TestCase):
         Test no field provided for a keyword in header
         """
         ac_test = self.set_up_test_activity_fast('INVD001')
+        ac_test.ParseHeader()
 
         # ID field has no content
         test_warnings = ac_test.getWarning()
@@ -110,6 +114,7 @@ class TestModuleParsing(unittest.TestCase):
         Test empty field provided for a keyword in header
         """
         ac_test = self.set_up_test_activity_fast('INVD002')
+        ac_test.ParseHeader()
 
         # Title has an empty field
         test_warnings = ac_test.getWarning()
@@ -132,8 +137,8 @@ class TestModuleParsing(unittest.TestCase):
         """
         Test missing fields in header
         """
-
         ac_test = self.set_up_test_activity_fast('INVD003')
+        ac_test.ParseHeader()
 
         # ID and Title are both missing
         test_warnings = ac_test.getWarning()
