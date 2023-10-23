@@ -2,9 +2,11 @@ import customtkinter as ctk
 from .ui_app import App
 from abc import abstractmethod, ABC
 
+
 class App_Frame(ctk.CTkFrame, ABC):
     """
-    Abstract Base Class to use in conjuction with App() for App's functionality to work
+    Abstract Base Class to use in conjuction with App() for App's
+    functionality to work
 
     Use App_Frame to implement all core windows
 
@@ -15,7 +17,8 @@ class App_Frame(ctk.CTkFrame, ABC):
     - all widgets can be destroyed and rebuild when refresh is called
     """
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(App().main_frame, fg_color='transparent', *args, **kwargs)
+        super().__init__(App().main_frame, fg_color='transparent', *args,
+                         **kwargs)
 
     @abstractmethod
     def attach_elements():
@@ -36,7 +39,7 @@ class App_Frame(ctk.CTkFrame, ABC):
     def refresh(self):
         """
         Refresh is in charge of 'refreshing' the page, updating the
-        contents with updated values by refreshing all variables 
+        contents with updated values by refreshing all variables
         and reattaching all elements
         """
         self.refresh_variables()

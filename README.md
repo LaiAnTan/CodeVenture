@@ -19,6 +19,11 @@ This project was developed following the waterfall model, where all documents
 
 All dependencies can be found [here](requirements.txt)
 
+## Supported OS
+
+This project was developed solely on Linux.
+The program was tested on Windows and MacOS.
+
 ## Installation & Execution
 
 1. Clone this repository ```git clone https://github.com/LaiAnTan/CodeVenture```

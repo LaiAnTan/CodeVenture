@@ -44,7 +44,7 @@ class ChallangeWindow(ActivityWindow):
 
         main_content_frame = ctk.CTkFrame(self.content_frame)
 
-        # buttons to switch between 3 frames, question, hint 
+        # buttons to switch between 3 frames, question, hint
 
         main_content_options_frame = ctk.CTkFrame(
             main_content_frame,
