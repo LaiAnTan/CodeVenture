@@ -12,7 +12,7 @@ from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 from ...backend.activity.ac_functions import search_database, \
     filter_by_difficulty, filter_by_tags, sort_results
 
-from config import LIGHTMODE_GRAY, DARKMODE_GRAY
+from config import LIGHTMODE_GRAY, DARKMODE_GRAY, TAG_DIR
 
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
@@ -298,9 +298,8 @@ class SelectionScreen(App_Frame):
             case "tags":
 
                 # checkboxes for tags
-
-                # this should not be hardcoded
-                tag_labels = ["py001", "py002", "py003"]
+                with open(TAG_DIR, 'r') as file:
+                    tag_labels = [line.strip('\n') for line in file]
 
                 tag_states = [0] * len(tag_labels)
 
