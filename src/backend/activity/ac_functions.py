@@ -89,10 +89,14 @@ def sort_results(results: list[tuple[str]], mode: str, option: str):
         case "name":
             weights = [adb.fetch_attr("title", result[0]) for result in
                        results]
+        case _:
+            return []
 
     if option == "asc":
         s = [x for _, x in sorted(zip(weights, results))]
     elif option == "desc":
         s = [x for _, x in sorted(zip(weights, results), reverse=True)]
+    else:
+        return []
 
     return s
