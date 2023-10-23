@@ -41,6 +41,10 @@ def filter_by_difficulty(results: list[tuple[str]], upper_limit: int,
 
     filtered = []
 
+    if isinstance(upper_limit, int) is False or isinstance(lower_limit, int)\
+            is False:
+        return filtered
+
     for result in results:
         diff = adb.fetch_attr("difficulty", result[0])
         if diff <= upper_limit and diff >= lower_limit:

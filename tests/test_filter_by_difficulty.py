@@ -70,8 +70,5 @@ class TestFilterByDifficulty(unittest.TestCase):
         self.assertIsNotNone(filtered, msg="Filtered database returned NULL!")
         self.assertEqual(filtered, expected, msg="Invalid filtering, did not return expected results")
 
-    
-
-
 if __name__ == '__main__':
     unittest.main()
