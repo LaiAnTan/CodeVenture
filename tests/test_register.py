@@ -58,6 +58,35 @@ class TestRegisterHandler(unittest.TestCase):
         result = registerHandler("new_user", "password", "password", "educator")
         self.assertEqual(result, (True, "Register Successful"))
 
+    def test_correct_output_data_type(self):
+        """
+        Test for correct output datatype.
+        """
+        username = "new_user"
+        password = "password"
+        confirm_pw = "password"
+        user_type = "student"
+
+        out = registerHandler(username, password, confirm_pw, user_type)
+
+        self.assertTrue(isinstance(out[0], bool),
+                        "Output datatype must be (bool, str)")
+        self.assertTrue(isinstance(out[1], str),
+                        "Output datatype must be (bool, str)")
+        
+    def test_user_in_database(self):
+        """
+        Test if the user is correctly added into the database.
+        """
+        username = "new_user"
+        password = "password"
+        user_type = "student"
+
+        registerHandler(username, password, password, user_type)
+
+        user_from_db = self.udb.fetch_attr("username", username)
+        self.assertIsNotNone(user_from_db, "User not found in database.")
+
     @classmethod
     def tearDown(cls):
         """
