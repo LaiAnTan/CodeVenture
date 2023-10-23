@@ -150,7 +150,7 @@ class Activity():
                         )
                     )
 
-        # check if all content is successfully gotten
+        # check if all content is successfully parsed
         # god please bless this code 
 
         header_content = [self.id, self.title, self.difficulty, self.tag]
