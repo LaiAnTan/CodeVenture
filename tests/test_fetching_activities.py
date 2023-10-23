@@ -5,8 +5,10 @@ import os
 p = os.path.abspath(os.path.join('..'))
 sys.path.append(p)
 
+# flake8: noqa
 from test_const import TEST_DIR, TEST_ASSET
 from src.backend.activity.ac_classes.ac_module import Activity
+
 
 class TestModuleParsing(unittest.TestCase):
     """Simulates the expected behavior when an activity (any module, quiz, 
@@ -328,6 +330,7 @@ class TestModuleParsing(unittest.TestCase):
             ],
             'Wrong Warning Issued'
         )
+
 
 if __name__ == "__main__":
     unittest.main()
