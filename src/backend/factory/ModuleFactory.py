@@ -75,7 +75,7 @@ class ModuleFactory(ActivityFactory):
     def build_Header(self):
         self.data_fd.write("HEADER-START\n")
         header_elements = {
-            "A_ID": self.header[0],
+            "ID": self.header[0],
             "TITLE": self.header[2],
             "DIFFICULTY": '*' * self.header[3],
             "TAG": self.header[4]

@@ -206,7 +206,8 @@ class TestModuleParsing(unittest.TestCase):
                 (Activity.Content_Type.Paragraph, 'Hi From Test!'),
                 (Activity.Content_Type.Image, 'IMG001'),
                 (Activity.Content_Type.Code, 'CD001')
-            ]
+            ],
+            'There are missing content that arent parsed'
         )
 
         # should not have any warning

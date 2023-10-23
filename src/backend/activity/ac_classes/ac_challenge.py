@@ -62,9 +62,6 @@ class Challange(Activity):
 
         return "\n".join(data)
 
-    def RunActivity(self):
-        print("Challange Activity is Running~")
-
 if __name__ == "__main__":
     test = Challange("CH0000")
     print(test)

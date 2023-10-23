@@ -3,7 +3,7 @@ from enum import Enum
 from abc import ABC, abstractmethod
 from config import ACTIVITY_DIR, DATA_FILE
 
-class Activity(ABC):
+class Activity():
     class Content_Type(Enum):
         Paragraph = 0
         Image = 1
@@ -31,14 +31,14 @@ class Activity(ABC):
         self.img = {}
         self.code = {}
         self.data_file = DATA_FILE
+        self.warnings = []
+        self.errors = []
 
         ## header values
-        self.id = "null"
-        self.title = "null"
-        self.difficulty = "null"
+        self.id = ''
+        self.title = ''
+        self.difficulty = ''
         self.tag = []
-        self.achievement = []
-        self.up_level = []
 
     def SourcesExtractor(self, from_where: list[str], to_where: dict, stop: str, delimiter: str='-') -> None:
         """
@@ -48,9 +48,26 @@ class Activity(ABC):
         while len(self.footer):
             contents = self.footer.pop(0)
             if contents == stop:
-                break
+                return
             values = contents.split(delimiter)
+
+            if (len(values) < 2) or values[1] == '':
+                self.warnings.append(
+                    (
+                        'SOURCES',
+                        f'Source asset has no value and will be ignored'
+                    )
+                )
+                continue
+
             to_where[values[0]] = values[1]
+
+        self.warnings.append(
+            (
+                'SOURCES',
+                f'Delimiter {stop} not found, parse ended prematurely'
+            )
+        )
 
     def ParseSources(self) -> None:
         while len(self.footer):
@@ -61,16 +78,33 @@ class Activity(ABC):
                 case "CODE-CONT-START":
                     self.SourcesExtractor(self.footer, self.code, "CODE-CONT-END")
 
-        # self.img = { x.split('-')[0] : Image.open(self.ModulePath + x.split('-')[1]) for x in self.img_src }
-        # self.code = { x.split('-')[0] : x.split('-')[1] for x in self.img_src }
-
     def ParseContent(self):
         for index, content in enumerate(self.content):
             if content.find("<IMG-CONT>") == 0:
                 content = content.removeprefix("<IMG-CONT>")
+
+                if not content:
+                    self.warnings.append(
+                        (
+                            'CONTENT',
+                            f'Image Asset in line {index + 1} has no image ID associated to it and will be ignored'
+                        )
+                    )
+                    continue
+
                 self.content[index] = (Activity.Content_Type.Image, content)
             elif content.find("<CODE-CONT>") == 0:
                 content = content.removeprefix("<CODE-CONT>")
+
+                if not content:
+                    self.warnings.append(
+                        (
+                            'CONTENT',
+                            f'Code Asset in line {index + 1} has no code ID associated to it and will be ignored'
+                        )
+                    )
+                    continue
+
                 self.content[index] = (Activity.Content_Type.Code, content)
             else:
                 self.content[index] = (Activity.Content_Type.Paragraph, content)
@@ -84,19 +118,55 @@ class Activity(ABC):
                 break
 
             stuff = line.split("|")
+
+            if len(stuff) < 2:
+                self.warnings.append(
+                    (
+                        'HEADER',
+                        f'Keyword {stuff[0]} has no content'
+                    )
+                )
+                continue
+
+            if stuff[1] == '':
+                self.warnings.append(
+                    (
+                        'HEADER',
+                        f'Keyword {stuff[0]} content is empty!'
+                    )
+                )
+
             match stuff[0]:
-                case "A_ID":
+                case "ID":
                     self.id = stuff[1]
                 case "TITLE":
                     self.title = stuff[1]
                 case "DIFFICULTY":
                     self.difficulty = stuff[1].count('*')
                 case "TAG":
-                    self.tag = stuff[1].split(',')
-                case "ACHIEVEMENT":
-                    self.achievement = stuff[1]
-                case "UP_LEVEL":
-                    self.up_level = stuff[1].split(',')
+                    self.tag = [x.strip() for x in stuff[1].split(',')]
+                case _:
+                    self.warnings.append(
+                        (
+                            'HEADER',
+                            f'Unidentified Keyword {{{stuff[0]}}}'
+                        )
+                    )
+
+        # check if all content is successfully gotten
+        # god please bless this code 
+
+        header_content = [self.id, self.title, self.difficulty, self.tag]
+        names = ['ID', 'Title', 'Difficulty', 'Tag']
+
+        if all(header_content) is False:
+            missing_names = [ names[index] for index in range(len(header_content)) if not header_content[index]]
+            self.warnings.append(
+                (
+                    'HEADER',
+                    f'Header field is incomplete, missing {str(missing_names).strip("[]")}'
+                )
+            )
 
     def	__get_Content(self, file):
         for line in file:
@@ -113,16 +183,20 @@ class Activity(ABC):
             self.footer.append(line)
 
     def read_mf_read(self):
-        with open(f"{self.ModulePath}/{self.data_file}") as file:
-            for line in file:
-                line = line.strip('\n')
-                match line:
-                    case "HEADER-START":
-                        self.__get_Headers(file)
-                    case "CONTENT-START":
-                        self.__get_Content(file)
-                    case "SOURCES-START":
-                        self.__get_Sources(file)
+        try:
+            with open(f"{self.ModulePath}/{self.data_file}") as file:
+                for line in file:
+                    line = line.strip('\n')
+                    match line:
+                        case "HEADER-START":
+                            self.__get_Headers(file)
+                        case "CONTENT-START":
+                            self.__get_Content(file)
+                        case "SOURCES-START":
+                            self.__get_Sources(file)
+        except FileNotFoundError:
+            self.errors.append('data.dat not found!')
+            return False
 
     def __str__(self):
         # this is actually meant for developers only
@@ -160,9 +234,29 @@ class Activity(ABC):
 
         return "\n".join(data)
 
-    @abstractmethod
-    def	RunActivity(self):
-        pass
+    def getWarning(self):
+        return self.warnings
+
+    def getErrors(self):
+        return self.errors
+
+    def getHeaders(self):
+        return (
+            self.id,
+            self.title,
+            self.difficulty,
+            self.tag,
+        )
+    
+    def getContent(self):
+        return self.content
+
+    def getSources(self):
+        return (
+            self.img,
+            self.code
+        )
+
 
 if __name__ == "__main__":
     pass

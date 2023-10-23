@@ -7,9 +7,6 @@ class Module(Activity):
         self.ParseContent()
         self.ParseSources()
 
-    def RunActivity(self):
-        print("Module Activity Running...")
-
     def __str__(self):
         description_msg = ''.join([x[1] for x in self.content])
         line_len = 32

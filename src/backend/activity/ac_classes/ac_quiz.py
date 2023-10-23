@@ -108,9 +108,6 @@ class Quiz(Activity):
 
         return "\n".join(data)
 
-    def RunActivity(self):
-        print("Running Quiz...")
-
 if __name__ == "__main__":
     test = Quiz("QZ0000")
     print(test)
