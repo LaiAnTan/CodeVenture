@@ -58,7 +58,7 @@ class TestChangePasswordHandler(unittest.TestCase):
         Test a successful password change.
         """
         result = changePasswordHandler(self.student, "unittest",
-                                       "new_password", "new_password")
+                                       "new_pw", "new_pw")
         self.assertEqual(result, (True, "Password Change Successful"))
 
     @classmethod

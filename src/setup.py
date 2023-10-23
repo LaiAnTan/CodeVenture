@@ -1,3 +1,4 @@
+import os
 import csv
 from argon2 import PasswordHasher
 
@@ -5,7 +6,7 @@ from .backend.database.database_user import UserDB
 from .backend.database.database_student import StudentDB
 from .backend.database.database_activity import ActivityDB
 from .backend.activity.ac_database.db_ac_completed import ActivityDictionary
-from config import ROOT_DIR
+from config import ROOT_DIR, DATABASE_DIR
 
 
 def import_data_from_csv(filename) -> list[tuple]:
@@ -64,3 +65,18 @@ def populate_databases():
 
     ActivityDictionary()
     print("Populated databases")
+
+
+def reset_databases() -> None:
+    """
+    Reset database by deleting .db files
+    """
+    files = os.listdir(DATABASE_DIR)
+
+    for file in files:
+        if file.split(".")[1] == 'db':
+            file_path = os.path.join(DATABASE_DIR, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+
+    print("Resetted databases")
