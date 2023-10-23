@@ -15,13 +15,22 @@ class EntryForm(RSFWidget):
         self.height = height
         self.width = width
 
+        self.error = True
+        self.error_msg = 'Entry Frame is left unused, Remove if not needed'
+
+    def SetFrames(self, no_entry_adder: bool = False):
+        """Builds both Header and Content Frame"""
+
         self.rowconfigure((0, 1), weight=1)
         self.columnconfigure(0, weight=1)
 
-        entryform = ctk.CTkFrame(self)
-        entryform.grid(row=1, column=0, sticky='ew')
-        entryform.rowconfigure((0, 1), weight=1)
-        entryform.columnconfigure(0, weight=1)
+        if not no_entry_adder:
+            entryform = ctk.CTkFrame(self)
+            entryform.grid(row=1, column=0, sticky='ew')
+            entryform.rowconfigure((0, 1), weight=1)
+            entryform.columnconfigure(0, weight=1)
+        else:
+            entryform = self
 
         self.header = ctk.CTkFrame(entryform)
         self.header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
@@ -29,14 +38,6 @@ class EntryForm(RSFWidget):
         self.content = ctk.CTkFrame(entryform)
         self.content.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
-        self.error = True
-        self.error_msg = 'Entry Frame is left unused, Remove if not needed'
-
-        ## the main place to input data
-        self.ContentEntryForm = None
-
-    def SetFrames(self, no_entry_adder: bool = False):
-        """Builds both Header and Content Frame"""
         self.SetHeader()
         self.SetContentFrame()
 

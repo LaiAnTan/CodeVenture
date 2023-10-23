@@ -16,7 +16,7 @@ class ImageEntryForm(EntryForm):
         self.SetFrames(True)
 
     def SetContentFrame(self):
-        DirectoryAndNameFrame = ctk.CTkFrame(self.content, width=self.subwidth)
+        DirectoryAndNameFrame = ctk.CTkFrame(self.content)
         DirectoryAndNameFrame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         ImageNameLabel = ctk.CTkLabel(
@@ -59,8 +59,8 @@ class ImageEntryForm(EntryForm):
         )
         FileDialogButton.grid(row=0, column=4, padx=5, pady=5)
 
-        PreviewFrame = ctk.CTkFrame(self.content, width=self.subwidth, height=self.subheight)
-        PreviewFrame.grid(row=1, column=0, padx=5, pady=5)
+        PreviewFrame = ctk.CTkFrame(self.content)
+        PreviewFrame.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
         self.PreviewLabel = ctk.CTkLabel(
             PreviewFrame, 
