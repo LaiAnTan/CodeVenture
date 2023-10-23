@@ -19,62 +19,22 @@ class TestModuleParsing(unittest.TestCase):
         ac_test.read_mf_read()
         return ac_test
 
+    ## ParseHeader
 
-    def test_function_return_value(self) -> None:
-        """
-        Ensures all function return value is as expected
-        """
-
+    def test_getHeader_return_value(self) -> None:
         ac_test = self.set_up_test_activity_fast('TEST000')
-        ac_test.ParseContent()
-        ac_test.ParseSources()
-
         header = ac_test.getHeaders()
-        content = ac_test.getContent()
-        sources = ac_test.getSources()
 
         # getHeader returns a tuple with 4 values [id, title, difficulty, tags]
         self.assertIsInstance(
             header,
             tuple,
-            'getHeader does not return a list'
+            'getHeader does not return a tuple'
         )
 
         self.assertTrue(
             len(header) == 4,
             'getHeader return value is not 4 values'
-        )
-
-
-        # getContent returns a list
-        self.assertIsInstance(
-            content,
-            list,
-            'getContent does not return a list'
-        )
-
-        # get sources returns a tuple with 2 dictionaries
-        self.assertIsInstance(
-            sources,
-            tuple,
-            'getSources does not return a tuple'
-        )
-
-        self.assertTrue(
-            len(sources) == 2,
-            'There isnt 2 dictionaries in the return value of getSources'
-        )
-
-        self.assertIsInstance(
-            sources[0],
-            dict,
-            'Image dictionary is not a dictionary data type'
-        )
-
-        self.assertIsInstance(
-            sources[1],
-            dict,
-            'Code dictionary is not a dictionary data type'
         )
 
 
@@ -189,6 +149,21 @@ class TestModuleParsing(unittest.TestCase):
             'Wrong Warning Issued'
         )
 
+    ## ParseContent
+
+    def test_getContent_returnValue(self) -> None:
+        ac_test = self.set_up_test_activity_fast('TEST000')
+        ac_test.ParseContent()
+
+        content = ac_test.getContent()
+
+        # getContent returns a list
+        self.assertIsInstance(
+            content,
+            list,
+            'getContent does not return a list'
+        )
+
 
     def test_parsing_content(self) -> None:
         """
@@ -238,6 +213,45 @@ class TestModuleParsing(unittest.TestCase):
             test_warnings[0],
             ('CONTENT', 'Image Asset in line 2 has no image ID associated to it and will be ignored'),
             'Wrong Warning Issued'
+        )
+
+    ## ParseSource
+
+    def test_getSources_return_value(self) -> None:
+        """
+        Ensures all function return value is as expected
+        """
+
+        ac_test = self.set_up_test_activity_fast('TEST000')
+        ac_test.ParseSources()
+
+        sources = ac_test.getSources()
+
+
+        # get sources returns a tuple with 2 dictionaries
+        self.assertIsInstance(
+            sources,
+            tuple,
+            'getSources does not return a tuple'
+        )
+
+        self.assertTrue(
+            len(sources) == 2,
+            'There isnt 2 dictionaries in the return value of getSources'
+        )
+
+        # image dictionary is a dict data type
+        self.assertIsInstance(
+            sources[0],
+            dict,
+            'Image dictionary is not a dictionary data type'
+        )
+
+        # code dictionary is a dict data type
+        self.assertIsInstance(
+            sources[1],
+            dict,
+            'Code dictionary is not a dictionary data type'
         )
 
 
