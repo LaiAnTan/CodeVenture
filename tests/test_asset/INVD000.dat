@@ -1,0 +1,14 @@
+HEADER-START
+ID|TEST000
+TITLE|Test
+DIFFICULTY|*
+TAG|test_tag
+INVALID|This will be ignored and cause a warning to be issued
+HEADER-END
+
+CONTENT-START
+Invalid Test
+CONTENT-END
+
+SOURCES-START
+SOURCES-END
