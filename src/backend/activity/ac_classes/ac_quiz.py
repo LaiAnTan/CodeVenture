@@ -54,7 +54,7 @@ class Quiz(Activity):
         self.questions: list[Question] = []
 
         super().__init__(filename, Activity.AType["Quiz"])
-        self.read_mf_read()
+        self.read_data_file()
         self.ParseSources()
         self.__init_Questions()
         self.__getAnswers()

@@ -182,7 +182,7 @@ class Activity():
                 break
             self.footer.append(line)
 
-    def read_mf_read(self):
+    def read_data_file(self):
         try:
             with open(f"{self.ModulePath}/{self.data_file}") as file:
                 for line in file:

@@ -3,7 +3,7 @@ from .ac_activity import Activity
 class Module(Activity):
     def __init__(self, filename: str) -> None:
         super().__init__(filename, Activity.AType["Module"])
-        self.read_mf_read()
+        self.read_data_file()
         self.ParseContent()
         self.ParseSources()
 

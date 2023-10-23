@@ -18,7 +18,7 @@ class TestModuleParsing(unittest.TestCase):
         ac_test = Activity(code, Activity.AType.Module)
         ac_test.ModulePath = f'{TEST_ASSET}'
         ac_test.data_file = f'{code}.dat'
-        ac_test.read_mf_read()
+        ac_test.read_data_file()
         return ac_test
 
     ## ParseHeader

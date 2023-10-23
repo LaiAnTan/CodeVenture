@@ -6,7 +6,7 @@ class Hints(Activity):
         super().__init__(filename, Activity.AType["Challenge"])
         self.data_file = "hints"
 
-        self.read_mf_read()
+        self.read_data_file()
         self.ParseContent()
         self.ParseSources()
 
@@ -17,7 +17,7 @@ class Challange(Activity):
     def __init__(self, filename: str) -> None:
         super().__init__(filename, Activity.AType["Challenge"])
 
-        self.read_mf_read()
+        self.read_data_file()
         self.ParseContent()
         self.ParseSources()
 
