@@ -43,7 +43,7 @@ class EntryAdder(ctk.CTkFrame):
             values=self.para_types,
             variable=self.chosen_para_type
         )
-        add_options.pack(side=ctk.LEFT)
+        add_options.pack(side=ctk.LEFT, padx=5, pady=5)
 
     def AddEntryPoint(self):
         """Adds an certain type of entry form in a certain position

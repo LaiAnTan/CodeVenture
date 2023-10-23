@@ -81,7 +81,7 @@ class EntryForm(RSFWidget):
                                  self.main_editor, 
                                  45,
                                  self.width)
-        entry_adder.grid(row=0, column=0, pady=5, sticky='ew')
+        entry_adder.grid(row=0, column=0, pady=(0, 10), sticky='ew')
 
     def getNextSimilarType(self):
         parent_tracking = self.parent_frame.get_tracking_list()
