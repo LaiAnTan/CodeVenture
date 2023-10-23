@@ -27,6 +27,9 @@ All dependencies can be found [here](requirements.txt)
 4. Install dependencies ```pip install -r requirements.txt```
 5. Run program ```python3 main.py```
 
+The program does not reset the database by default.
+To reset the databases, run ```python3 main.py --reset```
+
 List of test accounts:
 |Account Name|Account Password|Account Type|
 |------------|----------------|------------|

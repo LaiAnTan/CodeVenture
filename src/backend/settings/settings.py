@@ -14,8 +14,6 @@ class Settings:
         """
         self.config_file = config_file
 
-        print(self.config_file)
-
         with open(config_file, "r") as file:
             self.data = file.readlines()
 

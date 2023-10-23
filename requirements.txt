@@ -1,4 +1,4 @@
-customtkinter>=5.2.0
+customtkinter>=5.2.1
 Pygments>=2.15.0
 tkcalendar>=1.6.1
 argon2>=0.1.10
