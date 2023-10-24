@@ -132,7 +132,7 @@ class ImageEntryForm(EntryForm):
         file_format = file_path.split('.')[-1]
 
         if file_format not in ['jpeg', 'png', 'jpg']:
-            print('LOG: Invalid File Format for Images')
+            # print('LOG: Invalid File Format for Images')
             return self.ErrorImage('Error in Image Attachment - Invalid File Format', directory)
         else:
             txt_c = 'black'

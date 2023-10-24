@@ -94,13 +94,18 @@ class AssetWindow(ctk.CTkToplevel):
                 )
         self.asset_frame.track_element(entry_form)
 
-    def save_data(self):
+    def get_error_message(self) -> list[tuple[str]]:
         error_status = [x.getError() for x in self.asset_frame.get_tracking_list()]
         error_messages = []
 
         for index, error_ret in enumerate(error_status):
             if error_ret[0] is True:
                 error_messages.append((index + 1, error_ret[1]))
+    
+        return error_messages
+
+    def save_data(self) -> None:
+        error_messages = self.get_error_message()
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages, 'save assets')
             self.winfo_toplevel().wait_window(error_window)
@@ -110,7 +115,7 @@ class AssetWindow(ctk.CTkToplevel):
         self.assets.extend([x.getData() for x in self.asset_frame.get_tracking_list()])
         self.destroy()
 
-    def add_new_asset(self):
+    def add_new_asset(self) -> ImageEntryForm | CodeEntryForm:
         to_add  = self.chosen_type.get()
         match to_add:
             case 'Picture':
@@ -131,3 +136,5 @@ class AssetWindow(ctk.CTkToplevel):
         self.asset_frame.refresh_elements()
         self.asset_frame.scroll_frame(1)
         entry_form.focus()
+
+        return entry_form

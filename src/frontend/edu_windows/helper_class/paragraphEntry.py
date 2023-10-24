@@ -49,11 +49,11 @@ class ParagraphEntryForm(EntryForm):
 
     ## helper functions
 
-    def RemoveSelf(self, placeholder):
+    def RemoveSelf(self, placeholder=None):
         if not self.peek():
             self.delete_self(False)
 
-    def goNextChunk(self, placeholder, content=None):
+    def goNextChunk(self, placeholder=None, content=None):
         # get self index
         self_index = self.get_index_instance()
 
@@ -91,7 +91,7 @@ class ParagraphEntryForm(EntryForm):
         self.parent_frame.scroll_frame(where / self.parent_frame.get_tracking_no())
         return "break"
 
-    def PasteData(self, placeholder):
+    def PasteData(self, placeholder=None):
         try:
             value = self.winfo_toplevel().clipboard_get().strip()
         except TclError:

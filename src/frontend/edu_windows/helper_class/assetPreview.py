@@ -134,15 +134,13 @@ class AssetPreview(EntryForm):
         self.displaying_value = selection.get_Selection()
         if self.displaying_value is None:
             return 
-        self.error = False
 
+        self.error = False
         self.refreshPreview()
 
     def refreshPreview(self):
         if self.displaying_value is None:
             return self.display_default()
-        if self.error is True:
-            return self.displayError()
 
         try:
             self.assets.index(self.displaying_value)
