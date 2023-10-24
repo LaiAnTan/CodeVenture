@@ -1,6 +1,6 @@
 customtkinter>=5.2.1
-Pygments>=2.15.0
+Pygments>=2.16.1
 tkcalendar>=1.6.1
 argon2>=0.1.10
-argon2-cffi>=20.1.0
-Pillow>=10.0.1
+argon2-cffi>=23.1.0
+Pillow>=10.1.0
