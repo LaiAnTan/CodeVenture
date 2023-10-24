@@ -2,6 +2,7 @@ import customtkinter as ctk
 from .imageEntry import ImageEntryForm, EntryForm
 from .codeEntry import CodeEntryForm
 from .errorWindow import ErrorWindow
+from .refreshScrollFrame import RefreshableScrollableFrame
 
 class AssetWindow(ctk.CTkToplevel):
     def __init__(self, master, height, width, assets) -> None:
@@ -9,7 +10,6 @@ class AssetWindow(ctk.CTkToplevel):
         self.master = master
 
         self.assets = assets
-        self.content_frames: list[EntryForm] = []
 
         self.height = height
         self.width = width
@@ -28,8 +28,8 @@ class AssetWindow(ctk.CTkToplevel):
         self.header = ctk.CTkFrame(self)
         self.header.grid(row=0, column=0, sticky='ew')
 
-        self.content_frame = ctk.CTkFrame(self)
-        self.content_frame.grid(row=1, column=0, sticky='ew')
+        self.content = ctk.CTkFrame(self)
+        self.content.grid(row=1, column=0, sticky='ew')
 
         self.set_Frames()
 
@@ -62,16 +62,17 @@ class AssetWindow(ctk.CTkToplevel):
         add_new.pack(side=ctk.LEFT, padx=5, pady=5)
 
     def set_Content(self):
-        self.asset_frame = ctk.CTkScrollableFrame(
-            self.content_frame,
+        self.asset_frame = RefreshableScrollableFrame(
+            self.content,
             width=self.width - 25,
             height=self.height - 55
         )
         self.asset_frame.grid(row=0, column=0)
-        self.content_entry_frame = self.asset_frame
 
-        for asset in self.assets:
-            self.add_existing_asset(asset)
+        if self.assets:
+            for asset in self.assets:
+                self.add_existing_asset(asset)
+            self.asset_frame.refresh_elements()
 
     def add_existing_asset(self, data):
         match data[0]:
@@ -91,16 +92,10 @@ class AssetWindow(ctk.CTkToplevel):
                     self.entry_widget_width,
                     data
                 )
-        self.content_frames.append(entry_form)
-        entry_form.grid(
-            row=len(self.content_frames),
-            column=0,
-            padx=5,
-            pady=5
-        )
+        self.asset_frame.track_element(entry_form)
 
     def save_data(self):
-        error_status = [x.getError() for x in self.content_frames]
+        error_status = [x.getError() for x in self.asset_frame.get_tracking_list()]
         error_messages = []
 
         for index, error_ret in enumerate(error_status):
@@ -108,11 +103,11 @@ class AssetWindow(ctk.CTkToplevel):
                 error_messages.append((index + 1, error_ret[1]))
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages, 'save assets')
-            self.master.winfo_toplevel().wait_window(error_window)
+            self.winfo_toplevel().wait_window(error_window)
             return
 
         self.assets.clear()
-        self.assets.extend([x.getData() for x in self.content_frames])
+        self.assets.extend([x.getData() for x in self.asset_frame.get_tracking_list()])
         self.destroy()
 
     def add_new_asset(self):
@@ -132,34 +127,7 @@ class AssetWindow(ctk.CTkToplevel):
                     self.entry_widget_heigth,
                     self.entry_widget_width,
                 )
-        self.content_frames.append(entry_form)
-        print(len(self.content_frames))
-        entry_form.grid(
-            row=len(self.content_frames),
-            column=0,
-            padx=5,
-            pady=5
-        )
-        self.Regrid_Components()
-        self.ScrollContentFrame(1)
+        self.asset_frame.track_element(entry_form)
+        self.asset_frame.refresh_elements()
+        self.asset_frame.scroll_frame(1)
         entry_form.focus()
-
-    def ScrollContentFrame(self, how_much: float):
-        """Processes all idle and pending task
-        Scroll the frame until value stated in how_much is offscreen at the top"""
-
-        self.content_entry_frame.update_idletasks()
-        self.content_entry_frame._parent_canvas.yview_moveto(str(how_much))
-
-    def Regrid_Components(self):
-        """Remove all frame in container for entry frames
-        Then, reattach them onto the frame
-
-        Use when there are changes in the ordering of self.content_frames
-        (removal or addition)"""
-        for children in self.content_entry_frame.winfo_children():
-            children.grid_forget()
-
-        for index, components in enumerate(self.content_frames):
-            self.content_entry_frame.rowconfigure(index, weight=1)
-            components.grid(row=index, column=0, padx=5, pady=5, sticky='ew')

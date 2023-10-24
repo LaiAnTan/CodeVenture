@@ -11,6 +11,8 @@ class App():
     height = 600
 
     main = ctk.CTk()
+    main.rowconfigure(0, weight=1)
+    main.columnconfigure(0, weight=1)
 
     history = []
 
@@ -20,9 +22,8 @@ class App():
             height=height,
             fg_color="transparent"
         )
-
-    main.rowconfigure(0, weight=1)
-    main.columnconfigure(0, weight=1)
+    main_frame.rowconfigure(0, weight=1)
+    main_frame.columnconfigure(0, weight=1)
 
     main.geometry(f"{width}x{height}")
     main.title("CodeVenture")

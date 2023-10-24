@@ -16,7 +16,7 @@ class ImageEntryForm(EntryForm):
         self.SetFrames(True)
 
     def SetContentFrame(self):
-        DirectoryAndNameFrame = ctk.CTkFrame(self.content, width=self.subwidth)
+        DirectoryAndNameFrame = ctk.CTkFrame(self.content)
         DirectoryAndNameFrame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         ImageNameLabel = ctk.CTkLabel(
@@ -40,13 +40,13 @@ class ImageEntryForm(EntryForm):
         ContentEntryFormLabel.grid(row=0, column=2, padx=5, pady=5)
 
         self.DirectoryVar = ctk.StringVar(value='')
-        self.ContentEntryForm = ctk.CTkEntry(
+        self.DirectoryEntry = ctk.CTkEntry(
             DirectoryAndNameFrame,
             width=self.subwidth * 0.4,
             textvariable=self.DirectoryVar
         )
-        self.ContentEntryForm.grid(row=0, column=3, padx=5, pady=5)
-        self.DirectoryEntry = self.ContentEntryForm
+        self.set_focus_widget(self.DirectoryEntry)
+        self.DirectoryEntry.grid(row=0, column=3, padx=5, pady=5)
         self.DirectoryEntry.bind("<Return>", lambda x : self.PreviewImage(self.DirectoryEntry.get().strip()))
 
         FileDialogImage = Image.open(f'{ASSET_DIR}/file_explorer.png')
@@ -59,8 +59,8 @@ class ImageEntryForm(EntryForm):
         )
         FileDialogButton.grid(row=0, column=4, padx=5, pady=5)
 
-        PreviewFrame = ctk.CTkFrame(self.content, width=self.subwidth, height=self.subheight)
-        PreviewFrame.grid(row=1, column=0, padx=5, pady=5)
+        PreviewFrame = ctk.CTkFrame(self.content)
+        PreviewFrame.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
         self.PreviewLabel = ctk.CTkLabel(
             PreviewFrame, 

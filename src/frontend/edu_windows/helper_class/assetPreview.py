@@ -59,7 +59,7 @@ class AssetSelectionScreen(AssetWindow):
 
     def set_Content(self):
         self.description_frames = ctk.CTkScrollableFrame(
-            self.content_frame,
+            self.content,
             width=self.width - 45,
             height=self.height - 85
         )
@@ -95,8 +95,6 @@ class AssetPreview(EntryForm):
 
 
     def SetContentFrame(self):
-        # self.content.grid_propagate(False)
-
         self.content.rowconfigure((0, 1), weight=1)
         self.content.columnconfigure(0, weight=1)
 
@@ -125,12 +123,13 @@ class AssetPreview(EntryForm):
             text='Select an asset',
             command=self.display_Selection
         )
+        self.set_focus_widget(self.button)
         self.button.grid(row=0, column=1, padx=5, pady=5, sticky='w')
     
 
     def display_Selection(self):
         selection = AssetSelectionScreen(self, 450, 700, self.assets)
-        self.master.winfo_toplevel().wait_window(selection)
+        self.winfo_toplevel().wait_window(selection)
 
         self.displaying_value = selection.get_Selection()
         if self.displaying_value is None:
