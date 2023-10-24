@@ -22,6 +22,8 @@ class ModuleEditor(ActivityEditor):
         self.SetFrames()
 
     def ContentData(self):
+        self.content_data.rowconfigure(1, weight=1)
+        self.content_data.columnconfigure(0, weight=1)
         ContentHeader = ctk.CTkFrame(self.content_data)
         ContentHeader.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
@@ -62,10 +64,10 @@ class ModuleEditor(ActivityEditor):
         self.entry_frame_height = self.content_data_height * 0.55
         self.content_frame = RefreshableScrollableFrame(
             self.content_data,
-            width=self.content_width + 5,
-            height=self.entry_frame_height
+            # width=self.content_width + 5,
+            # height=self.entry_frame_height
         )
-        self.content_frame.grid(row=1, column=0, padx=5, pady=5)
+        self.content_frame.grid(row=1, column=0, padx=5, pady=5, sticky='nswe')
 
         self.entry_widget_heigth = self.entry_frame_height * 0.65
         self.entry_widget_width = self.content_width - 15
@@ -135,7 +137,7 @@ class ModuleEditor(ActivityEditor):
 if __name__ == "__main__":
     master = App()
     editwin = ModuleEditor(800, 650, None)
-    editwin.grid(row=0, column=0)
+    editwin.grid(row=0, column=0, sticky='nsew')
 
-    master.main_frame.grid(row=0, column=0)
+    master.main_frame.grid(row=0, column=0, sticky='nswe')
     master.mainloop()
