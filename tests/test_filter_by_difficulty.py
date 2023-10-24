@@ -27,15 +27,23 @@ class TestFilterByDifficulty(unittest.TestCase):
         """
         Test with valid filtering parameters and valid database.
         """
-        self.assertTrue(self.database, msg="Database is empty!")
-        filtered = filter_by_difficulty(self.database, self.upper_limit, self.lower_limit)
+        self.assertTrue(self.database,
+                        "Database is empty!")
+        filtered = filter_by_difficulty(self.database, self.upper_limit,
+                                        self.lower_limit)
         expected = [('MD0000', 1), ('QZ0000', 3), ('CH0000', 2)]
-        self.assertIsNotNone(filtered, msg="Filtered database returned NULL!")
-        self.assertEqual(filtered, expected, msg="Invalid filtering, did not return expected results")
+        self.assertIsNotNone(filtered,
+                             "Filtered database returned NULL!")
+        self.assertEqual(filtered, expected,
+                         "Invalid filtering, did not return expected results")
         for result in filtered:
-            self.assertEqual(len(result), 2, msg="Invalid filtering, did not return expected results for tuple format.")
+            self.assertEqual(len(result), 2,
+                             "Invalid filtering, did not return expected "
+                             "results for tuple format.")
             diff = self.adb.fetch_attr("difficulty", result[0])
-            self.assertTrue(diff <= self.upper_limit and diff >= self.lower_limit, msg="Invalid filtering")
+            self.assertTrue(diff <= self.upper_limit and
+                            diff >= self.lower_limit,
+                            "Invalid filtering")
     
     def test_negative_filter(self):
         """
@@ -43,10 +51,13 @@ class TestFilterByDifficulty(unittest.TestCase):
         """
         self.lower_limit = -100
         self.upper_limit = -1
-        filtered = filter_by_difficulty(self.database, self.upper_limit, self.lower_limit)
+        filtered = filter_by_difficulty(self.database, self.upper_limit,
+                                        self.lower_limit)
         expected = []
-        self.assertIsNotNone(filtered, msg="Filtered database returned NULL!")
-        self.assertEqual(filtered, expected, msg="Invalid filtering, did not return expected results")
+        self.assertIsNotNone(filtered,
+                             "Filtered database returned NULL!")
+        self.assertEqual(filtered, expected,
+                         "Invalid filtering, did not return expected results")
     
     def test_empty_filter(self):
         """
@@ -54,10 +65,13 @@ class TestFilterByDifficulty(unittest.TestCase):
         """
         self.lower_limit = 0
         self.upper_limit = 0
-        filtered = filter_by_difficulty(self.database, self.upper_limit, self.lower_limit)
+        filtered = filter_by_difficulty(self.database, self.upper_limit,
+                                        self.lower_limit)
         expected = []
-        self.assertIsNotNone(filtered, msg="Filtered database returned NULL!")
-        self.assertEqual(filtered, expected, msg="Invalid filtering, did not return expected results")
+        self.assertIsNotNone(filtered,
+                             "Filtered database returned NULL!")
+        self.assertEqual(filtered, expected,
+                         "Invalid filtering, did not return expected results")
     
     def test_invalid_filter(self):
         """
@@ -65,10 +79,13 @@ class TestFilterByDifficulty(unittest.TestCase):
         """
         self.lower_limit = "a"
         self.upper_limit = "b"
-        filtered = filter_by_difficulty(self.database, self.upper_limit, self.lower_limit)
+        filtered = filter_by_difficulty(self.database, self.upper_limit,
+                                        self.lower_limit)
         expected = []
-        self.assertIsNotNone(filtered, msg="Filtered database returned NULL!")
-        self.assertEqual(filtered, expected, msg="Invalid filtering, did not return expected results")
+        self.assertIsNotNone(filtered,
+                             "Filtered database returned NULL!")
+        self.assertEqual(filtered, expected,
+                         "Invalid filtering, did not return expected results")
 
 if __name__ == '__main__':
     unittest.main()

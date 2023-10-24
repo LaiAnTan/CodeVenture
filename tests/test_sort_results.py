@@ -23,31 +23,50 @@ class TestSortResults(unittest.TestCase):
         
     def test_valid_sort(self):
         """
-        Testing valid sorting of database results, with valid inputs of mode and option.
+        Testing valid sorting of database results, with valid inputs of mode
+        and option.
         """
         sorted_results = sort_results(self.database, "difficulty", "asc")
         for element in sorted_results:
-            #checks if every element in the sorted results is a tuple 
-            self.assertEqual(type(element), tuple, msg="Invalid sorting, did not return expected results for tuple format.")
+            # checks if every element in the sorted results is a tuple 
+            self.assertEqual(type(element), tuple,
+                             "Invalid sorting, did not return expected"
+                             "results for tuple format.")
 
-            #checks if every element in the sorted results is a tuple with 2 elements
-            self.assertEqual(len(element), 2, msg="Invalid sorting, tuple doesn't have 2 elements.")
+            # checks if every element in the sorted results is a tuple with 2 
+            # elements
+            self.assertEqual(len(element), 2,
+                             "Invalid sorting, tuple doesn't have 2 elements.")
 
-            #checks if first element is a string
-            self.assertEqual(type(element[0]), str, msg="Invalid sorting, first element of tuple is not a string.")
+            # checks if first element is a string
+            self.assertEqual(type(element[0]), str,
+                             "Invalid sorting, first element of tuple is not a"
+                             "string.")
 
-            #checks if second element is an integer
-            self.assertEqual(type(element[1]), int, msg="Invalid sorting, second element of tuple is not an integer.")
+            # checks if second element is an integer
+            self.assertEqual(type(element[1]), int,
+                             "Invalid sorting, second element of tuple is not"
+                             "an integer.")
 
-            #checks if return element can be found in the original database
-            self.assertIn(element, self.database, msg="Invalid sorting, did not found return element in database.")
+            # checks if return element can be found in the original database
+            self.assertIn(element, self.database,
+                          "Invalid sorting, did not found return element in"
+                          "database.")
             
-            #checks if the difficulty of the current element is less than or equal to the next element
-            self.assertGreaterEqual(self.adb.fetch_attr("difficulty", sorted_results[len(sorted_results)-1][0]), self.adb.fetch_attr("difficulty", element[0]), msg="Invalid sorting, difficulty of current element is greater than the next element.")
+            # checks if the difficulty of the current element is less than or
+            # equal to the next element
+            self.assertGreaterEqual(self.adb.fetch_attr("difficulty",
+                                    sorted_results[len(sorted_results)-1][0]),
+                                self.adb.fetch_attr("difficulty", element[0]),
+                                "Invalid sorting, difficulty of current"
+                                "element is greater than the next element.")
         
             # Sort by difficulty, ascending
-            self.assertEqual(sort_results(self.database, "difficulty", "asc"), [('MD0000', 1), ('QZ0000', 3), ('CH0000', 2), ('CH0001', 2)],
-                            msg = "Incorrect sorted results, different from expected results.")
+            self.assertEqual(sort_results(self.database, "difficulty", "asc"),
+                             [('MD0000', 1), ('QZ0000', 3), ('CH0000', 2),
+                              ('CH0001', 2)],
+                             "Incorrect sorted results, different from"
+                             "expected results.")
     
     def test_invalid_sort(self):
         """
@@ -55,15 +74,22 @@ class TestSortResults(unittest.TestCase):
         """
         
         #checks with invalid mode parameter
-        self.assertEqual(sort_results(self.database, "testtest123", "asc"), [], msg="Invalid sorting, did not return empty list for invalid mode parameter.")
+        self.assertEqual(sort_results(self.database, "testtest123", "asc"), [],
+                         "Invalid sorting, did not return empty list for"
+                         "invalid mode parameter.")
 
         #checks with invalid option parameter
-        self.assertEqual(sort_results(self.database, "difficulty", "whatamicooking"), [], msg="Invalid sorting, did not return empty list for invalid option parameter.")
+        self.assertEqual(sort_results(self.database, "difficulty",
+                                      "whatamicooking"), [],
+                         "Invalid sorting, did not return empty list for"
+                         "invalid option parameter.")
 
         #checks with empty mode and option parameters
-        self.assertEqual(sort_results(self.database, "", ""), [], msg="Invalid sorting, did not return empty list for empty mode and option parameters.")
+        self.assertEqual(sort_results(self.database, "", ""), [], 
+                         "Invalid sorting, did not return empty list for empty"
+                         "mode and option parameters.")
 
 
 if __name__ == '__main__':
     unittest.main()
-    # print(sort_results(search_database(""), "", ""))
+

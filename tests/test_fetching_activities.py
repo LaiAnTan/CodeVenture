@@ -11,8 +11,10 @@ from src.backend.activity.ac_classes.ac_module import Activity
 
 
 class TestModuleParsing(unittest.TestCase):
-    """Simulates the expected behavior when an activity (any module, quiz, 
-    or challange) is parsed"""
+    """
+    Simulates the expected behavior when an activity (any module, quiz,
+    or challange) is parsed
+    """
 
     def set_up_test_activity_fast(self, code: str) -> Activity:
         ac_test = Activity(code, Activity.AType.Module)
@@ -238,7 +240,8 @@ class TestModuleParsing(unittest.TestCase):
         # check warning content
         self.assertEqual(
             test_warnings[0],
-            ('CONTENT', 'Image Asset in line 2 has no image ID associated to it and will be ignored'),
+            ('CONTENT', 'Image Asset in line 2 has no image ID associated to '
+             'it and will be ignored'),
             'Wrong Warning Issued'
         )
 
@@ -294,7 +297,8 @@ class TestModuleParsing(unittest.TestCase):
         # check warning content
         self.assertEqual(
             test_warning[0],
-            ('SOURCES', 'Delimiter IMG-CONT-END not found, parse ended prematurely'),
+            ('SOURCES', 'Delimiter IMG-CONT-END not found, parse ended '
+             'prematurely'),
             'Wrong Warning Issued'
         )
 

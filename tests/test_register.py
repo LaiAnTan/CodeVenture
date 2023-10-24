@@ -55,7 +55,8 @@ class TestRegisterHandler(unittest.TestCase):
         """
         Test successful registration of an educator.
         """
-        result = registerHandler("new_user", "password", "password", "educator")
+        result = registerHandler("new_user", "password", "password",
+                                 "educator")
         self.assertEqual(result, (True, "Register Successful"))
 
     def test_correct_output_data_type(self):
