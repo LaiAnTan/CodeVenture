@@ -133,15 +133,16 @@ class AssetWindow(ctk.CTkToplevel):
                     self.entry_widget_width,
                 )
         self.content_frames.append(entry_form)
+        print(len(self.content_frames))
         entry_form.grid(
             row=len(self.content_frames),
             column=0,
             padx=5,
             pady=5
         )
+        self.Regrid_Components()
         self.ScrollContentFrame(1)
         entry_form.focus()
-
 
     def ScrollContentFrame(self, how_much: float):
         """Processes all idle and pending task
@@ -149,3 +150,16 @@ class AssetWindow(ctk.CTkToplevel):
 
         self.content_entry_frame.update_idletasks()
         self.content_entry_frame._parent_canvas.yview_moveto(str(how_much))
+
+    def Regrid_Components(self):
+        """Remove all frame in container for entry frames
+        Then, reattach them onto the frame
+
+        Use when there are changes in the ordering of self.content_frames
+        (removal or addition)"""
+        for children in self.content_entry_frame.winfo_children():
+            children.grid_forget()
+
+        for index, components in enumerate(self.content_frames):
+            self.content_entry_frame.rowconfigure(index, weight=1)
+            components.grid(row=index, column=0, padx=5, pady=5, sticky='ew')

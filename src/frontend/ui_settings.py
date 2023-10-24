@@ -52,6 +52,7 @@ class SettingsWindow(App_Frame):
     def __init__(self, student: Student):
         super().__init__()
 
+        self.student = student
         self.attach_elements()
 
     def refresh_variables(self):

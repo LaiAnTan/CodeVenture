@@ -20,28 +20,21 @@ class TestModuleParsing(unittest.TestCase):
         ac_test = Activity(code, Activity.AType.Module)
         ac_test.ModulePath = f'{TEST_ASSET}'
         ac_test.data_file = f'{code}.dat'
-        ac_test.read_mf_read()
+        ac_test.read_data_file()
         return ac_test
 
+    ## ParseHeader
 
-    def test_function_return_value(self) -> None:
-        """
-        Ensures all function return value is as expected
-        """
-
+    def test_getHeader_return_value(self) -> None:
         ac_test = self.set_up_test_activity_fast('TEST000')
-        ac_test.ParseContent()
-        ac_test.ParseSources()
-
+        ac_test.ParseHeader()
         header = ac_test.getHeaders()
-        content = ac_test.getContent()
-        sources = ac_test.getSources()
 
         # getHeader returns a tuple with 4 values [id, title, difficulty, tags]
         self.assertIsInstance(
             header,
             tuple,
-            'getHeader does not return a list'
+            'getHeader does not return a tuple'
         )
 
         self.assertTrue(
@@ -50,43 +43,12 @@ class TestModuleParsing(unittest.TestCase):
         )
 
 
-        # getContent returns a list
-        self.assertIsInstance(
-            content,
-            list,
-            'getContent does not return a list'
-        )
-
-        # get sources returns a tuple with 2 dictionaries
-        self.assertIsInstance(
-            sources,
-            tuple,
-            'getSources does not return a tuple'
-        )
-
-        self.assertTrue(
-            len(sources) == 2,
-            'There isnt 2 dictionaries in the return value of getSources'
-        )
-
-        self.assertIsInstance(
-            sources[0],
-            dict,
-            'Image dictionary is not a dictionary data type'
-        )
-
-        self.assertIsInstance(
-            sources[1],
-            dict,
-            'Code dictionary is not a dictionary data type'
-        )
-
-
     def test_valid_header_parsing(self) -> None:
         """
         Nothing special, just a valid header
         """
         ac_test = self.set_up_test_activity_fast('TEST000')
+        ac_test.ParseHeader()
 
         test_header = ac_test.getHeaders()
         self.assertEqual(
@@ -107,6 +69,7 @@ class TestModuleParsing(unittest.TestCase):
         Test invalid keyword in header
         """
         ac_test = self.set_up_test_activity_fast('INVD000')
+        ac_test.ParseHeader()
 
         test_warnings = ac_test.getWarning()
 
@@ -129,6 +92,7 @@ class TestModuleParsing(unittest.TestCase):
         Test no field provided for a keyword in header
         """
         ac_test = self.set_up_test_activity_fast('INVD001')
+        ac_test.ParseHeader()
 
         # ID field has no content
         test_warnings = ac_test.getWarning()
@@ -152,6 +116,7 @@ class TestModuleParsing(unittest.TestCase):
         Test empty field provided for a keyword in header
         """
         ac_test = self.set_up_test_activity_fast('INVD002')
+        ac_test.ParseHeader()
 
         # Title has an empty field
         test_warnings = ac_test.getWarning()
@@ -174,8 +139,8 @@ class TestModuleParsing(unittest.TestCase):
         """
         Test missing fields in header
         """
-
         ac_test = self.set_up_test_activity_fast('INVD003')
+        ac_test.ParseHeader()
 
         # ID and Title are both missing
         test_warnings = ac_test.getWarning()
@@ -191,6 +156,21 @@ class TestModuleParsing(unittest.TestCase):
             test_warnings[0],
             ('HEADER', 'Header field is incomplete, missing \'ID\', \'Title\''),
             'Wrong Warning Issued'
+        )
+
+    ## ParseContent
+
+    def test_getContent_returnValue(self) -> None:
+        ac_test = self.set_up_test_activity_fast('TEST000')
+        ac_test.ParseContent()
+
+        content = ac_test.getContent()
+
+        # getContent returns a list
+        self.assertIsInstance(
+            content,
+            list,
+            'getContent does not return a list'
         )
 
 
@@ -243,6 +223,45 @@ class TestModuleParsing(unittest.TestCase):
             ('CONTENT', 'Image Asset in line 2 has no image ID associated to '
              'it and will be ignored'),
             'Wrong Warning Issued'
+        )
+
+    ## ParseSource
+
+    def test_getSources_return_value(self) -> None:
+        """
+        Ensures all function return value is as expected
+        """
+
+        ac_test = self.set_up_test_activity_fast('TEST000')
+        ac_test.ParseSources()
+
+        sources = ac_test.getSources()
+
+
+        # get sources returns a tuple with 2 dictionaries
+        self.assertIsInstance(
+            sources,
+            tuple,
+            'getSources does not return a tuple'
+        )
+
+        self.assertTrue(
+            len(sources) == 2,
+            'There isnt 2 dictionaries in the return value of getSources'
+        )
+
+        # image dictionary is a dict data type
+        self.assertIsInstance(
+            sources[0],
+            dict,
+            'Image dictionary is not a dictionary data type'
+        )
+
+        # code dictionary is a dict data type
+        self.assertIsInstance(
+            sources[1],
+            dict,
+            'Code dictionary is not a dictionary data type'
         )
 
 
