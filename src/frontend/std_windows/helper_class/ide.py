@@ -27,18 +27,6 @@ class IDE(ctk.CTkFrame):
         ## please change this to a reasonable timeout period
         self.timeout_period = 10
 
-        self.columnconfigure(0, weight=1)
-
-        self.IDEHeader = ctk.CTkFrame(self)
-        self.IDEHeader.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
-        
-        self.IDEContent = ctk.CTkFrame(self)
-        self.IDEContent.columnconfigure(0, weight=1)
-        self.IDEContent.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
-
-        self.outputFrame = ctk.CTkFrame(self, fg_color='black')
-        self.outputFrame.columnconfigure(0, weight=1)
-
         self.setUpFrame()
 
     def ClearContent(self, which):
@@ -104,6 +92,18 @@ class IDE(ctk.CTkFrame):
         self.IDETextBox.focus()
 
     def	setUpFrame(self, previous_content = None):
+        self.columnconfigure(0, weight=1)
+
+        self.IDEHeader = ctk.CTkFrame(self)
+        self.IDEHeader.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
+        
+        self.IDEContent = ctk.CTkFrame(self)
+        self.IDEContent.columnconfigure(0, weight=1)
+        self.IDEContent.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
+
+        self.outputFrame = ctk.CTkFrame(self, fg_color='black')
+        self.outputFrame.columnconfigure(0, weight=1)
+
         self.IDEHeader.rowconfigure((0,1), weight=1)
         self.IDEHeader.columnconfigure((0,1), weight=1)
 
@@ -169,16 +169,20 @@ class IDE(ctk.CTkFrame):
             font=ctk.CTkFont("Helvetica", size=12),
             fg_color='black',
             height=self.max_term_height,
-            wrap='word'
+            wrap='word',
+            state='disabled'
         )
         output_label.tag_config("normal", foreground='white')
         output_label.tag_config("error", foreground='red')
         return output_label
 
+
     def insertTerminal(self, terminal: ctk.CTkTextbox, content, error):
         content = content[:self.max_output_size]
         last_post = terminal.index(ctk.CURRENT)
+        terminal.configure(state='normal')
         terminal.insert(last_post, content)
+        terminal.configure(state='disabled')
 
         if error:
             terminal.tag_add("error", last_post, ctk.END)
@@ -187,10 +191,6 @@ class IDE(ctk.CTkFrame):
 
 
     def RunCode(self):
-        for widget in self.outputFrame.winfo_children():
-            widget.destroy()
-        self.outputFrame.forget()
-
         print("Running Code. BzzZt")
 
         ## open file and dump all data inside
@@ -217,14 +217,58 @@ class IDE(ctk.CTkFrame):
 
         ## remove the file
         os.remove(f"{self.activity_folder}/{self.code_name}")
-
         if code_output or error_output:
-            self.outputFrame.grid(row=3, column=0, padx=5, pady=5, sticky='ew')
+            self.display_output_terminal(code_output, error_output)
 
-            code_output_label = self.terminalOutputLabel(self.outputFrame)
-            code_output_label.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
-            if code_output:
-                self.insertTerminal(code_output_label, code_output, False)
-            if error_output:
-                self.insertTerminal(code_output_label, error_output, True)
-            code_output_label.configure(state='disabled')
+    def display_output_terminal(self, code_output, error_output):
+        for widget in self.outputFrame.winfo_children():
+            widget.destroy()
+
+        self.outputFrame.grid(row=3, column=0, padx=5, pady=5, sticky='ew')
+
+        code_output_label = self.terminalOutputLabel(self.outputFrame)
+        code_output_label.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        if code_output:
+            self.insertTerminal(code_output_label, code_output, False)
+        if error_output:
+            self.insertTerminal(code_output_label, error_output, True)
+        code_output_label.configure(state='disabled')
+
+    # used in code entry and nowhere else
+
+    def get_code_from_filepath(self, filepath, switch= True):
+        """
+        probably shhhouldd have placed it here in the first place
+        """
+        return_val = (False, '')
+        file_name = os.path.split(filepath)[-1]
+        extension = file_name.split('.')[-1]
+        if len(file_name.split('.')) < 2 or extension != 'py':
+            content = 'Invalid File Type, Please only import python files'
+            return_val = (True, 'Error in code entry - Invalid File Type')
+        else:
+            with open(filepath) as file:
+                content = ''.join(file.readlines())
+
+        self.ClearContent(1)
+        self.InsertContent("0.0", content, 1)
+        self.IDETextBox.focus()
+        if switch:
+            self.setCodeFrame()
+        return return_val
+
+    def get_input_from_file(self, filepath, switch= True):
+        return_val = (False, '')
+        with open(filepath) as file:
+            try:
+                content = ''.join(file.readlines())
+            except UnicodeDecodeError:
+                content = 'Invalid File Type, Please import Text Files only!'
+                return_val = (True, 'Error in Code Entry - Invalid File Type for Code Input Import')
+
+        self.ClearContent(2)
+        self.InsertContent("0.0", content, 2)
+        self.InputTextBox.focus()
+        if switch:
+            self.setInputFrame()
+        return return_val

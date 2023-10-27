@@ -7,7 +7,7 @@ from ...backend.database.database_activity import ActivityDB
 from abc import abstractmethod, ABC
 
 class ActivityEditor(App_Frame, ABC):
-    def __init__(self, width, height, type: Activity.AType, activity: Activity=None):
+    def __init__(self, type: Activity.AType, activity: Activity=None):
         super().__init__()
         self.ac = activity
 
@@ -19,9 +19,6 @@ class ActivityEditor(App_Frame, ABC):
             self.ac_type = self.ac.type
 
         self.ac_type_name = type.name
-
-        self.max_width = width
-        self.max_height = height
 
         self.id_variable = ctk.StringVar(value=self.GetActivityID())
         self.name_variable = ctk.StringVar()
@@ -37,15 +34,8 @@ class ActivityEditor(App_Frame, ABC):
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
 
-        header_height = 15
-        self.header = ctk.CTkFrame(self, height=header_height)
+        self.header = ctk.CTkFrame(self)
         self.header.grid(row=0, column=0, padx=5, pady=5, sticky="new")
-
-        self.content_width = self.max_width
-        self.content_height = self.max_height - header_height
-
-        self.header_data_height = self.content_height * 0.30
-        self.content_data_height = self.content_height * 0.70
 
         self.content = ctk.CTkFrame(self)
         self.content.grid(row=1, column=0, padx=5, pady=5, sticky='nswe')
@@ -193,7 +183,7 @@ class ActivityEditor(App_Frame, ABC):
 
         self.description_entry = ctk.CTkTextbox(
             thirdrow,
-            height=self.header_data_height * 0.3
+            height=65
         )
         self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
@@ -244,11 +234,10 @@ class ActivityEditor(App_Frame, ABC):
         Used for auto indexing activities"""
         id_list = ActivityDB().getListID(self.ac_type.value)
 
-        # print(id_list)
-
         ## first 2 will be the type, last 3 is the value
         id_list = [int(x[2:]) for x in id_list]
         id_list.sort()
+
         ## search for closest empty spot
         index = len(id_list)
         for actual_index, ac_index in enumerate(id_list):

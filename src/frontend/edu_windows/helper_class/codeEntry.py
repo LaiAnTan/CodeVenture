@@ -10,6 +10,9 @@ class CodeEntryForm(EntryForm):
         self.type = "code"
         self.previous_data = data
 
+        self.error = False
+        self.error_msg = ''
+
         self.SetFrames(no_entry_adder=True)
 
     def SetContentFrame(self):
@@ -79,43 +82,17 @@ class CodeEntryForm(EntryForm):
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
-        file_name = path.split(file_path)[-1]
-        extension = file_name.split('.')[-1]
-        if len(file_name.split('.')) < 2 or extension != 'py':
-            content = 'Invalid File Type, Please only import python files'
-            self.error = True
-            self.error_msg = 'Error in Code Entry - Invalid File Type for Code Import'
-        else:
-            self.nameVar.set(file_name.split('.')[0])
-            with open(file_path) as file:
-                content = ''.join(file.readlines())
-            self.error = False
-
-        self.ide.ClearContent(1)
-        self.ide.InsertContent("0.0", content, 1)
-        self.ide.setCodeFrame()
-        self.ide.IDETextBox.focus()
-
+        self.error, self.error_msg = self.ide.get_code_from_filepath(file_path)
+        if self.error != True:
+            name = path.split(file_path)[-1]
+            self.nameVar.set(name.split('.')[0])
 
     def GetInputFromFile(self):
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
         else:
-            with open(file_path) as file:
-                try:
-                    content = ''.join(file.readlines())
-                    self.error = False
-                except UnicodeDecodeError:
-                    content = 'Invalid File Type, Please import Text Files only!'
-                    self.error = True
-                    self.error_msg = 'Error in Code Entry - Invalid File Type for Code Input Import'
-
-        self.ide.ClearContent(2)
-        self.ide.InsertContent("0.0", content, 2)
-        self.ide.setInputFrame()
-        self.ide.InputTextBox.focus()
-
+            self.error, self.error_msg = self.ide.get_input_from_file(file_path)
 
     def getData(self):
         """returns data input into the frame in the following format
@@ -127,3 +104,11 @@ class CodeEntryForm(EntryForm):
             self.ide.getCodeContent(),
             self.ide.getInputContent()
         )
+
+    def getError(self):
+        if self.ide.getCodeContent() == "":
+            return (
+                True,
+                'Entry Frame is left unused, Remove if not needed'
+            )
+        return super().getError()

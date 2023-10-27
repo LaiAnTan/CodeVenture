@@ -29,6 +29,8 @@ class AssetWindow(ctk.CTkToplevel):
         # self.maxsize(width, height)
         # self.minsize(width, height)
 
+        self.types = ['Picture', 'Code Snippet']
+
         self.geometry(f"{width}x{height}")
         self.title("Available Assets")
 
@@ -53,10 +55,9 @@ class AssetWindow(ctk.CTkToplevel):
         save_and_quit.pack(side=ctk.RIGHT, padx=5, pady=5)
 
         self.chosen_type = ctk.StringVar(value='Picture')
-        asset_type = ['Picture', 'Code Snippet']
         type = ctk.CTkOptionMenu(
             self.header,
-            values=asset_type,
+            values=self.types,
             variable=self.chosen_type
         )
         type.pack(side=ctk.LEFT, padx=(5, 20), pady=5)

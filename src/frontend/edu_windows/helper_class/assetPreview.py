@@ -197,8 +197,8 @@ class AssetPreview(EntryForm):
                 preview_label = ImageLabel(
                     previewframe,
                     self.displaying_value[2],
-                    750,
                     450,
+                    250,
                 )
         preview_label.grid(row=0, column=0, padx=5, pady=5)
 
