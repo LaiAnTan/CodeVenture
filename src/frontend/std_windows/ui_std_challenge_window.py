@@ -125,6 +125,7 @@ class ChallangeWindow(ActivityWindow):
 
         self.shittyIDE = IDE(
             sidebar_frame,
+            450,
             250,
             self.ac.id.lower(),
             self.std.username,

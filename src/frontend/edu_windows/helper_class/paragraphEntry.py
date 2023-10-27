@@ -3,8 +3,8 @@ from .entryForm import EntryForm
 from _tkinter import TclError
 
 class ParagraphEntryForm(EntryForm):
-    def __init__(self, master, main_editor, height, width):
-        super().__init__(master, main_editor, height, width)
+    def __init__(self, master, main_editor):
+        super().__init__(master, main_editor)
         self.type = "paragraph"
 
         self.error = False
@@ -17,7 +17,7 @@ class ParagraphEntryForm(EntryForm):
         self.content.columnconfigure(0, weight=1)
         self.ContentEntryForm = ctk.CTkTextbox(
             self.content,
-            height=self.height * 0.95,
+            height=150,
             wrap="word"
         )
         self.set_focus_widget(self.ContentEntryForm)
@@ -82,8 +82,6 @@ class ParagraphEntryForm(EntryForm):
         new = ParagraphEntryForm(
             self.parent_frame,
             self.main_editor,
-            self.height,
-            self.width,
         )
         new.insertData(content)
         new.focus()

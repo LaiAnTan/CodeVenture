@@ -104,15 +104,11 @@ class ModuleEditor(ActivityEditor):
                 entry_form = ParagraphEntryForm(
                     self.content_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
                 )
             case 'Asset':
                 entry_form = AssetPreview(
                     self.content_frame,
                     self,
-                    self.entry_widget_width,
-                    self.entry_widget_heigth,
                     self.assets
                 )
 

@@ -9,9 +9,10 @@ from .textboxWithPlaceholder import TextBox_Placeholder
 from config import DEFAULT_IDE_MESSAGE, DEFAULT_INPUT_MESSAGE
 
 class IDE(ctk.CTkFrame):
-    def __init__(self, master, output_height, code_name, id, activity_folder, content=None) -> None:
-        super().__init__(master)
+    def __init__(self, master, ide_height, output_height, code_name, id, activity_folder, content=None) -> None:
+        super().__init__(master, fg_color='transparent')
 
+        self.ide_height = ide_height
         self.max_term_height = output_height
 
         self.code_name = f"{code_name}-{id}"
@@ -67,7 +68,7 @@ class IDE(ctk.CTkFrame):
 
         self.IDETextBox = TextBox_Placeholder(
             self.IDEContent,
-            height=self.max_term_height,
+            height=self.ide_height,
             font=font,
             tabs=font.measure("    "),
             wrap=ctk.WORD,
@@ -85,7 +86,7 @@ class IDE(ctk.CTkFrame):
 
         self.InputTextBox = TextBox_Placeholder(
             self.IDEContent,
-            height=self.max_term_height,
+            height=self.ide_height,
             font=font,
             tabs=font.measure("    "),
             wrap=ctk.WORD,

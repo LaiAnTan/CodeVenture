@@ -5,13 +5,12 @@ from config import ASSET_DIR
 from os import path
 
 class ImageEntryForm(EntryForm):
-    def __init__(self, master, parent, height, width, data=None):
-        super().__init__(master, parent, height, width)
+    def __init__(self, master, parent, data=None):
+        super().__init__(master, parent)
 
         self.type = "image"
-        self.subwidth = self.width - 20
-        self.subheight = self.height - 10
-        self.max_image_height = self.subheight + 60
+        self.max_image_height = 250
+        self.max_image_width = 550
         self.previous_data = data
         self.SetFrames(True)
 
@@ -28,7 +27,6 @@ class ImageEntryForm(EntryForm):
         self.NameVar = ctk.StringVar(value='')
         self.NameEntry = ctk.CTkEntry(
             DirectoryAndNameFrame,
-            width=self.subwidth * 0.2,
             textvariable=self.NameVar
         )
         self.NameEntry.grid(row=0, column=1, padx=5, pady=5)
@@ -42,7 +40,6 @@ class ImageEntryForm(EntryForm):
         self.DirectoryVar = ctk.StringVar(value='')
         self.DirectoryEntry = ctk.CTkEntry(
             DirectoryAndNameFrame,
-            width=self.subwidth * 0.4,
             textvariable=self.DirectoryVar
         )
         self.set_focus_widget(self.DirectoryEntry)
@@ -53,20 +50,18 @@ class ImageEntryForm(EntryForm):
         FileDialogButton = ctk.CTkButton(
             DirectoryAndNameFrame,
             text='',
-            width=30,
             image=ctk.CTkImage(FileDialogImage, size=(20,20)),
             command=self.PromptFileDialog
         )
         FileDialogButton.grid(row=0, column=4, padx=5, pady=5)
 
         PreviewFrame = ctk.CTkFrame(self.content)
+        PreviewFrame.columnconfigure(0, weight=1)
         PreviewFrame.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
         self.PreviewLabel = ctk.CTkLabel(
             PreviewFrame, 
             text='No file selected',
-            width=self.subwidth,
-            height=self.subheight
         )
         self.PreviewLabel.grid(row=0, column=0, padx=5, pady=5)
 
@@ -140,7 +135,7 @@ class ImageEntryForm(EntryForm):
 
             try:
                 previewimage = Image.open(directory)
-                size=self.ratio_resizing(previewimage, self.max_image_height, self.subwidth)
+                size=self.ratio_resizing(previewimage, self.max_image_height, self.max_image_width)
             except (FileNotFoundError, UnidentifiedImageError):
                 return self.ErrorImage('Error in Image Asset - Unable to Open File', directory)
 

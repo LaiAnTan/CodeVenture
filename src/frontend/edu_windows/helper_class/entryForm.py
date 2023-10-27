@@ -7,13 +7,11 @@ from .refreshScrollFrame import RefreshableScrollableFrame
 from .refreshScrollFrame import RSFWidget
 
 class EntryForm(RSFWidget):
-    def __init__(self, master: RefreshableScrollableFrame, main_editor, height, width):
-        super().__init__(master=master, width=width, height=height)
+    def __init__(self, master: RefreshableScrollableFrame, main_editor):
+        super().__init__(master=master)
         self.main_editor = main_editor
 
         self.type = "base"
-        self.height = height
-        self.width = width
 
         self.error = True
         self.error_msg = 'Entry Frame is left unused, Remove if not needed'
@@ -79,8 +77,7 @@ class EntryForm(RSFWidget):
         entry_adder = EntryAdder(self, 
                                  self.parent_frame, 
                                  self.main_editor, 
-                                 45,
-                                 self.width)
+                                 )
         entry_adder.grid(row=0, column=0, pady=(0, 10), sticky='ew')
 
     def getNextSimilarType(self):

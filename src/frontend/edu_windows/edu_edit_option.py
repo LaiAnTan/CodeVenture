@@ -5,7 +5,8 @@ from ..ui_app_frame import App_Frame
 class EditorWindow(App_Frame):
     def __init__(self):
         super().__init__()
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure((0, 1), weight=1)
+        self.columnconfigure(0, weight=1)
 
         self.SetFrames()
 
@@ -19,12 +20,12 @@ class EditorWindow(App_Frame):
         self.header = ctk.CTkFrame(self)
         self.header.rowconfigure(0, weight=1)
         self.header.columnconfigure(0, weight=1)
-        self.header.grid(row=0, column=0, sticky="ew")
+        self.header.grid(row=0, column=0, sticky="s")
 
         self.content = ctk.CTkFrame(self)
         self.content.rowconfigure((0,1), weight=1)
         self.content.columnconfigure(0, weight=1)
-        self.content.grid(row=1, column=0, sticky="ew")
+        self.content.grid(row=1, column=0, sticky="n")
 
         font = ctk.CTkFont(
             "Helvatica",
@@ -66,8 +67,5 @@ class EditorWindow(App_Frame):
         dispatcher(option, None)
 
 if __name__ == "__main__":
-    master = App()
-    editwin = EditorWindow(master)
-    editwin.grid(row=0, column=0)
-    master.main_frame.grid(row=0, column=0)
-    master.mainloop()
+    App().change_frame(EditorWindow())
+    App().mainloop()

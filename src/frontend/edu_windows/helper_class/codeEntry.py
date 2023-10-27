@@ -4,34 +4,35 @@ from ...std_windows.helper_class.ide import IDE
 from os import path
 
 class CodeEntryForm(EntryForm):
-    def __init__(self, master, main_editor, height, width, data: tuple[str] | None=None):
-        super().__init__(master, main_editor, height, width)
+    def __init__(self, master, main_editor, data: tuple[str] | None=None):
+        super().__init__(master, main_editor)
 
         self.type = "code"
-        self.subwidth = self.width
         self.previous_data = data
 
         self.SetFrames(no_entry_adder=True)
 
     def SetContentFrame(self):
         self.content.rowconfigure(0, weight=1)
-        self.content.columnconfigure((0, 1), weight=1)
+        self.content.columnconfigure(0, weight=70)
+        self.content.columnconfigure(1, weight=30)
+        # self.content.columnconfigure((0, 1), weight=1)
 
-        ImportFrame = ctk.CTkFrame(self.content)
-        ImportFrame.grid(row=0, column=1, padx=5, pady=5, sticky="new")
+        ImportFrame = ctk.CTkFrame(self.content, fg_color='transparent')
+        ImportFrame.columnconfigure(0, weight=1)
+        ImportFrame.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
 
-        IDEFrame = ctk.CTkFrame(self.content)
-        IDEFrame.grid(row=0, column=0, padx=5, pady=5)
+        IDEFrame = ctk.CTkFrame(self.content, fg_color='transparent')
+        IDEFrame.columnconfigure(0, weight=1)
+        IDEFrame.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
 
-        nameFrame = ctk.CTkFrame(IDEFrame, corner_radius=0)
+        nameFrame = ctk.CTkFrame(IDEFrame, corner_radius=0, fg_color='transparent')
         nameFrame.grid(row=0, column=0, sticky='ew')
-
         nameLabel = ctk.CTkLabel(
             nameFrame,
             text='Code\'s name '
         )
         nameLabel.grid(row=0, column=0, padx=5, pady=5, sticky='e')
-
         self.nameVar = ctk.StringVar()
         nameEntry = ctk.CTkEntry(
             nameFrame,
@@ -41,28 +42,30 @@ class CodeEntryForm(EntryForm):
 
         self.ide = IDE(
             IDEFrame,
-            self.subwidth - 245,
-            self.height,
+            250,
+            100,
             "tmp",
             '0',
             '.',
             None
         )
         self.set_focus_widget(self.ide)
-        self.ide.grid(row=1, column=0, padx=5, pady=5)
+        self.ide.grid(row=1, column=0, sticky='ew')
 
 
         importCode = ctk.CTkButton(
             ImportFrame,
             text='Import Python Code From File',
-            command=self.GetCodeFromFile
+            command=self.GetCodeFromFile,
+            width=0
         )
         importCode.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
         importInput = ctk.CTkButton(
             ImportFrame,
             text='Import Input File From File',
-            command=self.GetInputFromFile
+            command=self.GetInputFromFile,
+            width=0
         )
         importInput.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 

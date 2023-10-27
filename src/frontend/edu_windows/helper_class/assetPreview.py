@@ -82,12 +82,10 @@ class AssetSelectionScreen(AssetWindow):
         return self.selected_asset
 
 class AssetPreview(EntryForm):
-    def __init__(self, master, parent, width, height, asset_list) -> None:
-        super().__init__(master, parent, width=width, height=height)
+    def __init__(self, master, parent, asset_list) -> None:
+        super().__init__(master, parent)
 
         self.type = 'asset'
-        self.width = width
-        self.height = height
 
         self.assets : list[tuple[str]] = asset_list
         self.displaying_value = None
@@ -190,7 +188,7 @@ class AssetPreview(EntryForm):
             case 'code':
                 preview_label = CodeBufferRunner(
                     previewframe,
-                    self.width - 15,
+                    450,
                     self.displaying_value[1],
                     self.displaying_value[2],
                     self.displaying_value[3]
@@ -199,8 +197,8 @@ class AssetPreview(EntryForm):
                 preview_label = ImageLabel(
                     previewframe,
                     self.displaying_value[2],
-                    self.height - 45,
-                    self.width - 15,
+                    750,
+                    450,
                 )
         preview_label.grid(row=0, column=0, padx=5, pady=5)
 

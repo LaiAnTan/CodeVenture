@@ -21,7 +21,14 @@ class AssetWindow(ctk.CTkToplevel):
         self.focus_set()
         self.grab_set()
 
-        self.resizable(0, 0)
+        # list of disapointments
+
+        # self.resizable(0, 0)
+        # self.wm_resizable(0, 0)
+
+        # self.maxsize(width, height)
+        # self.minsize(width, height)
+
         self.geometry(f"{width}x{height}")
         self.title("Available Assets")
 
@@ -80,16 +87,12 @@ class AssetWindow(ctk.CTkToplevel):
                 entry_form = ImageEntryForm(
                     self.asset_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
                     data
                 )
             case 'code':
                 entry_form = CodeEntryForm(
                     self.asset_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
                     data
                 )
         self.asset_frame.track_element(entry_form)
@@ -122,15 +125,11 @@ class AssetWindow(ctk.CTkToplevel):
                 entry_form = ImageEntryForm(
                     self.asset_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
                 )
             case 'Code Snippet':
                 entry_form = CodeEntryForm(
                     self.asset_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
                 )
         self.asset_frame.track_element(entry_form)
         self.asset_frame.refresh_elements()
