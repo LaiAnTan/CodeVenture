@@ -10,7 +10,8 @@ import customtkinter as ctk
 import subprocess
 
 from .imagelabel import ImageLabel
-from config import ROOT_DIR
+from ...ui_app import App
+from config import ROOT_DIR, LIGHTMODE_GRAY, DARKMODE_GRAY
 
 class CodeRunner(ctk.CTkFrame):
     def __init__(self, master, max_img_width, code_name, activity_folder) -> None:
@@ -23,20 +24,27 @@ class CodeRunner(ctk.CTkFrame):
         self.runnable = os.path.isfile(f'{self.code_folder}/input')
 
         if master != None:
-            super().__init__(master)
+            super().__init__(master, 
+                             fg_color=LIGHTMODE_GRAY if 
+                            App().settings.getSettingValue("lightmode").lower() == "true" else
+                            DARKMODE_GRAY)
+            self.rowconfigure((0, 1), weight=1)
+            self.columnconfigure(0, weight=1)
 
-            self.HeaderFrame = ctk.CTkFrame(self)
+            self.HeaderFrame = ctk.CTkFrame(self, fg_color='transparent')
             self.HeaderFrame.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
-            self.CodeFrame = ctk.CTkFrame(self)
+            self.CodeFrame = ctk.CTkFrame(self, fg_color='transparent')
             self.CodeFrame.grid(row=1, column=0, padx=5, pady=5)
 
             if self.runnable:
-                self.RunButtonFrame = ctk.CTkFrame(self)
-                self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+                self.rowconfigure(2, weight=1)
+                self.RunButtonFrame = ctk.CTkFrame(self, fg_color='transparent')
+                self.RunButtonFrame.grid(row=2, column=0, padx=5, pady=5)
                 self.RunButtonFrame.columnconfigure(0, weight=1)
 
-            self.outputFrame = ctk.CTkFrame(self)
+                self.outputFrame = ctk.CTkFrame(self, fg_color='black')
+                self.outputFrame.columnconfigure(0, weight=1)
 
             self.setUpFrame()
 
@@ -119,14 +127,12 @@ class CodeRunner(ctk.CTkFrame):
         placeholder = ctk.CTkLabel(
             self.outputFrame,
             text=code_output,
-            width=self.max_width - 50,
-            wraplength=self.max_width - 70,
             anchor="w",
             justify="left",
             font=ctk.CTkFont("Helvetica", size=11),
             bg_color="black",
             text_color=font_color
         )
-        placeholder.grid(row=0, column=0, padx=5, pady=5)
+        placeholder.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
 
-        self.outputFrame.grid(row=3, column=0, padx=5, pady=5)
+        self.outputFrame.grid(row=3, column=0, padx=5, pady=5, sticky='ew')

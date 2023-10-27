@@ -157,5 +157,5 @@ if __name__ == "__main__":
     editwin = ModuleEditor(800, 650, None)
     editwin.grid(row=0, column=0, sticky='nsew')
 
-    master.main_frame.grid(row=0, column=0, sticky='nswe')
+    master.main_frame.grid(row=0, column=0, padx=20, pady=20, sticky='nswe')
     master.mainloop()

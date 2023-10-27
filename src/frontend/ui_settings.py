@@ -59,19 +59,34 @@ class SettingsWindow(App_Frame):
         pass
 
     def attach_elements(self):
+        self.columnconfigure((0, 2), weight=50)
+        self.columnconfigure(1, weight=40)
+        self.rowconfigure((0, 1), weight=1)
+
+        pad = ctk.CTkFrame(
+            self,
+            fg_color='transparent',
+        )
+        pad.grid(row=0, rowspan=2 , column=2, sticky='nsew')
+
+        pad = ctk.CTkFrame(
+            self,
+            fg_color='transparent',
+        )
+        pad.grid(row=0, rowspan=2 ,column=0, sticky='nsew')
 
         # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
             self,
             width=self.full_width,
-            height=self.header_height
+            height=self.header_height,
         )
 
         header_frame.grid(
             row=0,
-            column=0,
-            sticky="we",
+            column=1,
+            sticky="sew",
             padx=5,
             pady=5
         )
@@ -111,12 +126,12 @@ class SettingsWindow(App_Frame):
             self,
             width=self.full_width,
             height=self.full_content_height,
-            fg_color="transparent"
         )
-
+        content_frame.columnconfigure(0, weight=1)
         content_frame.grid(
             row=1,
-            column=0
+            column=1,
+            sticky='new'
         )
 
         # change appearance mode

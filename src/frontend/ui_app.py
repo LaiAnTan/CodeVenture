@@ -56,6 +56,9 @@ class App():
     @classmethod
     def go_back_history(cls):
         # remove current frame from history (removed forever)
+        if len(cls.history) == 1:
+            return cls.history[0]
+
         cls.history.pop()
         previous = cls.history[-1]
 
@@ -79,8 +82,8 @@ class App():
         Please call this if you want to change the frame of the App, do
         not attempt to grid it by yourself, the back buttons depend on this"""
         cls.add_to_history(new_frame)
-        new_frame.grid(row=0, column=0)
-        cls.main_frame.grid(row=0, column=0)
+        new_frame.grid(row=0, column=0, sticky='nsew')
+        cls.main_frame.grid(row=0, column=0, padx=20, pady=20, sticky='nsew')
 
     @classmethod
     def __new__(cls, placeholder=None):

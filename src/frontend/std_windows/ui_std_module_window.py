@@ -8,6 +8,7 @@ from ...backend.user.user_student import Student
 from ...backend.activity.ac_classes.ac_module import Module
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
+from .helper_class.textdisplay import ParagraphDisplayer
 
 class ModuleWindow(ActivityWindow):
 
@@ -20,47 +21,50 @@ class ModuleWindow(ActivityWindow):
         main_content_frame_width = 550
         main_content_frame_height = 420
 
+        self.content_frame.rowconfigure(0, weight=1)
+        self.content_frame.columnconfigure(0, weight=1)
         self.contents = ctk.CTkScrollableFrame(
-            self.content_frame, 
-            width=main_content_frame_width,
-            height=main_content_frame_height
+            self.content_frame,
+            width=750
         )
-        self.contents.grid(row=0, column=0, padx=5, pady=5)
+        self.contents.columnconfigure(0, weight=1)
+        self.contents.grid(row=0, column=0, padx=5, pady=5, sticky='ns')
 
         paragraph_frame_width = main_content_frame_width - 20
 
         for index, content in enumerate(self.ac.content):
-            paragraph_frame = ctk.CTkFrame(self.contents)
-            paragraph_frame.grid(row=index, column=0, padx=5, pady=10)
+            self.contents.rowconfigure(index, weight=1)
+            self.contents.columnconfigure(0, weight=1)
+            paragraph_frame = ctk.CTkFrame(self.contents, fg_color='transparent')
+            paragraph_frame.rowconfigure(0, weight=1)
+            paragraph_frame.columnconfigure(0, weight=1)
+            paragraph_frame.grid(row=index, column=0, padx=5, pady=(0, 5), sticky='ew')
 
             match content[0]:
                 case Module.Content_Type.Paragraph:
-                    paragraph = ctk.CTkLabel(
+                    paragraph = ParagraphDisplayer(
                         paragraph_frame,
-                        text=content[1],
-                        width=paragraph_frame_width,
-                        wraplength=paragraph_frame_width - 10,
-                        anchor="w",
-                        justify="left"
+                        content[1]
                     )
-
                 case Module.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
-                        200, # TODO: Change the Height Value
-                        paragraph_frame_width,
+                        1600, # TODO: Change the Height Value
+                        750,
                         paragraph_frame
                     )
-
                 case Module.Content_Type.Code:
                     paragraph = self.CodeHandler(
                         content[1],
-                        paragraph_frame_width,
+                        750,
                         paragraph_frame
                     )
-            paragraph.grid(row=0, column=0, padx=5, pady=5)
+            paragraph.grid(row=0, column=0, sticky='ew')
+            paragraph.update_idletasks()
 
     def SetFooter(self):
+        self.footer_frame.columnconfigure(0, weight=1)
+
         submit_button = ctk.CTkButton(
             self.footer_frame,
             text="Complete",
@@ -68,7 +72,7 @@ class ModuleWindow(ActivityWindow):
             command= self.StudentCompletion,
             state="disabled" if self.done else "normal"
         )
-        submit_button.grid(row=0, column=0, padx=0, pady=0)
+        submit_button.grid(row=0, column=0)
 
     # helper functions
 
@@ -81,8 +85,5 @@ if __name__ == "__main__":
     from ..ui_app import App
 
     ActivityDictionary()
-    main = App()
-    frame = ModuleWindow(Module("MD0000"), Student("test_student"), main)
-    frame.Attach()
-    main.main_frame.grid(row=0, column=0)
-    main.mainloop()
+    App().change_frame(ModuleWindow(Module("MD0000"), Student("test_student")))
+    App().mainloop()

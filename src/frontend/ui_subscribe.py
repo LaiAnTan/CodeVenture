@@ -175,7 +175,7 @@ class SubscribeWindow(App_Frame):
             font=("Helvetica", 14),
             width=120,
             height=50,
-            command=lambda: backToLoginButtonEvent()
+            command=lambda: App().go_back_history()
             )
 
         back_to_login_button.grid(

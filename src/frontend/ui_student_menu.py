@@ -1,7 +1,9 @@
 import customtkinter as ctk
 
 from .ui_std_window_gen import loginPage, profilePage, settingsPage
-from src.frontend.ui_activity_tile import ActivityTile
+from .helper_windows.ui_activity_tile import ActivityTile
+from .helper_windows.ui_more_info_tile import MoreInfoTile
+from .helper_windows.ui_recommended_ac_tile import RecommendedAcFrame
 from .ui_app import App
 from .ui_app_frame import App_Frame
 from ..backend.user.user_student import Student
@@ -14,7 +16,7 @@ class StudentMenuWindow(App_Frame):
     """
 
     # constants
-    header_height = 20
+    header_height = 35
     full_width = 450
     half_width = full_width / 2
     full_content_height = 460 - header_height
@@ -42,6 +44,9 @@ class StudentMenuWindow(App_Frame):
 
         @return None
         """
+        self.rowconfigure((0, 1), weight=1)
+        self.columnconfigure(0, weight=1)
+
         # header frame
 
         header_frame = ctk.CTkFrame(
@@ -50,6 +55,7 @@ class StudentMenuWindow(App_Frame):
             height=self.header_height,
             fg_color="transparent"
         )
+        header_frame.pack_propagate(False)
 
         profile_title = ctk.CTkLabel(
             header_frame,
@@ -59,7 +65,7 @@ class StudentMenuWindow(App_Frame):
         profile_title.pack(
             side=ctk.LEFT,
             padx=5,
-            pady=5
+            pady=5,
         )
 
         def logoutButtonEvent():
@@ -113,7 +119,7 @@ class StudentMenuWindow(App_Frame):
         header_frame.grid(
             row=0,
             column=0,
-            sticky="we",
+            sticky="s",
             padx=5,
             pady=5
         )
@@ -130,16 +136,13 @@ class StudentMenuWindow(App_Frame):
         content_frame.grid(
             row=1,
             column=0,
-            sticky="ew"
+            sticky="n"
         )
+
+        content_frame.rowconfigure((0, 1), weight=1)
+        content_frame.columnconfigure(0, weight=1)
 
         # recommended
-
-        recommended_frame = ctk.CTkFrame(
-            content_frame,
-            width=self.full_width,
-            fg_color="transparent"
-        )
 
         recommended_title = ctk.CTkLabel(
             content_frame,
@@ -155,61 +158,53 @@ class StudentMenuWindow(App_Frame):
             pady=10,
         )
 
+        # recommend frame
+
+        ac_tile_width = 120
+        ac_tile_height = 220
+
+        recommended_frame = RecommendedAcFrame(
+            content_frame,
+            width=self.full_width,
+            height=ac_tile_width + 35,
+            orientation='horizontal'
+        )
+
         recommended_frame.grid(
             row=1,
             column=0,
             sticky="ew",
         )
 
-        # recommended frame
+        ac_id = ["MD0000", "QZ0000", "CH0000"]
 
-        ac_tile_width = 120
-        ac_tile_height = 220
+        for index, id in enumerate(ac_id):
+            recommended = ActivityTile(
+                id,
+                ac_tile_width,
+                ac_tile_height,
+                self.student,
+                recommended_frame,
+            )
+            recommended.attach_elements()
+            recommended.grid(
+                row=0,
+                column=index,
+                padx=10,
+                pady=10
+            )
 
-        recommended_1 = ActivityTile("MD0000",
-                                     ac_tile_width,
-                                     ac_tile_height,
-                                     self.student,
-                                     recommended_frame,
-                                     )
-
-        recommended_1.attach_elements()
-
-        recommended_1.grid(row=1,
-                           column=0,
-                           padx=10,
-                           pady=10)
-
-        recommended_2 = ActivityTile("QZ0000",
-                                     ac_tile_width,
-                                     ac_tile_height,
-                                     self.student,
-                                     recommended_frame,
-                                     )
-
-        recommended_2.attach_elements()
-
-        recommended_2.grid(row=1,
-                           column=1,
-                           padx=10,
-                           pady=10)
-
-        recommended_3 = ActivityTile("CH0000",
-                                     ac_tile_width,
-                                     ac_tile_height,
-                                     self.student,
-                                     recommended_frame,
-                                     )
-
-        recommended_3.attach_elements()
-
-        recommended_3.grid(row=1,
-                           column=2,
-                           padx=10,
-                           pady=10)
-
-        recommended_frame.rowconfigure((0, 1), weight=1)
-        recommended_frame.columnconfigure((0, 1, 2), weight=1)
+        recommend_fake_dots = MoreInfoTile(
+            30,
+            ac_tile_height,
+            recommended_frame
+        )
+        recommend_fake_dots.attach_elements()
+        recommend_fake_dots.grid(row=0,
+                                 column=len(ac_id), 
+                                 padx=10, 
+                                 pady=10, 
+                                 sticky='ns')
 
         # button frame
 

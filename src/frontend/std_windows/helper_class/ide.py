@@ -9,12 +9,10 @@ from .textboxWithPlaceholder import TextBox_Placeholder
 from config import DEFAULT_IDE_MESSAGE, DEFAULT_INPUT_MESSAGE
 
 class IDE(ctk.CTkFrame):
-    def __init__(self, master, width, height, code_name, id, activity_folder, content=None) -> None:
+    def __init__(self, master, output_height, code_name, id, activity_folder, content=None) -> None:
         super().__init__(master)
 
-        self.max_width = width
-        self.max_height = height
-        self.terminal_width = self.max_width - 5
+        self.max_term_height = output_height
 
         self.code_name = f"{code_name}-{id}"
         self.activity_folder = activity_folder
@@ -28,13 +26,17 @@ class IDE(ctk.CTkFrame):
         ## please change this to a reasonable timeout period
         self.timeout_period = 10
 
-        self.IDEHeader = ctk.CTkFrame(self, width=self.max_width)
+        self.columnconfigure(0, weight=1)
+
+        self.IDEHeader = ctk.CTkFrame(self)
         self.IDEHeader.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
         
-        self.IDEContent = ctk.CTkFrame(self, width=self.max_width)
+        self.IDEContent = ctk.CTkFrame(self)
+        self.IDEContent.columnconfigure(0, weight=1)
         self.IDEContent.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
-        self.outputFrame = ctk.CTkFrame(self)
+        self.outputFrame = ctk.CTkFrame(self, fg_color='black')
+        self.outputFrame.columnconfigure(0, weight=1)
 
         self.setUpFrame()
 
@@ -65,8 +67,7 @@ class IDE(ctk.CTkFrame):
 
         self.IDETextBox = TextBox_Placeholder(
             self.IDEContent,
-            width=self.max_width,
-            height=self.max_height,
+            height=self.max_term_height,
             font=font,
             tabs=font.measure("    "),
             wrap=ctk.WORD,
@@ -84,8 +85,7 @@ class IDE(ctk.CTkFrame):
 
         self.InputTextBox = TextBox_Placeholder(
             self.IDEContent,
-            width=self.max_width,
-            height=self.max_height,
+            height=self.max_term_height,
             font=font,
             tabs=font.measure("    "),
             wrap=ctk.WORD,
@@ -94,12 +94,12 @@ class IDE(ctk.CTkFrame):
 
     def setInputFrame(self):
         self.IDETextBox.grid_forget()
-        self.InputTextBox.grid(row=0, column=0, padx=5, pady=5)
+        self.InputTextBox.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
         self.InputTextBox.focus()
         
     def setCodeFrame(self):
         self.InputTextBox.grid_forget()
-        self.IDETextBox.grid(row=0, column=0, padx=5, pady=5)
+        self.IDETextBox.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
         self.IDETextBox.focus()
 
     def	setUpFrame(self, previous_content = None):
@@ -162,20 +162,28 @@ class IDE(ctk.CTkFrame):
         ## if error, return the raw error output
         return code_output
 
-    def terminalOutputLabel(self, output, attach_to, max_width, word_color):
-        output = output[:self.max_output_size]
-        output_label = ctk.CTkLabel(
+    def terminalOutputLabel(self, attach_to):
+        output_label = ctk.CTkTextbox(
             attach_to,
-            text=output,
-            width=max_width,
-            wraplength=max_width,
-            anchor="w",
-            justify="left",
-            font=ctk.CTkFont("Helvetica", size=11),
-            bg_color="black",
-            text_color=word_color
+            font=ctk.CTkFont("Helvetica", size=12),
+            fg_color='black',
+            height=self.max_term_height,
+            wrap='word'
         )
+        output_label.tag_config("normal", foreground='white')
+        output_label.tag_config("error", foreground='red')
         return output_label
+
+    def insertTerminal(self, terminal: ctk.CTkTextbox, content, error):
+        content = content[:self.max_output_size]
+        last_post = terminal.index(ctk.CURRENT)
+        terminal.insert(last_post, content)
+
+        if error:
+            terminal.tag_add("error", last_post, ctk.END)
+        else:
+            terminal.tag_add("normal", last_post, ctk.END)
+
 
     def RunCode(self):
         for widget in self.outputFrame.winfo_children():
@@ -189,30 +197,33 @@ class IDE(ctk.CTkFrame):
         with open(f"{self.activity_folder}/{self.code_name}", "w") as file:
             file.write(text)
 
+        # run code
         cmd = f"{sys.executable} \"{self.activity_folder}/{self.code_name}\""
 
         user_input = self.InputTextBox.get("0.0", "end")
         user_input = bytes(user_input, "utf-8")
         try:
-            code_runner = subprocess.run(cmd, timeout=10, input=user_input, capture_output=True, shell=True)
+            code_runner = subprocess.run(cmd, 
+                                         timeout=10, 
+                                         input=user_input, 
+                                         capture_output=True, 
+                                         shell=True)
             code_output = code_runner.stdout
             error_output = code_runner.stderr
-        except subprocess.TimeoutExpired:
-            code_output = bytes("", "utf-8")
+        except subprocess.TimeoutExpired as err:    
+            code_output = err.stdout.decode() if err.stdout is not None else '' # does not work for some reason, god hates me
             error_output = bytes("Timeout After Running For 10 seconds", "utf-8")
 
         ## remove the file
         os.remove(f"{self.activity_folder}/{self.code_name}")
 
         if code_output or error_output:
-            code_output_frame = ctk.CTkFrame(self.outputFrame)
-            code_output_frame.grid(row=0, column=0, padx=5, pady=5)
-            self.outputFrame.grid(row=3, column=0, padx=5, pady=5)
+            self.outputFrame.grid(row=3, column=0, padx=5, pady=5, sticky='ew')
 
+            code_output_label = self.terminalOutputLabel(self.outputFrame)
+            code_output_label.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
             if code_output:
-                code_output_label = self.terminalOutputLabel(code_output, code_output_frame, self.terminal_width, "white")
-                code_output_label.grid(row=0, column=0, sticky="ns")
-
+                self.insertTerminal(code_output_label, code_output, False)
             if error_output:
-                error_label = self.terminalOutputLabel(error_output, code_output_frame, self.terminal_width, "red")
-                error_label.grid(row=1, column=0, sticky="ns")
+                self.insertTerminal(code_output_label, error_output, True)
+            code_output_label.configure(state='disabled')

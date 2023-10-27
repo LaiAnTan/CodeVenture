@@ -13,16 +13,17 @@ class ParagraphEntryForm(EntryForm):
         self.SetFrames()
 
     def SetContentFrame(self):
+        self.content.rowconfigure(0, weight=1)
+        self.content.columnconfigure(0, weight=1)
         self.ContentEntryForm = ctk.CTkTextbox(
             self.content,
             height=self.height * 0.95,
-            width=self.width - 15,
             wrap="word"
         )
         self.set_focus_widget(self.ContentEntryForm)
 
         self.setContentFormEvent()
-        self.ContentEntryForm.grid(row=0, column=0, padx=5, pady=5)
+        self.ContentEntryForm.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
     
     def setContentFormEvent(self):
         self.ContentEntryForm.bind("<Return>", self.goNextChunk)
