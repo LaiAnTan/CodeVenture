@@ -28,14 +28,19 @@ class CodeRunner(ctk.CTkFrame):
                              fg_color=LIGHTMODE_GRAY if 
                             App().settings.getSettingValue("lightmode").lower() == "true" else
                             DARKMODE_GRAY)
+
             self.rowconfigure((0, 1), weight=1)
             self.columnconfigure(0, weight=1)
 
             self.HeaderFrame = ctk.CTkFrame(self, fg_color='transparent')
             self.HeaderFrame.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
-            self.CodeFrame = ctk.CTkFrame(self, fg_color='transparent')
-            self.CodeFrame.grid(row=1, column=0, padx=5, pady=5)
+            self.CodeFrame = ctk.CTkFrame(self, 
+                                          fg_color= '#f8f8f8' if 
+                                          App().settings.getSettingValue("lightmode").lower() == "true" else
+                                          '#000000'
+                                          )
+            self.CodeFrame.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
             if self.runnable:
                 self.rowconfigure(2, weight=1)
@@ -90,7 +95,7 @@ class CodeRunner(ctk.CTkFrame):
             RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         CodeContent = self.DisplayCodeline_FromFile()
-        CodeContent.grid(row=0, column=0, padx=5, pady=5)
+        CodeContent.grid(row=0, column=0, sticky='w')
 
     def RunTestCases(self, testcase_path):
         cmd = f"{sys.executable} \"{self.code_folder}/main.py\""

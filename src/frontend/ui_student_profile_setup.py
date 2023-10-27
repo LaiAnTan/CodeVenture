@@ -60,6 +60,8 @@ class StudentProfileSetupWindow(App_Frame):
         pass
 
     def attach_elements(self):
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure((0, 2), weight=1)
 
         def deleteProfilePic():
             try:
@@ -82,7 +84,7 @@ class StudentProfileSetupWindow(App_Frame):
         title_frame.grid(
             row=0,
             column=0,
-            sticky="ew"
+            sticky="sew"
         )
 
         title_frame.rowconfigure((0, 1), weight=1)
@@ -115,7 +117,7 @@ class StudentProfileSetupWindow(App_Frame):
         details_frame.grid(
             row=1,
             column=0,
-            sticky="nsew"
+            # sticky="ew"
         )
 
         details_frame.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
@@ -278,11 +280,12 @@ class StudentProfileSetupWindow(App_Frame):
             height=20,
             fg_color="transparent"
         )
+        button_frame.columnconfigure(0, weight=1)
 
         button_frame.grid(
-            row=3,
+            row=2,
             column=0,
-            sticky="ew"
+            sticky="new"
         )
 
         def doneButtonEvent():
@@ -320,3 +323,7 @@ class StudentProfileSetupWindow(App_Frame):
             padx=20,
             pady=30
         )
+
+if __name__ == "__main__":
+    App().change_frame(StudentProfileSetupWindow(Student("testone")))
+    App().mainloop()

@@ -49,7 +49,8 @@ class RegisterWindow(App_Frame):
         pass
 
     def attach_elements(self):
-
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure((0, 2), weight=1)
         # title frame
 
         title_frame = ctk.CTkFrame(
@@ -62,7 +63,7 @@ class RegisterWindow(App_Frame):
         title_frame.grid(
             row=0,
             column=0,
-            sticky="ew"
+            sticky="sew"
         )
 
         title_frame.rowconfigure((0, 1), weight=1)
@@ -199,8 +200,19 @@ class RegisterWindow(App_Frame):
             pady=10,
         )
 
-        user_type_label = ctk.CTkLabel(
+        user_type_frame = ctk.CTkFrame(
             entry_frame,
+            fg_color='transparent'
+        )
+        user_type_frame.grid(
+            row=4,
+            column=0,
+            padx=5,
+            pady=5
+        )
+
+        user_type_label = ctk.CTkLabel(
+            user_type_frame,
             text="My role is: ",
             font=("Helvetica", 14),
         )
@@ -213,7 +225,7 @@ class RegisterWindow(App_Frame):
         )
 
         register_user_type = ctk.CTkOptionMenu(
-            entry_frame,
+            user_type_frame,
             values=["student", "educator"]
         )
 
@@ -240,11 +252,12 @@ class RegisterWindow(App_Frame):
             height=20,
             fg_color="transparent"
         )
+        button_frame.columnconfigure((0, 1), weight=1)
 
         button_frame.grid(
-            row=3,
+            row=2,
             column=0,
-            sticky="ew"
+            sticky="n"
         )
 
         def registerButtonEvent():
@@ -290,7 +303,7 @@ class RegisterWindow(App_Frame):
                                      text="Back to Login",
                                      font=("Helvetica", 14),
                                      width=120, height=50,
-                                     command=lambda: loginButtonEvent()
+                                     command=lambda: App().go_back_history()
                                      )
 
         login_button.grid(
@@ -299,3 +312,8 @@ class RegisterWindow(App_Frame):
             padx=20,
             pady=30
         )
+
+if __name__ == "__main__":
+    App()
+    App().change_frame(RegisterWindow())
+    App().mainloop()
