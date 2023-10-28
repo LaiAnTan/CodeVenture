@@ -79,6 +79,14 @@ class RefreshableScrollableFrame(ctk.CTkScrollableFrame):
     def remove_element(self, to_remove: RSFWidget) -> None:
         self.tracking.remove(to_remove)
 
+    def swap_order(self, index1, index2) -> None:
+        """
+        Swaps order of 2 widgets, thats all it does
+        """
+
+        self.tracking[index1], self.tracking[index2] = self.tracking[index2], self.tracking[index1]
+        self.refresh_elements()
+
     def scroll_frame(self, how_much: float) -> None:
         """
         okay rant
@@ -90,6 +98,7 @@ class RefreshableScrollableFrame(ctk.CTkScrollableFrame):
         """
         self.update_idletasks()
         self._parent_canvas.yview_moveto(str(how_much))
+
 
 
 class RSFWidget(ctk.CTkFrame):

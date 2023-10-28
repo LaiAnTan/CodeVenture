@@ -4,11 +4,10 @@ from ...std_windows.helper_class.ide import IDE
 from os import path
 
 class CodeEntryForm(EntryForm):
-    def __init__(self, master, main_editor, data: tuple[str] | None=None):
+    def __init__(self, master, main_editor):
         super().__init__(master, main_editor)
 
         self.type = "code"
-        self.previous_data = data
 
         self.error = False
         self.error_msg = ''
@@ -72,11 +71,15 @@ class CodeEntryForm(EntryForm):
         )
         importInput.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
-        if self.previous_data is not None:
-            self.error = False
-            self.nameVar.set(self.previous_data[1])
-            self.ide.InsertContent('0.0', self.previous_data[2], 1)
-            self.ide.InsertContent('0.0', self.previous_data[3], 2)
+        self.runnable_var = ctk.BooleanVar(value=True)
+        runnable = ctk.CTkSwitch(
+            ImportFrame,
+            text='Runnable',
+            onvalue=True,
+            offvalue=False,
+            variable=self.runnable_var
+        )
+        runnable.grid(row=2, column=0, padx=5, pady=5)
 
     def GetCodeFromFile(self):
         file_path = ctk.filedialog.askopenfilename()
@@ -102,7 +105,7 @@ class CodeEntryForm(EntryForm):
             self.type,
             self.nameVar.get().strip(),
             self.ide.getCodeContent(),
-            self.ide.getInputContent()
+            self.ide.getInputContent() if self.runnable_var.get() is True else None
         )
 
     def getError(self):
@@ -112,3 +115,21 @@ class CodeEntryForm(EntryForm):
                 'Entry Frame is left unused, Remove if not needed'
             )
         return super().getError()
+    
+    def importData(self, data: tuple[str]):
+        if data[0] != 'code':
+            assert AssertionError("Wrong Type")
+
+        super().importData(data)
+        self.nameVar.set(data[1])
+
+        self.ide.ClearContent(1)
+        self.ide.InsertContent("0.0", data[2], 1)
+
+        if data[3] != None:
+            self.ide.ClearContent(2)
+            self.ide.InsertContent("0.0", data[3], 2)
+        else:
+            self.runnable_var.set(False)
+
+        self.ide.setCodeFrame()

@@ -15,7 +15,7 @@ class EntryAdder(ctk.CTkFrame):
                  master: RSFWidget,
                  attached_form: RefreshableScrollableFrame, 
                  main_editor):
-        super().__init__(master)
+        super().__init__(master, fg_color='#779DEB')
 
         self.master = master
         self.parent = attached_form
@@ -24,7 +24,8 @@ class EntryAdder(ctk.CTkFrame):
 
         option_frame = ctk.CTkFrame(
             self,
-            fg_color='transparent'
+            fg_color='transparent',
+            
         )
         option_frame.grid(row=0, column=0, padx=5, pady=5, sticky='e')
 
@@ -34,8 +35,8 @@ class EntryAdder(ctk.CTkFrame):
         )
         option_label.grid(row=0, column=0, padx=5, pady=5)
 
-        self.chosen_para_type = ctk.StringVar(value='Paragraph')
-        self.para_types = ['Paragraph', 'Asset']
+        self.para_types = self.main_editor.para_types
+        self.chosen_para_type = ctk.StringVar(value=self.para_types[0])
         add_options = ctk.CTkOptionMenu(
             option_frame,
             values=self.para_types,
@@ -63,18 +64,7 @@ class EntryAdder(ctk.CTkFrame):
         index_to_add = self.master.get_index_instance()
         to_add = self.chosen_para_type.get()
 
-        match to_add:
-            case 'Paragraph':
-                entry_form = ParagraphEntryForm(
-                    self.parent,
-                    self.main_editor,
-                )
-            case 'Asset':
-                entry_form = AssetPreview(
-                    self.parent,
-                    self.main_editor,
-                    self.main_editor.assets
-                )
+        entry_form = self.main_editor.widget_factory(to_add)
 
         entry_form.focus()
         self.parent.add_element_specific(index_to_add, entry_form)

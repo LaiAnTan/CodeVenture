@@ -10,9 +10,16 @@ Produce a python program that gets two values input, and add them together, and 
 You do not need to handle errors
 Example Output:
 <IMG-CONT>IMG001
+Example Code:
+<CODE-CONT>CD0001
 CONTENT-END
 
 SOURCES-START
 IMG-CONT-START
 IMG001-amongus.png
 IMG-CONT-END
+
+CODE-CONT-START
+CD0001-test
+CODE-CONT-END
+SOURCES-END

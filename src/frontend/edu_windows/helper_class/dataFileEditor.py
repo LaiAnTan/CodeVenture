@@ -3,7 +3,6 @@ import customtkinter as ctk
 from .paragraphEntry import ParagraphEntryForm
 from .assetPreview import AssetPreview
 from .assetWindow import AssetWindow
-from .errorWindow import ErrorWindow
 from .refreshScrollFrame import RefreshableScrollableFrame
 from PIL import Image
 from config import ASSET_FOLDER
@@ -15,6 +14,7 @@ class dataFileEditor(ctk.CTkFrame):
 
         self.columnconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
+
         try:
             asset_folder_image = ctk.CTkImage(
                 Image.open(f'{ASSET_FOLDER}/asset_folder.png')
@@ -25,39 +25,43 @@ class dataFileEditor(ctk.CTkFrame):
         asset_adder_frame = ctk.CTkFrame(
             self
         )
+        asset_adder_frame.columnconfigure((0, 1), weight=1)
         asset_adder_frame.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
         asset_button = ctk.CTkButton(
             asset_adder_frame,
             image=asset_folder_image,
             text='Assets',
-            width=100,
+            width=0,
             command=self.show_asset_window
         )
-        asset_button.pack(side=ctk.LEFT, padx=5, pady=5)
+        asset_button.grid(row=0, column=0, padx=5, pady=5, sticky='w')
 
-        add_button = ctk.CTkButton(
-            asset_adder_frame,
-            text="Add Entry Form At the End!",
-            width=220,
-            command=lambda : self.add_entry_point()
+        option_frame = ctk.CTkFrame(asset_adder_frame, fg_color='transparent')
+        option_frame.grid(row=0, column=1, padx=5, pady=5, sticky='e')
+
+        option_label = ctk.CTkLabel(
+            option_frame,
+            text='Type: ',
         )
-        add_button.pack(side=ctk.RIGHT, padx=5, pady=5)
+        option_label.grid(row=0, column=0, padx=5, pady=5, sticky='e')
 
         self.chosen_para_type = ctk.StringVar(value='Paragraph')
         self.para_types = ['Paragraph', 'Asset']
         add_options = ctk.CTkOptionMenu(
-            asset_adder_frame,
+            option_frame,
             values=self.para_types,
             variable=self.chosen_para_type
         )
-        add_options.pack(side=ctk.RIGHT, padx=(5, 40), pady=5)
+        add_options.grid(row=0, column=1, padx=5, pady=5, sticky='e')
 
-        option_label = ctk.CTkLabel(
-            asset_adder_frame,
-            text='Type: ',
+        add_button = ctk.CTkButton(
+            option_frame,
+            text="Add Entry Form At the End!",
+            width=0,
+            command=lambda : self.add_entry_point()
         )
-        option_label.pack(side=ctk.RIGHT, padx=5, pady=5)
+        add_button.grid(row=0, column=2, padx=5, pady=5, sticky='e')
 
         self.content_frame = RefreshableScrollableFrame(
             self,
@@ -70,6 +74,15 @@ class dataFileEditor(ctk.CTkFrame):
         type is retrive from add_options CtkOptionMenu"""
         to_add = self.chosen_para_type.get()
 
+        entry_form = self.widget_factory(to_add)
+
+        self.content_frame.track_element(entry_form)
+        self.content_frame.refresh_elements()
+        self.content_frame.scroll_frame(1)
+        entry_form.focus()
+        return entry_form
+
+    def widget_factory(self, to_add) -> ParagraphEntryForm | AssetWindow:
         match to_add:
             case 'Paragraph':
                 entry_form = ParagraphEntryForm(
@@ -82,13 +95,8 @@ class dataFileEditor(ctk.CTkFrame):
                     self,
                     self.assets
                 )
-
-        self.content_frame.track_element(entry_form)
-        self.content_frame.refresh_elements()
-        self.content_frame.scroll_frame(1)
-        entry_form.focus()
         return entry_form
-
+ 
     def get_content_data(self):
         return [x.getData() for x in self.content_frame.get_tracking_list()]
 
@@ -112,3 +120,12 @@ class dataFileEditor(ctk.CTkFrame):
 
         # refresh all asset window
         self.refresh_assets()
+
+    def import_data_list(self, data_list = list[tuple[str]]):
+        for data in data_list:
+            entry_form = self.widget_factory(data[0].capitalize())
+            entry_form.importData(data)
+
+            self.content_frame.track_element(entry_form)
+            entry_form.focus()
+        self.content_frame.refresh_elements()

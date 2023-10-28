@@ -42,6 +42,11 @@ class ParagraphEntryForm(EntryForm):
             self.ContentEntryForm.get("0.0", ctk.END).strip()
         )
 
+    def getError(self):
+        if self.ContentEntryForm.get('0.0', ctk.END).strip() == '':
+            return (True, 'Paragraph Entry not used, removed if not needed')
+        return super().getError()
+
     def peek(self):
         """Check if there are content in the main entry form 
 
@@ -115,3 +120,10 @@ class ParagraphEntryForm(EntryForm):
 
         current_chunk.focus()
         return "break"
+
+    def importData(self, data: tuple[str]):
+        if data[0] != 'paragraph':
+            raise AssertionError('Wrong Type')
+
+        super().importData(data)
+        self.insertData(data[1])

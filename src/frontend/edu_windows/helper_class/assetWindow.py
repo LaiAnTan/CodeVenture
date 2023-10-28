@@ -88,14 +88,13 @@ class AssetWindow(ctk.CTkToplevel):
                 entry_form = ImageEntryForm(
                     self.asset_frame,
                     self,
-                    data
                 )
             case 'code':
                 entry_form = CodeEntryForm(
                     self.asset_frame,
                     self,
-                    data
                 )
+        entry_form.importData(data)
         self.asset_frame.track_element(entry_form)
 
     def get_error_message(self) -> list[tuple[str]]:

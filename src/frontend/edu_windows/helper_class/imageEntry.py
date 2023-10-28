@@ -5,13 +5,12 @@ from config import ASSET_DIR
 from os import path
 
 class ImageEntryForm(EntryForm):
-    def __init__(self, master, parent, data=None):
+    def __init__(self, master, parent):
         super().__init__(master, parent)
 
         self.type = "image"
         self.max_image_height = 250
         self.max_image_width = 550
-        self.previous_data = data
         self.SetFrames(True)
 
     def SetContentFrame(self):
@@ -65,11 +64,6 @@ class ImageEntryForm(EntryForm):
         )
         self.PreviewLabel.grid(row=0, column=0, padx=5, pady=5)
 
-        if self.previous_data is not None:
-            self.DirectoryVar.set(self.previous_data[2])
-            self.NameVar.set(self.previous_data[1])
-            self.PreviewImage(self.previous_data[2])
-
     def getData(self):
         """returns data input into the frame in the following format 
         
@@ -98,6 +92,8 @@ class ImageEntryForm(EntryForm):
     def PromptFileDialog(self):
         """Prompts a file dialog for user to choose the file, then displayes the image"""
         file_path = ctk.filedialog.askopenfilename()
+        name = path.split(file_path)[-1].split('.')[0]
+        self.NameVar.set(name)
         self.PreviewImage(file_path)
 
     def ErrorImage(self, error_msg, original_dir):
@@ -130,8 +126,7 @@ class ImageEntryForm(EntryForm):
             # print('LOG: Invalid File Format for Images')
             return self.ErrorImage('Error in Image Attachment - Invalid File Format', directory)
         else:
-            txt_c = 'black'
-            name = path.split(file_path)[-1].split('.')[0]
+            txt_c = 'white'
 
             try:
                 previewimage = Image.open(directory)
@@ -153,6 +148,14 @@ class ImageEntryForm(EntryForm):
         self.DirectoryVar.set(directory)
 
         self.NameEntry.configure(text_color=txt_c)
-        self.NameVar.set(name)
 
         return "break"
+
+    def importData(self, data: tuple[str]):
+        if data[0] != 'image':
+            raise AssertionError("Wrong Type")
+
+        super().importData(data)
+        self.NameVar.set(data[1])
+        self.DirectoryVar.set(data[2])
+        self.PreviewImage(data[2])

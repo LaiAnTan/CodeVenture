@@ -166,6 +166,12 @@ class ChallangeWindow(ActivityWindow):
                         frame_width,
                         self.displayed_frame
                     )
+                case Challange.Content_Type.Code:
+                    paragraph = self.CodeHandler(
+                        content[1],
+                        frame_width,
+                        self.displayed_frame
+                    )
             paragraph.grid(row=index, column=0, sticky='ew')
 
 

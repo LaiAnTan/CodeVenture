@@ -56,7 +56,7 @@ class QuestionFrame(ctk.CTkFrame):
 
 
         self.options_frame = ctk.CTkFrame(self, fg_color='transparent')
-        self.options_frame.grid(row=1, column=0, padx=5, pady=5)
+        self.options_frame.grid(row=1, column=0, padx=5, pady=5, sticky='w')
 
         for index, answer in enumerate(self.question.get_Options()):
             option = ctk.CTkRadioButton(
@@ -80,15 +80,6 @@ class QuizWindow(ActivityWindow):
     def refresh_variables(self):
         self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
 
-    def InitializeQnAFrame(self):
-        self.qna_width = 450
-        self.qna_height = 460
-
-        self.qna_frame = ctk.CTkScrollableFrame(
-            self.content_frame,
-        )
-        self.qna_frame.grid(row=0, column=0, padx=5, pady=5)
-
     def SetContent(self):
         self.content_frame.rowconfigure(0, weight=1)
 
@@ -107,38 +98,46 @@ class QuizWindow(ActivityWindow):
         self.SetMainContent()
         self.SetSidebar()
 
+    def InitializeQnAFrame(self):
+        self.qna_width = 450
+        self.qna_height = 460
+
+        self.qna_frame = ctk.CTkScrollableFrame(self.content_frame)
+        self.qna_frame.columnconfigure(0, weight=1)
+        self.qna_frame.grid(row=0, column=1, padx=5, pady=5, sticky='nsew')
+        self.update_idletasks()
+
     def SetMainContent(self):
         self.question_width = self.qna_width - 30
+
+        self.genAllQuestions()
         self.showAllQuestions()
 
     def SetSidebar(self):
-        sidebar_width = 150
-        button_sidebar_width = sidebar_width - 30
-        sidebar_frame = ctk.CTkScrollableFrame(self.content_frame, width=sidebar_width)
+        sidebar_frame = ctk.CTkScrollableFrame(self.content_frame)
         sidebar_frame.columnconfigure(0, weight=1)
         sidebar_frame.grid(row=0, column=2, padx=5, pady=5, sticky="nsew")
 
         check_button = ctk.CTkButton(
             sidebar_frame,
-            width=button_sidebar_width,
             text="Check",
-            command=lambda : self.checkAnswers(questionStatusFrame, button_sidebar_width)
+            command= self.checkAnswers
         )
         check_button.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
         show_all_questions_button = ctk.CTkButton(
             sidebar_frame,
-            width=button_sidebar_width,
             text="Show All Questions",
             command= self.showAllQuestions
         )
         show_all_questions_button.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
-        questionStatusFrame = ctk.CTkFrame(sidebar_frame, width=sidebar_width)
-        questionStatusFrame.columnconfigure(0, weight=1)
-        questionStatusFrame.grid(row=2, column=0, padx=5, pady=5, sticky='ew')
+        self.questionStatusFrame = ctk.CTkFrame(sidebar_frame)
+        self.questionStatusFrame.columnconfigure(0, weight=1)
+        self.questionStatusFrame.grid(row=2, column=0, padx=5, pady=5, sticky='ew')
 
-        self.checkAnswers(questionStatusFrame, button_sidebar_width)
+        self.initAnswersButton()
+        self.checkAnswers()
 
     def SetFooter(self):
         self.footer_frame.columnconfigure(0, weight=1)
@@ -161,14 +160,12 @@ class QuizWindow(ActivityWindow):
         return ret
 
     def RefreshQnAFrame(self):
-        self.qna_frame.grid_forget()
-        self.qna_frame.destroy()
-        self.qna_frame = ctk.CTkScrollableFrame(self.content_frame, width=self.qna_width, height=self.qna_height)
-        self.qna_frame.columnconfigure(0, weight=1)
-        self.qna_frame.grid(row=0, column=1, padx=5, pady=5, sticky='nsew')
+        for children in self.qna_frame.winfo_children():
+            children.grid_forget()
+        self.qna_frame._parent_canvas.yview_moveto(0)
 
-    def showAllQuestions(self):
-        self.RefreshQnAFrame()
+    def genAllQuestions(self):
+        self.question_frames = []
         for index, questions in enumerate(self.ac.questions):
             q_frame = QuestionFrame(
                 self.qna_frame,
@@ -177,23 +174,31 @@ class QuizWindow(ActivityWindow):
                 self.question_width,
                 self.stdanswer[index]
             )
-            q_frame.grid(row=index, column=0, padx=5, pady=5)
+            self.question_frames.append(q_frame)
+
+    def showAllQuestions(self):
+        self.RefreshQnAFrame()
+        for index, frame in enumerate(self.question_frames):
+            frame.grid(row=index, column=0, padx=5, pady=5, sticky='ew')
 
     def showOneQuestion(self, index):
         self.RefreshQnAFrame()
-        q_frame = QuestionFrame(
-            self.qna_frame,
-            self,
-            self.ac.questions[index],
-            self.question_width,
-            self.stdanswer[index]
-        )
-        q_frame.grid(row=0, column=0, padx=5, pady=5)
+        self.question_frames[index].grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
-    def checkAnswers(self, questionStatusFrame: ctk.CTkFrame, max_width):
-        for widget in questionStatusFrame.winfo_children():
-            widget.destroy()
+    def initAnswersButton(self):
+        student_answers = [x.get() for x in self.stdanswer]
+        self.statusButtons = []
 
+        for index, answer in enumerate(student_answers):
+            statusButton = ctk.CTkButton(
+                self.questionStatusFrame,
+                text=f"Question {index}",
+                command= lambda index=index: self.showOneQuestion(index)
+            )
+            self.statusButtons.append(statusButton)
+            statusButton.grid(row=index, column=0, padx=5, pady=5, sticky='ew')
+
+    def checkAnswers(self):
         student_answers = [x.get() for x in self.stdanswer]
 
         for index, answer in enumerate(student_answers):
@@ -207,14 +212,10 @@ class QuizWindow(ActivityWindow):
                 color = "#BB351E"
                 hover_color = "#962B18"
 
-            statusButton = ctk.CTkButton(
-                questionStatusFrame,
-                text=f"Question {index}",
+            self.statusButtons[index].configure(
                 hover_color=hover_color,
-                fg_color=color,
-                command= lambda index=index: self.showOneQuestion(index)
+                fg_color=color
             )
-            statusButton.grid(row=index, column=0, padx=5, pady=5, sticky='ew')
 
     def StudentSubmission(self):
         print("Uploading Student's Answer to backend.database...")

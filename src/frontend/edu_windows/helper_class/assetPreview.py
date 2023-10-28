@@ -91,7 +91,6 @@ class AssetPreview(EntryForm):
         self.displaying_value = None
         self.SetFrames()
 
-
     def SetContentFrame(self):
         self.content.rowconfigure((0, 1), weight=1)
         self.content.columnconfigure(0, weight=1)
@@ -135,6 +134,9 @@ class AssetPreview(EntryForm):
 
         self.error = False
         self.refreshPreview()
+
+    def set_displaying_value(self, display_val):
+        self.displaying_value = display_val
 
     def refreshPreview(self):
         if self.displaying_value is None:
@@ -229,9 +231,16 @@ class AssetPreview(EntryForm):
         )
         self.button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
-
     def getData(self):
         return (
             'asset',
             self.displaying_value
         )
+
+    def importData(self, data: tuple[str]):
+        if data[0] != 'asset':
+            raise AssertionError('Wrong Type')
+        
+        super().importData(data)
+        self.displaying_value = data[1]
+        self.refreshPreview()
