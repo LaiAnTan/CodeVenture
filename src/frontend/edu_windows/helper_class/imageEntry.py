@@ -92,8 +92,6 @@ class ImageEntryForm(EntryForm):
     def PromptFileDialog(self):
         """Prompts a file dialog for user to choose the file, then displayes the image"""
         file_path = ctk.filedialog.askopenfilename()
-        name = path.split(file_path)[-1].split('.')[0]
-        self.NameVar.set(name)
         self.PreviewImage(file_path)
 
     def ErrorImage(self, error_msg, original_dir):
@@ -127,7 +125,7 @@ class ImageEntryForm(EntryForm):
             return self.ErrorImage('Error in Image Attachment - Invalid File Format', directory)
         else:
             txt_c = 'white'
-
+            name = path.split(file_path)[-1].split('.')[0]
             try:
                 previewimage = Image.open(directory)
                 size=self.ratio_resizing(previewimage, self.max_image_height, self.max_image_width)
@@ -146,7 +144,7 @@ class ImageEntryForm(EntryForm):
 
         self.DirectoryEntry.configure(text_color=txt_c)
         self.DirectoryVar.set(directory)
-
+        self.NameVar.set(name)
         self.NameEntry.configure(text_color=txt_c)
 
         return "break"
@@ -156,6 +154,5 @@ class ImageEntryForm(EntryForm):
             raise AssertionError("Wrong Type")
 
         super().importData(data)
-        self.NameVar.set(data[1])
-        self.DirectoryVar.set(data[2])
         self.PreviewImage(data[2])
+        self.NameVar.set(data[1])
