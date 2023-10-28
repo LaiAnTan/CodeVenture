@@ -42,11 +42,18 @@ def profileSetupHandler(student: Student, full_name: str, email: str, dob: str,
 
 class StudentProfileSetupWindow(App_Frame):
 
+    """
+    Frame class for displaying the student profile setup window.
+    """
+
     profile_pic_dir_path = "pfp"
     full_width = 450
     half_width = full_width / 2
 
     def __init__(self, student: Student):
+        """
+        Constructor for the Student Profile Setup Frame.
+        """
         super().__init__()
         self.student = student
         self.full_name = ""
@@ -60,8 +67,15 @@ class StudentProfileSetupWindow(App_Frame):
         pass
 
     def attach_elements(self):
+        """
+        Function that attaches all elements of the frame to the main frame.
+        """
 
         def deleteProfilePic():
+            """
+            Function that handles the deletion of profile picture from the
+            directory stated in profile_pic_path.
+            """
             try:
                 os.remove(self.profile_pic_path)
             except FileNotFoundError:
@@ -194,6 +208,10 @@ class StudentProfileSetupWindow(App_Frame):
         )
 
         def dateOfBirthButtonEvent():
+            """
+            Function that handles the event when the date of birth button is
+            pressed.
+            """
             date = datePickerTopLevelPage()
             self.dob = date
             date_of_birth_button.configure(
@@ -231,6 +249,11 @@ class StudentProfileSetupWindow(App_Frame):
         )
 
         def profilePicButtonEvent():
+            """
+            Function that handles the event when the profile picture button is
+            pressed.
+            """
+
             profile_pic_filepath = ctk.filedialog.askopenfilename()
             if profile_pic_filepath == ():
                 return
@@ -286,6 +309,11 @@ class StudentProfileSetupWindow(App_Frame):
         )
 
         def doneButtonEvent():
+            """
+            Function that handles the event when the done button is
+            pressed.
+            """
+
             self.full_name = name.get()
             self.email = email.get()
             ret = profileSetupHandler(self.student, self.full_name, self.email,

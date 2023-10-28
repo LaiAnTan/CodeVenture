@@ -1,6 +1,5 @@
 import customtkinter as ctk
 
-from src.frontend.ui_app import App
 from .ui_app_frame import App_Frame
 from src.frontend.ui_std_window_gen import loginPage
 from src.backend.user.user_student import Student
@@ -9,10 +8,17 @@ from src.backend.database.database_student import StudentDB
 
 class SubscribeWindow(App_Frame):
 
+    """
+    Frame class for displaying the subscribe window.
+    """
+
     full_width = 450
     half_width = full_width / 2
 
-    def __init__(self, student: Student):
+    def __init__(self, student: Student) -> None:
+        """
+        Initializes the class.
+        """
         super().__init__()
         self.student = student
 
@@ -21,7 +27,12 @@ class SubscribeWindow(App_Frame):
     def refresh_variables(self):
         pass
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame in root.
+
+        @return None
+        """
 
         # title frame
 
@@ -106,6 +117,10 @@ class SubscribeWindow(App_Frame):
         )
 
         def validateSubButtonEvent() -> None:
+            """
+            Function that handles the event when the validate code button is
+            pressed.
+            """
             code = sub_code.get()
             if code == "99999":
                 sdb = StudentDB()
@@ -148,6 +163,10 @@ class SubscribeWindow(App_Frame):
         button_frame.columnconfigure((0, 1), weight=1)
 
         def subscribeButtonEvent():
+            """
+            Function that handles the event when the subscribe button is
+            pressed.
+            """
             print("This button relocates to the subscription service")
             return
 
@@ -167,6 +186,10 @@ class SubscribeWindow(App_Frame):
         )
 
         def backToLoginButtonEvent():
+            """
+            Function that handles the event when the back to login button is
+            pressed.
+            """
             loginPage()
 
         back_to_login_button = ctk.CTkButton(

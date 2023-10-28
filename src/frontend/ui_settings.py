@@ -1,7 +1,6 @@
 import customtkinter as ctk
 from argon2 import PasswordHasher, exceptions
 
-from .ui_std_window_gen import studentMenuPage
 from .ui_app import App
 from .ui_app_frame import App_Frame
 from ..backend.user.user_student import Student
@@ -43,6 +42,10 @@ def changePasswordHandler(student: Student, old_password: str,
 
 class SettingsWindow(App_Frame):
 
+    """
+    Frame class for displaying the settings window.
+    """
+
     header_height = 20
     full_width = 600
     half_width = full_width / 2
@@ -50,6 +53,10 @@ class SettingsWindow(App_Frame):
     half_content_height = full_content_height / 2
 
     def __init__(self, student: Student):
+        """
+        Initializes the class.
+        """
+
         super().__init__()
 
         self.student = student
@@ -58,8 +65,12 @@ class SettingsWindow(App_Frame):
     def refresh_variables(self):
         pass
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame in root.
 
+        @return None
+        """
         # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
@@ -86,9 +97,6 @@ class SettingsWindow(App_Frame):
             padx=5,
             pady=5
         )
-
-        def backButtonEvent():
-            studentMenuPage(self.student)
 
         back_button = ctk.CTkButton(
             header_frame,
@@ -154,6 +162,10 @@ class SettingsWindow(App_Frame):
         appearance_toggler_status = ctk.IntVar(value=0)
 
         def appearanceTogglerEvent():
+            """
+            Function that handles the event when light/dark mode toggler is
+            pressed.
+            """
             if appearance_toggler_status.get() == 1:
                 ctk.set_appearance_mode("light")
                 ctk.set_default_color_theme("blue")
@@ -275,6 +287,10 @@ class SettingsWindow(App_Frame):
         )
 
         def changePasswordButtonEvent():
+            """
+            Function that handles the event when the change password button is
+            pressed.
+            """
             ret = changePasswordHandler(self.student, old_password.get(),
                                         new_password.get(),
                                         confirm_password.get())

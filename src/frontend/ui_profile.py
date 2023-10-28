@@ -5,11 +5,14 @@ from PIL import Image
 from .ui_app import App
 from .ui_app_frame import App_Frame
 from ..backend.user.user_student import Student
-from .ui_std_window_gen import studentMenuPage
 from config import PFP_DIR, ASSET_DIR, LIGHTMODE_GRAY, DARKMODE_GRAY
 
 
 def find_profile_pic(username: str) -> str:
+    """
+    Function that locates the profile picture of a student when given the
+    username as input.
+    """
 
     files = os.listdir(PFP_DIR)
 
@@ -22,13 +25,20 @@ def find_profile_pic(username: str) -> str:
 
 class ProfileWindow(App_Frame):
 
+    """
+    Frame class for displaying the profile window.
+    """
+
     header_height = 20
     full_width = 450
     half_width = full_width / 2
     full_content_height = 460 - header_height
     half_content_height = full_content_height / 2
 
-    def __init__(self, student: Student):
+    def __init__(self, student: Student) -> None:
+        """
+        Initializes the class.
+        """
         super().__init__()
         self.student = student
         self.profile_pic_path = find_profile_pic(self.student.getUsername())
@@ -39,8 +49,12 @@ class ProfileWindow(App_Frame):
     def refresh_variables(self):
         pass
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame in root.
 
+        @return None
+        """
         # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
@@ -54,9 +68,6 @@ class ProfileWindow(App_Frame):
             header_frame,
             text=f"Dashboard: {self.student.username}'s profile"
         )
-
-        def backButtonEvent():
-            studentMenuPage(self.student)
 
         back_button = ctk.CTkButton(
             header_frame,
@@ -105,7 +116,7 @@ class ProfileWindow(App_Frame):
             content_frame,
             width=self.half_width,
             height=self.half_content_height,
-            fg_color=LIGHTMODE_GRAY if 
+            fg_color=LIGHTMODE_GRAY if
             App().settings.getSettingValue("lightmode").lower() == "true" else
             DARKMODE_GRAY
         )

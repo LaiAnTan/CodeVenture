@@ -1,6 +1,11 @@
 from .ui_app import App
 
+
 def dispatcher(option, existing_activity):
+    """
+    Function that handles the frame switch to the correct activity editor
+    window.
+    """
     App().clean_frame()
     from .edu_windows.edu_module_editor import ModuleEditor
 
@@ -12,7 +17,11 @@ def dispatcher(option, existing_activity):
         case 'Challange':
             raise NotImplementedError
 
+
 def editor_prompt():
+    """
+    Function that handles the frame switch to the editor window.
+    """
     from .edu_windows.edu_edit_option import EditorWindow
 
     App().clean_frame()

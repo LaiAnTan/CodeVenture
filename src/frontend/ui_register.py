@@ -1,7 +1,6 @@
 import customtkinter as ctk
 from argon2 import PasswordHasher
 
-from .ui_app import App
 from .ui_app_frame import App_Frame
 from .ui_std_window_gen import loginPage
 from ..backend.database.database_user import UserDB
@@ -38,9 +37,17 @@ def registerHandler(username: str, password: str, confirm_pw: str,
 
 class RegisterWindow(App_Frame):
 
+    """
+    Frame class for displaying the register window.
+    """
+
     full_width = 450
 
     def __init__(self):
+        """
+        Initializes the class.
+        """
+
         super().__init__()
 
         self.attach_elements()
@@ -48,8 +55,12 @@ class RegisterWindow(App_Frame):
     def refresh_variables(self):
         pass
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame in root.
 
+        @return None
+        """
         # title frame
 
         title_frame = ctk.CTkFrame(
@@ -171,6 +182,9 @@ class RegisterWindow(App_Frame):
         checkbox1_status = ctk.IntVar(value=0)
 
         def show_password():
+            """
+            Handles event when show password checkbox is ticked / unticked.
+            """
             print(checkbox1_status.get())
             if checkbox1_status.get() == 1:
                 new_password.configure(show="")
@@ -248,6 +262,9 @@ class RegisterWindow(App_Frame):
         )
 
         def registerButtonEvent():
+            """
+            Handles event where register button is pressed.
+            """
             ret = registerHandler(new_username.get(), new_password.get(),
                                   confirm_password.get(),
                                   register_user_type.get())
@@ -284,6 +301,9 @@ class RegisterWindow(App_Frame):
         )
 
         def loginButtonEvent():
+            """
+            Handles event where back to login button is pressed.
+            """
             loginPage()
 
         login_button = ctk.CTkButton(button_frame,

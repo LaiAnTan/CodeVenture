@@ -1,19 +1,24 @@
 import customtkinter as ctk
 
-from .ui_app import App
 from .ui_app_frame import App_Frame
-
 from .ui_std_window_gen import registerPage, studentMenuPage, subscribePage, \
     studentProfileSetupPage
-
 from .ui_edu_window_gen import editor_prompt
-
 from ..backend.user.user_base import User
 from ..backend.user.user_student import Student
 
+
 class LoginWindow(App_Frame):
 
-    def __init__(self):
+    """
+    Frame class for displaying the login window.
+    """
+
+    def __init__(self) -> None:
+        """
+        Initializes the class.
+        """
+
         super().__init__()
         self.username = None
         self.password = None
@@ -22,18 +27,31 @@ class LoginWindow(App_Frame):
         self.attach_elements()
 
     def getUsername(self):
+        """
+        Getter for username.
+        """
         return self.username
 
     def getPassword(self):
+        """
+        Getter for password.
+        """
         return self.password
 
-    def refresh_variables(self):
+    def refresh_variables(self) -> None:
+        """
+        Function that resets the variables to default values.
+        """
         self.username = None
         self.password = None
         self.user = User(None)
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame in root.
 
+        @return None
+        """
         full_width = 450
 
         # title frame
@@ -138,6 +156,9 @@ class LoginWindow(App_Frame):
         checkbox1_status = ctk.IntVar(value=0)
 
         def eventShowPassword():
+            """
+            Handles event when show password checkbox is ticked / unticked.
+            """
             if checkbox1_status.get() == 1:
                 password1.configure(show="")
             else:
@@ -242,6 +263,10 @@ class LoginWindow(App_Frame):
         )
 
         def registerButtonEvent():
+            """
+            Function that handles the event when the register button is
+            pressed.
+            """
             registerPage()
 
         register_button = ctk.CTkButton(

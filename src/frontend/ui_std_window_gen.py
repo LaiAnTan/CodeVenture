@@ -3,48 +3,72 @@ from src.backend.user.user_student import Student
 
 
 def loginPage():
+    """
+    Function that handles the frame switch to login window.
+    """
     from .ui_login import LoginWindow
     App().clean_frame()
     App().change_frame(LoginWindow())
 
 
 def registerPage():
+    """
+    Function that handles the frame switch to register window.
+    """
     from .ui_register import RegisterWindow
     App().clean_frame()
     App().change_frame(RegisterWindow())
 
 
 def studentMenuPage(student: Student):
+    """
+    Function that handles the frame switch to student menu window.
+    """
     from .ui_student_menu import StudentMenuWindow
     App().clean_frame()
     App().change_frame(StudentMenuWindow(student))
 
 
 def profilePage(student: Student):
+    """
+    Function that handles the frame switch to student profile window.
+    """
     from .ui_profile import ProfileWindow
     App().clean_frame()
     App().change_frame(ProfileWindow(student))
 
 
 def settingsPage(student: Student):
+    """
+    Function that handles the frame switch to settings window.
+    """
     from .ui_settings import SettingsWindow
     App().clean_frame()
     App().change_frame(SettingsWindow(student))
 
 
 def subscribePage(student: Student):
+    """
+    Function that handles the frame switch to subscribe window.
+    """
     from .ui_subscribe import SubscribeWindow
     App().clean_frame()
     App().change_frame(SubscribeWindow(student))
 
 
 def studentProfileSetupPage(student: Student):
+    """
+    Function that handles the frame switch to profile setup window.
+    """
     from .ui_student_profile_setup import StudentProfileSetupWindow
     App().clean_frame()
     App().change_frame(StudentProfileSetupWindow(student))
 
 
 def datePickerTopLevelPage():
+    """
+    Function that triggers the top level date picker window.
+    """
     from .helper_windows.ui_date_picker import DatePickerWindow
     date_picker = DatePickerWindow()
     date_picker.show_window()
@@ -53,12 +77,18 @@ def datePickerTopLevelPage():
 
 
 def displayActivitySelections(student: Student):
+    """
+    Function that handles the frame switch to activity selection window.
+    """
     from .std_windows.ui_std_selection_window import SelectionScreen
     App().clean_frame()
     App().change_frame(SelectionScreen(student))
 
 
 def dispatcher(activityID, activityType, student: Student):
+    """
+    Function that handles the frame switch to the correct activity window.
+    """
     from .std_windows.ui_std_challenge_window import ChallangeWindow
     from .std_windows.ui_std_quiz_window import QuizWindow
     from .std_windows.ui_std_module_window import ModuleWindow

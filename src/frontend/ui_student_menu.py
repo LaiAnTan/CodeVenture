@@ -2,7 +2,6 @@ import customtkinter as ctk
 
 from .ui_std_window_gen import loginPage, profilePage, settingsPage
 from src.frontend.ui_activity_tile import ActivityTile
-from .ui_app import App
 from .ui_app_frame import App_Frame
 from ..backend.user.user_student import Student
 
@@ -10,7 +9,7 @@ from ..backend.user.user_student import Student
 class StudentMenuWindow(App_Frame):
 
     """
-    Frame class for displaying the student menu with tkinter.
+    Frame class for displaying the student menu.
     """
 
     # constants
@@ -25,7 +24,6 @@ class StudentMenuWindow(App_Frame):
         Initializes the class.
 
         @param student: student object coresponding to current user.
-        @param main_attach: main tkinter object containing root frame.
         @return None
         """
         super().__init__()
@@ -63,6 +61,10 @@ class StudentMenuWindow(App_Frame):
         )
 
         def logoutButtonEvent():
+            """
+            Function that handles the event when the logout button is
+            pressed.
+            """
             loginPage()
 
         logout_button = ctk.CTkButton(
@@ -79,6 +81,10 @@ class StudentMenuWindow(App_Frame):
         )
 
         def settingsButtonEvent():
+            """
+            Function that handles the event when the settings button is
+            pressed.
+            """
             settingsPage(self.student)
 
         settings_button = ctk.CTkButton(
@@ -95,6 +101,10 @@ class StudentMenuWindow(App_Frame):
         )
 
         def profileButtonEvent():
+            """
+            Function that handles the event when the profile button is
+            pressed.
+            """
             profilePage(self.student)
 
         profile_button = ctk.CTkButton(

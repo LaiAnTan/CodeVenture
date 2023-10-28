@@ -5,6 +5,13 @@ from config import ROOT_DIR
 
 
 class App():
+
+    """
+    Main user interface class.
+
+    Singleton pattern.
+    """
+
     _instance = None
 
     width = 900
@@ -42,19 +49,24 @@ class App():
 
     @classmethod
     def clean_frame(cls):
-        """Call this before adding new frames
-        
+        """
+        Call this before adding new frames
+
         remove all frames from the App's main frame
-        
-        DO NOT call this after adding your new frame"""
+
+        DO NOT call this after adding your new frame
+        """
         # cls.main_frame.place_forget() # i dont think this is doing anything?
-        cls.main_frame.grid_forget() # THIS is the one that is doing something
+        cls.main_frame.grid_forget()  # THIS is the one that is doing something
         # but that breaks so :P
         for widgets in cls.main_frame.winfo_children():
             widgets.grid_forget()
 
     @classmethod
     def go_back_history(cls):
+        """
+        Returns to the previous frame displayed.
+        """
         # remove current frame from history (removed forever)
         cls.history.pop()
         previous = cls.history[-1]
@@ -65,31 +77,39 @@ class App():
 
     @classmethod
     def add_to_history(cls, frame):
+        """
+        Adds the current frame into the history of displayed frames.
+        """
         cls.history.append(frame)
 
     @classmethod
     def change_frame(cls, new_frame):
         """Changes frame of App
-        Call App().clean_frame beforehand to remove existing 
-        windows
+        Call App().clean_frame beforehand to remove existing windows
 
         make sure new_frame's master is App or App.main_frame
 
-        
         Please call this if you want to change the frame of the App, do
-        not attempt to grid it by yourself, the back buttons depend on this"""
+        not attempt to grid it by yourself, the back buttons depend on this
+        """
         cls.add_to_history(new_frame)
         new_frame.grid(row=0, column=0)
         cls.main_frame.grid(row=0, column=0)
 
     @classmethod
     def __new__(cls, placeholder=None):
+        """
+        Dunder method for singleton design pattern.
+        """
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
     @classmethod
     def mainloop(cls):
+        """
+        Mainloop for tkinter operations.
+        """
         cls.main.mainloop()
 
 

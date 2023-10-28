@@ -9,7 +9,7 @@ from .backend.activity.ac_database.db_ac_completed import ActivityDictionary
 from config import ROOT_DIR, DATABASE_DIR
 
 
-def import_data_from_csv(filename) -> list[tuple]:
+def import_data_from_csv(filename: str) -> list[tuple]:
     """
     Reads from a csv file containing user data
     and converts it into a list of tuples for database insertion
@@ -69,7 +69,7 @@ def populate_databases():
 
 def reset_databases() -> None:
     """
-    Reset database by deleting .db files
+    Resets the databases by deleting .db files
     """
     files = os.listdir(DATABASE_DIR)
 
