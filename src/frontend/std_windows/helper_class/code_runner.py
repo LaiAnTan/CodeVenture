@@ -10,10 +10,19 @@ import customtkinter as ctk
 import subprocess
 
 from .imagelabel import ImageLabel
-from config import ROOT_DIR
+
 
 class CodeRunner(ctk.CTkFrame):
-    def __init__(self, master, max_img_width, code_name, activity_folder) -> None:
+
+    """
+    Frame class that handles the display and execution of code.
+    """
+
+    def __init__(self, master, max_img_width, code_name,
+                 activity_folder) -> None:
+        """
+        Initializes the class.
+        """
         self.max_width = max_img_width
 
         self.code_name = code_name
@@ -22,7 +31,7 @@ class CodeRunner(ctk.CTkFrame):
         self.code_folder = f"{self.activity_folder}/{self.code_name}"
         self.runnable = os.path.isfile(f'{self.code_folder}/input')
 
-        if master != None:
+        if master is None:
             super().__init__(master)
 
             self.HeaderFrame = ctk.CTkFrame(self)
@@ -33,20 +42,24 @@ class CodeRunner(ctk.CTkFrame):
 
             if self.runnable:
                 self.RunButtonFrame = ctk.CTkFrame(self)
-                self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+                self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5,
+                                         pady=5)
                 self.RunButtonFrame.columnconfigure(0, weight=1)
 
             self.outputFrame = ctk.CTkFrame(self)
 
             self.setUpFrame()
 
-    def	DisplayCodeline_FromFile(self):
+    def DisplayCodeline_FromFile(self):
+        """
+        Displays the code line from a file.
+        """
         with open(f"{self.code_folder}/main.py") as file:
             pyg.highlight(
                 file.read(),
                 PythonLexer(),
                 ImageFormatter(
-                    font_name="Helvetica",
+                    font_name="DejaVu Sans Mono",
                     font_size=12
                 ),
                 outfile=f"{self.code_folder}/temp"
@@ -55,17 +68,19 @@ class CodeRunner(ctk.CTkFrame):
         ret_widget = ImageLabel(
             self.CodeFrame,
             f"{self.code_folder}/temp",
-            1600, # TODO: Change the height value later
+            1600,  # TODO: Change the height value later
             self.max_width,
             True
         )
 
-        ## imagine if this is system24, LETS GO
         os.remove(f"{self.code_folder}/temp")
 
         return ret_widget
 
-    def	setUpFrame(self):
+    def setUpFrame(self):
+        """
+        Sets up the frame.
+        """
         title = ctk.CTkLabel(
             self.HeaderFrame,
             text=self.code_name
@@ -85,10 +100,16 @@ class CodeRunner(ctk.CTkFrame):
         CodeContent.grid(row=0, column=0, padx=5, pady=5)
 
     def RunTestCases(self, testcase_path):
+        """
+        Runs the test cases specified in testcase_path.
+        """
         cmd = f"{sys.executable} \"{self.code_folder}/main.py\""
         testcase_in = open(testcase_path)
         try:
-            code_output = subprocess.check_output(cmd, timeout=10, stdin=testcase_in, stderr=subprocess.STDOUT, shell=True).decode()
+            code_output = subprocess.check_output(cmd, timeout=10,
+                                                  stdin=testcase_in,
+                                                  stderr=subprocess.STDOUT,
+                                                  shell=True).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
         except subprocess.TimeoutExpired:
@@ -97,18 +118,24 @@ class CodeRunner(ctk.CTkFrame):
         return code_output
 
     def RunCode(self):
+        """
+        Runs the code specified.
+        """
         for widget in self.outputFrame.winfo_children():
             widget.destroy()
         self.outputFrame.forget()
 
-        print("Running Code. BzzZt")
+        print("Running Code.")
 
         cmd = f"{sys.executable} \"{self.code_folder}/main.py\""
         code_input = open(f"{self.code_folder}/input")
-        
+
         font_color = "white"
         try:
-            code_output = subprocess.check_output(cmd, timeout=10, stdin=code_input, stderr=subprocess.STDOUT, shell=True).decode()
+            code_output = subprocess.check_output(cmd, timeout=10,
+                                                  stdin=code_input,
+                                                  stderr=subprocess.STDOUT,
+                                                  shell=True).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
             font_color = "red"
@@ -123,7 +150,7 @@ class CodeRunner(ctk.CTkFrame):
             wraplength=self.max_width - 70,
             anchor="w",
             justify="left",
-            font=ctk.CTkFont("Helvetica", size=11),
+            font=("Helvetica", 11),
             bg_color="black",
             text_color=font_color
         )

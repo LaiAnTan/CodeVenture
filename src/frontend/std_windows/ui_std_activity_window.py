@@ -11,20 +11,38 @@ from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 from .helper_class.code_runner import CodeRunner
 from .helper_class.imagelabel import ImageLabel
 
+
 class ActivityWindow(App_Frame, ABC):
 
+    """
+    Abstract base class for activity frames (module, quiz, challenge)
+    """
+
     def __init__(self, activity: Activity, student: Student):
+        """
+        Initializes the class.
+        """
         super().__init__()
         self.ac = activity
         self.std = student
         self.completion_database = ActivityDictionary().getDatabase(self.ac.id)
-        
-        self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
+
+        self.done = self.completion_database.StudentEntryExist(self.std
+                                                               .getUsername())
 
     def refresh_variables(self):
-        self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
+        """
+        Resets variables to their default state.
+        """
+        self.done = self.completion_database.StudentEntryExist(self.std
+                                                               .getUsername())
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame in root.
+
+        @return None
+        """
         self.SetFrames()
 
     def SetFrames(self):
@@ -66,10 +84,14 @@ class ActivityWindow(App_Frame, ABC):
 
     # HELPER FUNCTIONS
 
-    def ImageHandler(self, content, max_img_height, max_img_width, attach_to, source=None):
+    def ImageHandler(self, content, max_img_height, max_img_width, attach_to,
+                     source=None):
+        """
+        Function that handles displaying images.
+        """
         if source is None:
             source = self.ac
-        
+
         if source.img.get(content):
             ret_widget = ImageLabel(
                 attach_to,

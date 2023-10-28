@@ -3,7 +3,6 @@ import customtkinter as ctk
 import os
 
 from ..ui_app import App
-from ..ui_app import App
 from .helper_class.ide import IDE
 from .helper_class.code_runner import CodeRunner
 from .ui_std_activity_window import ActivityWindow
@@ -14,29 +13,50 @@ from ...backend.user.user_student import Student
 
 class ChallangeWindow(ActivityWindow):
 
-    def __init__(self, challenge: Challange, student: Student):
+    """
+    Frame class for displaying the challenge window.
+    """
+
+    def __init__(self, challenge: Challange, student: Student) -> None:
+        """
+        Initialize the class.
+        """
         super().__init__(challenge, student)
         self.attempted_count = 0
         self.suceeded = False
         self.percentage = 0
 
-        self.codeentry = self.completion_database.getStudentCode(self.std.username)
+        self.codeentry = self.completion_database.getStudentCode(self.std
+                                                                 .getUsername()
+                                                                 )
 
         self.displayed_frame = None
         self.shittyIDE = None
 
         self.SetFrames()
-    
+
     def refresh_variables(self):
+        """
+        Function that resets the variables to default values.
+        """
         super().refresh_variables()
 
-        self.codeentry = self.completion_database.getStudentCode(self.std.username)
+        self.codeentry = self.completion_database.getStudentCode(self.std
+                                                                 .getUsername()
+                                                                 )
 
     def SetContent(self):
+        """
+        Function that handles the setting of contents.
+        """
         self.SetMainContent()
         self.SetSidebar()
 
     def SetMainContent(self):
+        """
+        Function that performs attachment of main frame elements onto the main
+        frame.
+        """
         content_frame_height = 460
         content_frame_width = 350
 
@@ -89,7 +109,7 @@ class ChallangeWindow(ActivityWindow):
         )
         mark_button.grid(row=0, column=3, padx=5, pady=5)
 
-        ## main question frame
+        # main question frame
 
         self.displayed_frame = ctk.CTkScrollableFrame(
             main_content_frame,
@@ -114,6 +134,10 @@ class ChallangeWindow(ActivityWindow):
         )
 
     def SetSidebar(self):
+        """
+        Function that performs attachment of sidebar frame elements onto the
+        main frame.
+        """
         sidebar_width = 350
         sidebar_frame = ctk.CTkScrollableFrame(
             self.content_frame,
@@ -135,6 +159,10 @@ class ChallangeWindow(ActivityWindow):
         sidebar_frame.grid(row=0, column=1, padx=5, pady=5)
 
     def SetFooter(self):
+        """
+        Function that performs attachment of footer frame elements onto the
+        main frame.
+        """
         submit_button = ctk.CTkButton(
             self.footer_frame,
             text="Resubmit" if self.done else "Submit",
@@ -147,6 +175,9 @@ class ChallangeWindow(ActivityWindow):
         # footer end ------------------------------------------
 
     def QuestionFrames(self, frame_width):
+        """
+        Function that performs attachment of question frame elements.
+        """
         for widget in self.displayed_frame.winfo_children():
             widget.destroy()
         self.displayed_frame.forget()
@@ -166,7 +197,7 @@ class ChallangeWindow(ActivityWindow):
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
-                        200, # change height value later
+                        200,  # change height value later
                         frame_width,
                         self.displayed_frame
                     )
@@ -174,6 +205,9 @@ class ChallangeWindow(ActivityWindow):
             paragraph.grid(row=index, column=0, padx=5, pady=5)
 
     def SolutionFrames(self, frame_width):
+        """
+        Function that performs attachment of solution frame elements.
+        """
         for widget in self.displayed_frame.winfo_children():
             widget.destroy()
         self.displayed_frame.forget()
@@ -188,7 +222,7 @@ class ChallangeWindow(ActivityWindow):
         else:
             solution_widget = ctk.CTkLabel(
                         self.displayed_frame,
-                        text="ERROR: Attempt More Times to Unlock the Solution!",
+                        text="ERROR: Attempt More Times to Unlock Solution!",
                         width=frame_width - 10,
                         wraplength=frame_width - 20,
                         anchor="w",
@@ -199,6 +233,9 @@ class ChallangeWindow(ActivityWindow):
         solution_widget.grid(row=0, column=0, padx=5, pady=5)
 
     def HintFrames(self, frame_width):
+        """
+        Function that performs attachment of hint frame elements.
+        """
         for widget in self.displayed_frame.winfo_children():
             widget.destroy()
 
@@ -218,7 +255,7 @@ class ChallangeWindow(ActivityWindow):
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
-                        1600, # TODO: Change the height value
+                        1600,  # TODO: Change the height value
                         frame_width,
                         self.displayed_frame,
                         self.ac.hints
@@ -227,14 +264,21 @@ class ChallangeWindow(ActivityWindow):
             paragraph.grid(row=index, column=0, padx=5, pady=5)
 
     def RunTestCases(self, test_input):
+        """
+        Function that runs all the test cases.
+        """
         own_code = self.shittyIDE.RunTestCases(test_input)
-        test_code = CodeRunner(None, None, "solution", self.ac.ModulePath).RunTestCases(f"{self.ac.ModulePath}/{test_input}")
+        test_code = CodeRunner(None, None, "solution",
+                               self.ac.ModulePath).RunTestCases(f"{self.ac.ModulePath}/{test_input}")
         if own_code == test_code:
             return True, own_code, test_code
         else:
             return False, own_code, test_code
 
     def RunTestCases_GenFrame(self, frame_width):
+        """
+        Function that displays the result of all test cases onto a frame.
+        """
         self.attempted_count += 1
         for widget in self.displayed_frame.winfo_children():
             widget.destroy()
@@ -244,16 +288,13 @@ class ChallangeWindow(ActivityWindow):
         correct_cases = 0
 
         for index, test_case in enumerate(test_cases):
-            result, usr_out, sys_out = self.RunTestCases(f"testcase/{test_case}")
-            if result == True:
+            result, o, t = self.RunTestCases(f"testcase/{test_case}")
+            if result is True:
                 result = ctk.CTkLabel(
                     self.displayed_frame,
                     text=f"Test {index} -- OK!",
                     text_color="limegreen",
-                    font=ctk.CTkFont(
-                        "Helvetica",
-                        size=20
-                    ),
+                    font=("Helvetica Bold", 20),
                     width=frame_width - 10,
                     justify="left",
                     anchor="w"
@@ -264,10 +305,7 @@ class ChallangeWindow(ActivityWindow):
                     self.displayed_frame,
                     text=f"Test {index} -- KO!",
                     text_color="red",
-                    font=ctk.CTkFont(
-                        "Helvetica",
-                        size=20
-                    ),
+                    font=("Helvetica Bold", 20),
                     width=frame_width - 10,
                     justify="left",
                     anchor="w"
@@ -282,26 +320,27 @@ class ChallangeWindow(ActivityWindow):
             self.displayed_frame,
             text=f"Test {correct_cases}/{cases} passed!",
             text_color="yellow",
-            font=ctk.CTkFont(
-                "Helvetica",
-                size=20
-            ),
+            font=("Helvetica Bold", 20),
             width=frame_width - 10,
             justify="left",
             anchor="w"
         )
-        
+
         result.grid(row=cases, column=0, padx=5, pady=5)
 
     def StudentSubmission(self):
+        """
+        Function that handles the submission event when button is pressed.
+        """
         print("Submitting code attempt")
         codecontent = self.shittyIDE.getCodeContent()
-        self.completion_database.updateStudentCode(self.std.username, self.percentage, codecontent)
+        self.completion_database.updateStudentCode(self.std.username,
+                                                   self.percentage,
+                                                   codecontent)
         App().go_back_history()
 
-if __name__ == "__main__":
-    from ..ui_app import App
 
+if __name__ == "__main__":
     ActivityDictionary()
     main = App()
     ChallangeWindow(Challange("CH0001"), Student("james"), main).Attach()

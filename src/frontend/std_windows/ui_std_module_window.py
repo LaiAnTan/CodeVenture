@@ -2,7 +2,6 @@
 import customtkinter as ctk
 
 from ..ui_app import App
-from ..ui_std_window_gen import displayActivitySelections
 from .ui_std_activity_window import ActivityWindow
 from ...backend.user.user_student import Student
 from ...backend.activity.ac_classes.ac_module import Module
@@ -11,17 +10,28 @@ from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 
 class ModuleWindow(ActivityWindow):
 
-    def __init__(self, module: Module, student: Student):
+    """
+    Frame clas for displaying the module window.
+    """
+
+    def __init__(self, module: Module, student: Student) -> None:
+        """
+        Initialises the class.
+        """
         super().__init__(module, student)
 
         self.SetFrames()
 
     def SetContent(self):
+        """
+        Function that performs attachment of content elements onto the main
+        frame.
+        """
         main_content_frame_width = 550
         main_content_frame_height = 420
 
         self.contents = ctk.CTkScrollableFrame(
-            self.content_frame, 
+            self.content_frame,
             width=main_content_frame_width,
             height=main_content_frame_height
         )
@@ -47,7 +57,7 @@ class ModuleWindow(ActivityWindow):
                 case Module.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
-                        200, # TODO: Change the Height Value
+                        200,  # TODO: Change the Height Value
                         paragraph_frame_width,
                         paragraph_frame
                     )
@@ -61,11 +71,15 @@ class ModuleWindow(ActivityWindow):
             paragraph.grid(row=0, column=0, padx=5, pady=5)
 
     def SetFooter(self):
+        """
+        Function that performs attachment of footer frame elements onto the
+        main frame.
+        """
         submit_button = ctk.CTkButton(
             self.footer_frame,
             text="Complete",
             width=150,
-            command= self.StudentCompletion,
+            command=self.StudentCompletion,
             state="disabled" if self.done else "normal"
         )
         submit_button.grid(row=0, column=0, padx=0, pady=0)
@@ -73,13 +87,16 @@ class ModuleWindow(ActivityWindow):
     # helper functions
 
     def StudentCompletion(self):
+        """
+        Function that handles the completion event of a student when the button
+        is pressed.
+        """
         print("Adding Student Entry into backend.database...")
         self.completion_database.addStudentEntry((self.std.username,))
         App().go_back_history()
 
-if __name__ == "__main__":
-    from ..ui_app import App
 
+if __name__ == "__main__":
     ActivityDictionary()
     main = App()
     frame = ModuleWindow(Module("MD0000"), Student("test_student"), main)

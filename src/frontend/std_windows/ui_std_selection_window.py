@@ -20,7 +20,14 @@ from config import LIGHTMODE_GRAY, DARKMODE_GRAY, TAG_DIR
 
 class SelectionScreen(App_Frame):
 
+    """
+    Frame class for displaying the selection window.
+    """
+
     def __init__(self, student) -> None:
+        """
+        Initializes the class.
+        """
         super().__init__()
 
         self.student = student
@@ -30,14 +37,24 @@ class SelectionScreen(App_Frame):
         self.attach_elements()
 
     def refresh_variables(self):
+        """
+        Function that resets the variables to default values.
+        """
         self.results = search_database("")
 
     def return_to_studentMenu(self):
+        """
+        Function that handles the back to student menu event when the back
+        button is pressed.
+        """
         from ..ui_std_window_gen import studentMenuPage
         studentMenuPage(self.student)
 
     def attach_elements(self):
-
+        """
+        Function that performs attachment of elements onto the main
+        frame.
+        """
         content_width = 650
 
         # header
@@ -161,6 +178,10 @@ class SelectionScreen(App_Frame):
         filter_content.columnconfigure(0, weight=1)
 
     def display_using_ids(self, ids: list[str], max_width, attach_to) -> None:
+        """
+        Function that creates activity tiles based on their id's and displays
+        them in order.
+        """
 
         # destroys previous widgets
         for widgets in attach_to.winfo_children():
@@ -173,6 +194,10 @@ class SelectionScreen(App_Frame):
 
     def display_all_info(self, type, max_width,
                          attach_to: ctk.CTkScrollableFrame) -> None:
+        """
+        Function that displays all activities that are currently in the
+        database as activity tiles.
+        """
         for widgets in attach_to.winfo_children():
             widgets.destroy()
 
@@ -357,18 +382,36 @@ class SelectionScreen(App_Frame):
 
 
 class DataChunk():
+
+    """
+    Class that represents an activity tile containing:
+    - ID of activity
+    - Name of activity
+    - Description of activity
+    - button to enter activity
+    """
+
     def __init__(self, activity_id, width, student: Student):
+        """
+        Initialises the class.
+        """
         self.activity = activity_id
         self.widget_width = width
         self.student = student
 
     def GetData(self):
+        """
+        Gets the relevant data through the activity database.
+        """
         database = ab.ActivityDB()
         self.contents = database.retrieve_all_attr(self.activity)
         self.id = self.contents[database.field.id.value]
         self.type = self.contents[database.field.type.value]
 
     def generateChunk(self, attach_main):
+        """
+        Generates the activity tile and attaches it to attach_main.
+        """
         self.GetData()
 
         ret_frame = ctk.CTkFrame(attach_main,
