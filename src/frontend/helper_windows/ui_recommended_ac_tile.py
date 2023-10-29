@@ -1,5 +1,3 @@
-from typing import Literal, Optional, Tuple, Union
-from typing_extensions import Literal
 import customtkinter as ctk
 from customtkinter.windows.widgets.font import CTkFont
 
@@ -10,22 +8,22 @@ class RecommendedAcFrame(ctk.CTkScrollableFrame):
                  master: any,
                  width: int = 200,
                  height: int = 200,
-                 corner_radius: Optional[Union[int, str]] = None,
-                 border_width: Optional[Union[int, str]] = None,
+                 corner_radius = None,
+                 border_width = None,
 
-                 bg_color: Union[str, Tuple[str, str]] = "transparent",
-                 fg_color: Optional[Union[str, Tuple[str, str]]] = None,
-                 border_color: Optional[Union[str, Tuple[str, str]]] = None,
-                 scrollbar_fg_color: Optional[Union[str, Tuple[str, str]]] = None,
-                 scrollbar_button_color: Optional[Union[str, Tuple[str, str]]] = None,
-                 scrollbar_button_hover_color: Optional[Union[str, Tuple[str, str]]] = None,
-                 label_fg_color: Optional[Union[str, Tuple[str, str]]] = None,
-                 label_text_color: Optional[Union[str, Tuple[str, str]]] = None,
+                 bg_color = "transparent",
+                 fg_color = None,
+                 border_color = None,
+                 scrollbar_fg_color = None,
+                 scrollbar_button_color = None,
+                 scrollbar_button_hover_color = None,
+                 label_fg_color = None,
+                 label_text_color = None,
 
                  label_text: str = "",
-                 label_font: Optional[Union[tuple, CTkFont]] = None,
+                 label_font = None,
                  label_anchor: str = "center",
-                 orientation: Literal["vertical", "horizontal"] = "horizontal"):
+                 orientation = "horizontal"):
             super().__init__(master, width,
                              height, corner_radius,
                              border_width, bg_color,

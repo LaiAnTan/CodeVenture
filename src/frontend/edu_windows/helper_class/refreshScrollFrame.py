@@ -1,6 +1,4 @@
 from __future__ import annotations
-from typing import Literal, Optional, Tuple, Union
-from typing_extensions import Literal
 import customtkinter as ctk
 from customtkinter.windows.widgets.font import CTkFont
 
@@ -24,17 +22,17 @@ class RefreshableScrollableFrame(ctk.CTkScrollableFrame):
                  height: int = 200, 
                  corner_radius: int | str | None = None, 
                  border_width: int | str | None = None, 
-                 bg_color: str | Tuple[str, str] = "transparent", 
-                 fg_color: str | Tuple[str, str] | None = None, 
-                 border_color: str | Tuple[str, str] | None = None, 
-                 scrollbar_fg_color: str | Tuple[str, str] | None = None,
-                 scrollbar_button_color: str | Tuple[str, str] | None = None, 
-                 scrollbar_button_hover_color: str | Tuple[str, str] | None = None, 
-                 label_fg_color: str | Tuple[str, str] | None = None, 
-                 label_text_color: str | Tuple[str, str] | None = None, 
+                 bg_color: str | tuple[str, str] = "transparent", 
+                 fg_color: str | tuple[str, str] | None = None, 
+                 border_color: str | tuple[str, str] | None = None, 
+                 scrollbar_fg_color: str | tuple[str, str] | None = None,
+                 scrollbar_button_color: str | tuple[str, str] | None = None, 
+                 scrollbar_button_hover_color: str | tuple[str, str] | None = None, 
+                 label_fg_color: str | tuple[str, str] | None = None, 
+                 label_text_color: str | tuple[str, str] | None = None, 
                  label_text: str = "", label_font: tuple | CTkFont | None = None, 
                  label_anchor: str = "center", 
-                 orientation: Literal['vertical', 'horizontal'] = "vertical"
+                 orientation = "vertical"
                  ):
         super().__init__(master, width, height, corner_radius, 
                          border_width, bg_color, fg_color, border_color, 
