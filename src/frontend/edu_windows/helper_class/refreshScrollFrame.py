@@ -10,9 +10,6 @@ class RefreshableScrollableFrame(ctk.CTkScrollableFrame):
     anywhere you want, and it will refresh and redisplay
     all contents without (hopefully) errors
 
-    add is done using .grid so you can go fuck yourself if
-    you want pack
-
     Its also scrollable, which means you can set
     where is it scroll to after you add // remove a widget
     """
