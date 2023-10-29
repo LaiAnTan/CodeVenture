@@ -85,18 +85,19 @@ def displayActivitySelections(student: Student):
     App().change_frame(SelectionScreen(student))
 
 
-def dispatcher(activityID, activityType, student: Student):
+def dispatcher(activityID, activityType, student: Student, editor_view=False):
     """
     Function that handles the frame switch to the correct activity window.
     """
+
     from .std_windows.ui_std_challenge_window import ChallangeWindow
     from .std_windows.ui_std_quiz_window import QuizWindow
     from .std_windows.ui_std_module_window import ModuleWindow
 
-    from src.backend.activity.ac_classes.ac_activity import Activity
-    from src.backend.activity.ac_classes.ac_module import Module
-    from src.backend.activity.ac_classes.ac_quiz import Quiz
-    from src.backend.activity.ac_classes.ac_challenge import Challange
+    from ..backend.activity.ac_classes.ac_activity import Activity
+    from ..backend.activity.ac_classes.ac_module import Module
+    from ..backend.activity.ac_classes.ac_quiz import Quiz
+    from ..backend.activity.ac_classes.ac_challenge import Challange
 
     App().clean_frame()
     match activityType:

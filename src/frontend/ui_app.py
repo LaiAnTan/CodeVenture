@@ -22,6 +22,7 @@ class App():
     main.columnconfigure(0, weight=1)
 
     history = []
+    tracked = True
 
     main_frame = ctk.CTkFrame(
             main,
@@ -57,8 +58,7 @@ class App():
         DO NOT call this after adding your new frame
         """
         # cls.main_frame.place_forget() # i dont think this is doing anything?
-        cls.main_frame.grid_forget()  # THIS is the one that is doing something
-        # but that breaks so :P
+        cls.main_frame.grid_forget() # THIS is the one that is doing something
         for widgets in cls.main_frame.winfo_children():
             widgets.grid_forget()
 
@@ -68,6 +68,10 @@ class App():
         Returns to the previous frame displayed.
         """
         # remove current frame from history (removed forever)
+        if len(cls.history) == 1:
+            return cls.history[0]
+
+        # if cls.tracked:
         cls.history.pop()
         previous = cls.history[-1]
 
@@ -83,18 +87,21 @@ class App():
         cls.history.append(frame)
 
     @classmethod
-    def change_frame(cls, new_frame):
+    def change_frame(cls, new_frame, tracking=True):
         """Changes frame of App
         Call App().clean_frame beforehand to remove existing windows
 
         make sure new_frame's master is App or App.main_frame
 
+        set Tracking to false if this frame is not to be recorded in history
+
         Please call this if you want to change the frame of the App, do
-        not attempt to grid it by yourself, the back buttons depend on this
-        """
-        cls.add_to_history(new_frame)
-        new_frame.grid(row=0, column=0)
-        cls.main_frame.grid(row=0, column=0)
+        not attempt to grid it by yourself, the back buttons depend on this"""
+        if tracking:
+            cls.add_to_history(new_frame)
+        cls.tracked = tracking
+        new_frame.grid(row=0, column=0, sticky='nsew')
+        cls.main_frame.grid(row=0, column=0, padx=20, pady=20, sticky='nsew')
 
     @classmethod
     def __new__(cls, placeholder=None):

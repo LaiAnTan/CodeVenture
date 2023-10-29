@@ -18,24 +18,32 @@ class ActivityWindow(App_Frame, ABC):
     Abstract base class for activity frames (module, quiz, challenge)
     """
 
-    def __init__(self, activity: Activity, student: Student):
+    def __init__(self, activity: Activity, student: Student, editor_view=False):
         """
         Initializes the class.
         """
+
         super().__init__()
         self.ac = activity
         self.std = student
-        self.completion_database = ActivityDictionary().getDatabase(self.ac.id)
+        self.editor_view = editor_view
 
-        self.done = self.completion_database.StudentEntryExist(self.std
-                                                               .getUsername())
+        if student is None:
+            self.editor_view = True
+
+        self.completion_database = ActivityDictionary().getDatabase(self.ac.id)
+        if not self.editor_view:
+            self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
+        else:
+            self.done = False
 
     def refresh_variables(self):
         """
         Resets variables to their default state.
         """
-        self.done = self.completion_database.StudentEntryExist(self.std
-                                                               .getUsername())
+
+        if not self.editor_view:
+            self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
 
     def attach_elements(self) -> None:
         """
@@ -46,14 +54,20 @@ class ActivityWindow(App_Frame, ABC):
         self.SetFrames()
 
     def SetFrames(self):
+        self.rowconfigure(1, weight=1)
+        self.columnconfigure(0, weight=1)
+
         self.header_frame = ctk.CTkFrame(self)
-        self.header_frame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        self.header_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
 
-        self.content_frame = ctk.CTkFrame(self)
-        self.content_frame.grid(row=1, column=0, padx=5, pady=5)
+        self.content_frame = ctk.CTkFrame(self, fg_color='transparent')
+        self.content_frame.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
 
-        self.footer_frame = ctk.CTkFrame(self)
-        self.footer_frame.grid(row=2, column=0, padx=5, pady=5)
+        self.footer_frame = ctk.CTkFrame(self, fg_color='transparent')
+
+        if self.editor_view == False:
+            self.footer_frame.grid(row=2, column=0, padx=5, pady=5,
+                                   sticky='nsew')
 
         self.SetHeader()
         self.SetContent()
@@ -103,7 +117,6 @@ class ActivityWindow(App_Frame, ABC):
             ret_widget = ctk.CTkLabel(
                 attach_to,
                 text=f"Error displaying image {content}",
-                width=max_img_width,
                 wraplength=max_img_width - 10,
             )
         return ret_widget

@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from .imageEntry import ImageEntryForm, EntryForm
+from .imageEntry import ImageEntryForm
 from .codeEntry import CodeEntryForm
 from .errorWindow import ErrorWindow
 from .refreshScrollFrame import RefreshableScrollableFrame
@@ -21,7 +21,16 @@ class AssetWindow(ctk.CTkToplevel):
         self.focus_set()
         self.grab_set()
 
-        self.resizable(0, 0)
+        # list of disapointments
+
+        # self.resizable(0, 0)
+        # self.wm_resizable(0, 0)
+
+        # self.maxsize(width, height)
+        # self.minsize(width, height)
+
+        self.types = ['Picture', 'Code Snippet']
+
         self.geometry(f"{width}x{height}")
         self.title("Available Assets")
 
@@ -46,10 +55,9 @@ class AssetWindow(ctk.CTkToplevel):
         save_and_quit.pack(side=ctk.RIGHT, padx=5, pady=5)
 
         self.chosen_type = ctk.StringVar(value='Picture')
-        asset_type = ['Picture', 'Code Snippet']
         type = ctk.CTkOptionMenu(
             self.header,
-            values=asset_type,
+            values=self.types,
             variable=self.chosen_type
         )
         type.pack(side=ctk.LEFT, padx=(5, 20), pady=5)
@@ -80,18 +88,13 @@ class AssetWindow(ctk.CTkToplevel):
                 entry_form = ImageEntryForm(
                     self.asset_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
-                    data
                 )
             case 'code':
                 entry_form = CodeEntryForm(
                     self.asset_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
-                    data
                 )
+        entry_form.importData(data)
         self.asset_frame.track_element(entry_form)
 
     def get_error_message(self) -> list[tuple[str]]:
@@ -122,15 +125,11 @@ class AssetWindow(ctk.CTkToplevel):
                 entry_form = ImageEntryForm(
                     self.asset_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
                 )
             case 'Code Snippet':
                 entry_form = CodeEntryForm(
                     self.asset_frame,
                     self,
-                    self.entry_widget_heigth,
-                    self.entry_widget_width,
                 )
         self.asset_frame.track_element(entry_form)
         self.asset_frame.refresh_elements()

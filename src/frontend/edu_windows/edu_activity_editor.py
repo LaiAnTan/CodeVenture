@@ -5,9 +5,11 @@ from ..ui_app_frame import App_Frame
 from ...backend.activity.ac_classes.ac_activity import Activity
 from ...backend.database.database_activity import ActivityDB
 from abc import abstractmethod, ABC
+from .helper_class.confirmationWindow import ConfirmationWindow
+from .helper_class.sucessWindow import successWindow
 
 class ActivityEditor(App_Frame, ABC):
-    def __init__(self, width, height, type: Activity.AType, activity: Activity=None):
+    def __init__(self, type: Activity.AType, activity: Activity=None):
         super().__init__()
         self.ac = activity
 
@@ -19,9 +21,6 @@ class ActivityEditor(App_Frame, ABC):
             self.ac_type = self.ac.type
 
         self.ac_type_name = type.name
-
-        self.max_width = width
-        self.max_height = height
 
         self.id_variable = ctk.StringVar(value=self.GetActivityID())
         self.name_variable = ctk.StringVar()
@@ -37,15 +36,8 @@ class ActivityEditor(App_Frame, ABC):
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
 
-        header_height = 15
-        self.header = ctk.CTkFrame(self, height=header_height)
+        self.header = ctk.CTkFrame(self)
         self.header.grid(row=0, column=0, padx=5, pady=5, sticky="new")
-
-        self.content_width = self.max_width
-        self.content_height = self.max_height - header_height
-
-        self.header_data_height = self.content_height * 0.30
-        self.content_data_height = self.content_height * 0.70
 
         self.content = ctk.CTkFrame(self)
         self.content.grid(row=1, column=0, padx=5, pady=5, sticky='nswe')
@@ -68,7 +60,7 @@ class ActivityEditor(App_Frame, ABC):
         submit_button = ctk.CTkButton(
             self.header,
             text="Finish and Export",
-            command=self.ExportData
+            command=self.PreExportData
         )
         submit_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
@@ -193,13 +185,44 @@ class ActivityEditor(App_Frame, ABC):
 
         self.description_entry = ctk.CTkTextbox(
             thirdrow,
-            height=self.header_data_height * 0.3
+            height=65
         )
         self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
     @abstractmethod
     def ContentData(self):
         pass
+
+    def PreExportData(self):
+        confirm = ConfirmationWindow(self, f'export {self.ac_type_name}')
+        self.winfo_toplevel().wait_window(confirm)
+        if not confirm.get_value():
+            return
+
+        if self.ExportData():
+            ok_win = successWindow(self, f'exported {self.ac_type_name} {self.id_variable.get()}')
+            ok_win.add_a_action_button('Back To Selection', lambda : App().go_back_history())
+            ok_win.add_a_action_button('Preview Window', self.preview_win)
+            self.winfo_toplevel().wait_window(ok_win)
+
+    def preview_win(self):
+        from ..std_windows.ui_std_module_window import ModuleWindow
+        from ..std_windows.ui_std_quiz_window import QuizWindow
+        from ..std_windows.ui_std_challenge_window import ChallangeWindow
+
+        from ...backend.activity.ac_classes.ac_module import Module
+        from ...backend.activity.ac_classes.ac_quiz import Quiz
+        from ...backend.activity.ac_classes.ac_challenge import Challange
+
+        ac_id = self.id_variable.get()
+        App().clean_frame()
+        match self.ac_type:
+            case Activity.AType.Module:
+                App().change_frame(ModuleWindow(Module(ac_id), None, True), False)
+            case Activity.AType.Quiz:
+                App().change_frame(QuizWindow(Quiz(ac_id), None, True), False)
+            case Activity.AType.Challenge:
+                App().change_frame(ChallangeWindow(Challange(ac_id), None, True), False)
 
     @abstractmethod
     def ExportData(self):
@@ -244,11 +267,10 @@ class ActivityEditor(App_Frame, ABC):
         Used for auto indexing activities"""
         id_list = ActivityDB().getListID(self.ac_type.value)
 
-        # print(id_list)
-
         ## first 2 will be the type, last 3 is the value
         id_list = [int(x[2:]) for x in id_list]
         id_list.sort()
+
         ## search for closest empty spot
         index = len(id_list)
         for actual_index, ac_index in enumerate(id_list):

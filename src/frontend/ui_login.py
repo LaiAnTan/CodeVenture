@@ -38,35 +38,33 @@ class LoginWindow(App_Frame):
         """
         return self.password
 
-    def refresh_variables(self) -> None:
-        """
-        Function that resets the variables to default values.
-        """
-        self.username = None
-        self.password = None
-        self.user = User(None)
+    def refresh_variables(self):
+        pass
 
-    def attach_elements(self) -> None:
+    def attach_elements(self):
+
         """
         Performs attachment of frame elements onto the main frame in root.
 
         @return None
         """
-        full_width = 450
+
+        self.rowconfigure((0, 2), weight=1)
+        self.columnconfigure(0, weight=1)
 
         # title frame
 
         title_frame = ctk.CTkFrame(
             self,
-            width=full_width,
-            height=40,
+            # width=full_width,
+            # height=40,
             fg_color="transparent"
         )
 
         title_frame.grid(
             row=0,
             column=0,
-            sticky="ew"
+            sticky="sew"
         )
 
         title_frame.rowconfigure((0, 1), weight=1)
@@ -84,7 +82,6 @@ class LoginWindow(App_Frame):
             column=0,
             padx=10,
             pady=10,
-            sticky=""
         )
 
         login_label = ctk.CTkLabel(
@@ -99,16 +96,15 @@ class LoginWindow(App_Frame):
             column=0,
             padx=10,
             pady=20,
-            sticky=""
         )
 
         # entry frame
 
         entry_frame = ctk.CTkFrame(
             self,
-            width=full_width,
-            height=100,
-            fg_color="transparent"
+            # width=full_width,
+            # height=100,
+            fg_color="transparent",
         )
 
         entry_frame.grid(
@@ -117,7 +113,6 @@ class LoginWindow(App_Frame):
             sticky="nsew"
         )
 
-        entry_frame.rowconfigure((0, 1, 2), weight=1)
         entry_frame.columnconfigure(0, weight=1)
 
         username1 = ctk.CTkEntry(
@@ -132,7 +127,8 @@ class LoginWindow(App_Frame):
             row=0,
             column=0,
             padx=10,
-            pady=10
+            pady=10,
+            sticky='n'
         )
 
         password1 = ctk.CTkEntry(
@@ -148,7 +144,8 @@ class LoginWindow(App_Frame):
             row=1,
             column=0,
             padx=10,
-            pady=10
+            pady=10,
+            sticky='n'
         )
 
         # show password checkbox
@@ -172,14 +169,15 @@ class LoginWindow(App_Frame):
             variable=checkbox1_status,
             onvalue=1,
             offvalue=0,
-            command=lambda: eventShowPassword()
+            command=lambda: eventShowPassword(),
         )
 
         checkbox1.grid(
             row=2,
             column=0,
             padx=10,
-            pady=20
+            pady=(10, 20),
+            sticky='n'
         )
 
         wrong_password_label = ctk.CTkLabel(
@@ -194,15 +192,18 @@ class LoginWindow(App_Frame):
 
         button_frame = ctk.CTkFrame(
             self,
-            width=full_width,
-            height=20,
+            # width=full_width,
+            # height=20,
             fg_color="transparent"
         )
 
+        button_frame.rowconfigure(0, weight=1)
+        button_frame.columnconfigure((0, 1), weight=1)
+
         button_frame.grid(
-            row=3,
+            row=2,
             column=0,
-            sticky="ew"
+            sticky="new"
         )
 
         def loginButtonEvent():
@@ -234,6 +235,7 @@ class LoginWindow(App_Frame):
 
                     case "admin":
                         return
+
                     case _:
                         raise AssertionError("Unknown user type")
 
@@ -259,7 +261,8 @@ class LoginWindow(App_Frame):
             row=0,
             column=0,
             padx=20,
-            pady=20
+            pady=20,
+            sticky='e'
         )
 
         def registerButtonEvent():
@@ -281,5 +284,6 @@ class LoginWindow(App_Frame):
             row=0,
             column=1,
             padx=20,
-            pady=20
+            pady=20,
+            sticky='w'
         )

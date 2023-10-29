@@ -15,13 +15,16 @@ class IDE(ctk.CTkFrame):
     Class that represents an IDE frame.
     """
 
-    def __init__(self, master, width, height, code_name, id, activity_folder,
-                 content=None) -> None:
-        super().__init__(master)
+    def __init__(self, master, ide_height, output_height, code_name, id,
+                 activity_folder, content=None) -> None:
+        """
+        Initialises the class.
+        """
 
-        self.max_width = width
-        self.max_height = height
-        self.terminal_width = self.max_width - 5
+        super().__init__(master, fg_color='transparent')
+
+        self.ide_height = ide_height
+        self.max_term_height = output_height
 
         self.code_name = f"{code_name}-{id}"
         self.activity_folder = activity_folder
@@ -34,14 +37,6 @@ class IDE(ctk.CTkFrame):
 
         # please change this to a reasonable timeout period
         self.timeout_period = 10
-
-        self.IDEHeader = ctk.CTkFrame(self, width=self.max_width)
-        self.IDEHeader.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
-
-        self.IDEContent = ctk.CTkFrame(self, width=self.max_width)
-        self.IDEContent.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
-
-        self.outputFrame = ctk.CTkFrame(self)
 
         self.setUpFrame()
 
@@ -82,8 +77,7 @@ class IDE(ctk.CTkFrame):
 
         self.IDETextBox = TextBox_Placeholder(
             self.IDEContent,
-            width=self.max_width,
-            height=self.max_height,
+            height=self.ide_height,
             font=font,
             tabs=font.measure("    "),
             wrap=ctk.WORD,
@@ -104,8 +98,7 @@ class IDE(ctk.CTkFrame):
 
         self.InputTextBox = TextBox_Placeholder(
             self.IDEContent,
-            width=self.max_width,
-            height=self.max_height,
+            height=self.ide_height,
             font=font,
             tabs=font.measure("    "),
             wrap=ctk.WORD,
@@ -117,7 +110,7 @@ class IDE(ctk.CTkFrame):
         Function that attaches the input frame.
         """
         self.IDETextBox.grid_forget()
-        self.InputTextBox.grid(row=0, column=0, padx=5, pady=5)
+        self.InputTextBox.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
         self.InputTextBox.focus()
 
     def setCodeFrame(self):
@@ -125,14 +118,30 @@ class IDE(ctk.CTkFrame):
         Function that attaches the IDE frame.
         """
         self.InputTextBox.grid_forget()
-        self.IDETextBox.grid(row=0, column=0, padx=5, pady=5)
+        self.IDETextBox.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
         self.IDETextBox.focus()
 
-    def setUpFrame(self):
+    def setUpFrame(self, previous_content=None):
         """
         Function that performs attachment of main elements onto the main
         frame.
         """
+
+        self.columnconfigure(0, weight=1)
+
+        self.IDEHeader = ctk.CTkFrame(self)
+        self.IDEHeader.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
+
+        self.IDEContent = ctk.CTkFrame(self)
+        self.IDEContent.columnconfigure(0, weight=1)
+        self.IDEContent.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
+
+        self.outputFrame = ctk.CTkFrame(self, fg_color='black')
+        self.outputFrame.columnconfigure(0, weight=1)
+
+        self.terminal = self.terminalOutputLabel(self.outputFrame)
+        self.terminal.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
+
         self.IDEHeader.rowconfigure((0, 1), weight=1)
         self.IDEHeader.columnconfigure((0, 1), weight=1)
 
@@ -204,72 +213,120 @@ class IDE(ctk.CTkFrame):
         # if error, return the raw error output
         return code_output
 
-    def terminalOutputLabel(self, output, attach_to, max_width, word_color):
+    def terminalOutputLabel(self, attach_to):
         """
         Function that attaches the output of the code to the frame attach_to.
         """
-        output = output[:self.max_output_size]
-        output_label = ctk.CTkLabel(
+
+        output_label = ctk.CTkTextbox(
             attach_to,
-            text=output,
-            width=max_width,
-            wraplength=max_width,
-            anchor="w",
-            justify="left",
-            font=ctk.CTkFont("Helvetica", size=11),
-            bg_color="black",
-            text_color=word_color
+            font=ctk.CTkFont("Helvetica", size=12),
+            fg_color='black',
+            height=self.max_term_height,
+            wrap='word',
+            state='disabled'
         )
+        output_label.tag_config("normal", foreground='white')
+        output_label.tag_config("error", foreground='red')
         return output_label
+
+    def insertTerminal(self, terminal: ctk.CTkTextbox, content, error):
+        content = content[:self.max_output_size]
+        last_post = terminal.index(ctk.CURRENT)
+        terminal.configure(state='normal')
+        terminal.insert(last_post, content)
+        terminal.configure(state='disabled')
+
+        if error:
+            terminal.tag_add("error", last_post, ctk.END)
+        else:
+            terminal.tag_add("normal", last_post, ctk.END)
 
     def RunCode(self):
         """
         Function that runs the code that was written in the IDE text box,
         with potential inputs from the input text box.
         """
-        for widget in self.outputFrame.winfo_children():
-            widget.destroy()
-        self.outputFrame.forget()
 
-        print("Running Code.")
+        print("Running Code. BzzZt")
 
         # open file and dump all data inside
         text = self.IDETextBox.get("0.0", "end")
         with open(f"{self.activity_folder}/{self.code_name}", "w") as file:
             file.write(text)
 
+        # run code
         cmd = f"{sys.executable} \"{self.activity_folder}/{self.code_name}\""
 
         user_input = self.InputTextBox.get("0.0", "end")
         user_input = bytes(user_input, "utf-8")
         try:
-            code_runner = subprocess.run(cmd, timeout=10, input=user_input,
-                                         capture_output=True, shell=True)
+            code_runner = subprocess.run(cmd,
+                                         timeout=10,
+                                         input=user_input,
+                                         capture_output=True,
+                                         shell=True)
             code_output = code_runner.stdout
             error_output = code_runner.stderr
-        except subprocess.TimeoutExpired:
-            code_output = bytes("", "utf-8")
+        except subprocess.TimeoutExpired as err:
+            # does not work for some reason, god hates me
+            code_output = err.stdout.decode() if err.stdout is not None else ''
             error_output = bytes("Timeout After Running For 10 seconds",
                                  "utf-8")
 
         # remove the file
         os.remove(f"{self.activity_folder}/{self.code_name}")
+        self.display_output_terminal(code_output, error_output)
+
+    def display_output_terminal(self, code_output, error_output):
+        self.terminal.configure(state='normal')
+        self.terminal.delete('0.0', ctk.END)
 
         if code_output or error_output:
-            code_output_frame = ctk.CTkFrame(self.outputFrame)
-            code_output_frame.grid(row=0, column=0, padx=5, pady=5)
-            self.outputFrame.grid(row=3, column=0, padx=5, pady=5)
-
+            self.outputFrame.grid(row=3, column=0, padx=5, pady=5, sticky='ew')
             if code_output:
-                code_output_label = self.terminalOutputLabel(code_output,
-                                                             code_output_frame,
-                                                             self.terminal_width,
-                                                             "white")
-                code_output_label.grid(row=0, column=0, sticky="ns")
-
+                self.insertTerminal(self.terminal, code_output, False)
             if error_output:
-                error_label = self.terminalOutputLabel(error_output,
-                                                       code_output_frame,
-                                                       self.terminal_width,
-                                                       "red")
-                error_label.grid(row=1, column=0, sticky="ns")
+                self.insertTerminal(self.terminal, error_output, True)
+            self.terminal.configure(state='disabled')
+        else:
+            self.outputFrame.grid_forget()
+
+    # used in code entry and nowhere else
+
+    def get_code_from_filepath(self, filepath, switch=True):
+        """
+        probably shhhouldd have placed it here in the first place
+        """
+        return_val = (False, '')
+        file_name = os.path.split(filepath)[-1]
+        extension = file_name.split('.')[-1]
+        if len(file_name.split('.')) < 2 or extension != 'py':
+            content = 'Invalid File Type, Please only import python files'
+            return_val = (True, 'Error in code entry - Invalid File Type')
+        else:
+            with open(filepath) as file:
+                content = ''.join(file.readlines())
+
+        self.ClearContent(1)
+        self.InsertContent("0.0", content, 1)
+        self.IDETextBox.focus()
+        if switch:
+            self.setCodeFrame()
+        return return_val
+
+    def get_input_from_file(self, filepath, switch= True):
+        return_val = (False, '')
+        with open(filepath) as file:
+            try:
+                content = ''.join(file.readlines())
+            except UnicodeDecodeError:
+                content = 'Invalid File Type, Please import Text Files only!'
+                return_val = (True, 'Error in Code Entry - Invalid File Type for Code Input Import')
+
+        self.ClearContent(2)
+        self.InsertContent("0.0", content, 2)
+        self.InputTextBox.focus()
+        if switch:
+            self.setInputFrame()
+        return return_val

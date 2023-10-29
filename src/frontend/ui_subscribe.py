@@ -34,6 +34,8 @@ class SubscribeWindow(App_Frame):
         @return None
         """
 
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure((0, 2), weight=1)
         # title frame
 
         title_frame = ctk.CTkFrame(
@@ -46,7 +48,7 @@ class SubscribeWindow(App_Frame):
         title_frame.grid(
             row=0,
             column=0,
-            sticky="ew"
+            sticky="sew"
         )
 
         title_frame.rowconfigure((0, 1), weight=1)
@@ -94,7 +96,7 @@ class SubscribeWindow(App_Frame):
         entry_frame.grid(
             row=1,
             column=0,
-            sticky="nsew"
+            sticky="ew"
         )
 
         entry_frame.rowconfigure((0, 1), weight=1)
@@ -113,7 +115,8 @@ class SubscribeWindow(App_Frame):
             row=0,
             column=0,
             padx=10,
-            pady=10
+            pady=10,
+            sticky='e'
         )
 
         def validateSubButtonEvent() -> None:
@@ -141,7 +144,8 @@ class SubscribeWindow(App_Frame):
             row=0,
             column=1,
             padx=10,
-            pady=10
+            pady=10,
+            sticky='w'
         )
 
         # buttons frame
@@ -154,9 +158,9 @@ class SubscribeWindow(App_Frame):
         )
 
         button_frame.grid(
-            row=3,
+            row=2,
             column=0,
-            sticky="ew"
+            sticky="n"
         )
 
         button_frame.rowconfigure(0, weight=1)
@@ -207,3 +211,7 @@ class SubscribeWindow(App_Frame):
             padx=20,
             pady=20
         )
+
+if __name__ == "__main__":
+    App().change_frame(SubscribeWindow(Student("test")))
+    App().mainloop()

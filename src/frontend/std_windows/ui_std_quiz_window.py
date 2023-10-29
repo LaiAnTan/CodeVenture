@@ -1,9 +1,11 @@
 import customtkinter as ctk
 
 from ..ui_app import App
+from config import LIGHTMODE_GRAY, DARKMODE_GRAY
 from ...backend.user.user_student import Student
 from ..std_windows.ui_std_activity_window import ActivityWindow
 from ...backend.activity.ac_classes.ac_quiz import Quiz, Question
+from .helper_class.textdisplay import ParagraphDisplayer
 
 
 class QuestionFrame(ctk.CTkFrame):
@@ -19,7 +21,10 @@ class QuestionFrame(ctk.CTkFrame):
         """
         Initialises the class.
         """
-        super().__init__(master)
+        super().__init__(master,
+                         fg_color=LIGHTMODE_GRAY if
+                         App().settings.getSettingValue("lightmode").lower() ==
+                         "true" else DARKMODE_GRAY)
 
         self.parent = parent_window
         self.question = question
@@ -28,8 +33,11 @@ class QuestionFrame(ctk.CTkFrame):
 
         self.prompt = self.question.get_Prompt()
 
-        self.prompt_frame = ctk.CTkFrame(self)
-        self.prompt_frame.grid(row=0, column=0, padx=5, pady=5)
+        self.columnconfigure(0, weight=1)
+
+        self.prompt_frame = ctk.CTkFrame(self, fg_color='transparent')
+        self.prompt_frame.columnconfigure(0, weight=1)
+        self.prompt_frame.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
         for index, prompt in enumerate(self.prompt):
             if "IMG-CONT" in prompt:
@@ -46,18 +54,14 @@ class QuestionFrame(ctk.CTkFrame):
                     self.prompt_frame
                 )
             else:
-                self.prompt = ctk.CTkLabel(
+                self.prompt = ParagraphDisplayer(
                     self.prompt_frame,
-                    text=prompt,
-                    width=self.max_width,
-                    wraplength=self.max_width - 10,
-                    anchor="w",
-                    justify="left",
+                    prompt
                 )
-            self.prompt.grid(row=index, column=0, padx=5, pady=5)
+            self.prompt.grid(row=index, column=0, sticky='ew')
 
-        self.options_frame = ctk.CTkFrame(self)
-        self.options_frame.grid(row=1, column=0, padx=5, pady=5)
+        self.options_frame = ctk.CTkFrame(self, fg_color='transparent')
+        self.options_frame.grid(row=1, column=0, padx=5, pady=5, sticky='w')
 
         for index, answer in enumerate(self.question.get_Options()):
             option = ctk.CTkRadioButton(
@@ -76,22 +80,48 @@ class QuizWindow(ActivityWindow):
     Frame class for displaying the quiz window.
     """
 
-    def __init__(self, quiz: Quiz, student: Student):
-        super().__init__(quiz, student)
+    def __init__(self, quiz: Quiz, student: Student, editor_view=False):
+        """
+        Initialises the class.
+        """
+
+        super().__init__(quiz, student, editor_view)
         self.ac: Quiz
 
-        self.stdanswer = self.processAnswer(self.completion_database
-                                            .getStudentAnswer(self.std
-                                                              .getUsername()))
+        if not self.editor_view:
+            self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
+        else:
+            self.stdanswer = self.processAnswer(None)
+
         self.SetFrames()
 
     def refresh_variables(self):
-        """
-        Function that resets the variables to default values.
-        """
-        self.stdanswer = self.processAnswer(self.completion_database
-                                            .getStudentAnswer(self.std
-                                                              .getUsername()))
+        super().refresh_variables()
+
+        if not self.editor_view:
+            self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
+        else:
+            self.stdanswer = self.processAnswer(None)
+
+    def SetContent(self):
+        self.content_frame.rowconfigure(0, weight=1)
+
+        self.content_frame.columnconfigure(0, weight=20)
+        self.content_frame.columnconfigure(1, weight=50)
+        self.content_frame.columnconfigure(2, weight=10)
+        self.content_frame.columnconfigure(3, weight=20)
+
+        pad = ctk.CTkFrame(self.content_frame, fg_color='transparent', width=0,
+                           height=0)
+        pad.grid(row=0, column=0, padx=5, pady=5, sticky='nswe')
+
+        pad = ctk.CTkFrame(self.content_frame, fg_color='transparent', width=0,
+                           height=0)
+        pad.grid(row=0, column=3, padx=5, pady=5, sticky='nswe')
+
+        self.InitializeQnAFrame()
+        self.SetMainContent()
+        self.SetSidebar()
 
     def InitializeQnAFrame(self):
         """
@@ -100,68 +130,59 @@ class QuizWindow(ActivityWindow):
         self.qna_width = 450
         self.qna_height = 460
 
-        self.qna_frame = ctk.CTkScrollableFrame(
-            self.content_frame,
-            width=self.qna_width,
-            height=self.qna_height
-        )
-        self.qna_frame.grid(row=0, column=0, padx=5, pady=5)
-
-    def SetContent(self):
-        """
-        Function that handles the init & setting of contents.
-        """
-        self.InitializeQnAFrame()
-        self.SetMainContent()
-        self.SetSidebar()
+        self.qna_frame = ctk.CTkScrollableFrame(self.content_frame)
+        self.qna_frame.columnconfigure(0, weight=1)
+        self.qna_frame.grid(row=0, column=1, padx=5, pady=5, sticky='nsew')
+        self.update_idletasks()
 
     def SetMainContent(self):
         """
         Function that handles the setting of the main content (questions).
         """
         self.question_width = self.qna_width - 30
+
+        self.genAllQuestions()
         self.showAllQuestions()
 
     def SetSidebar(self):
         """
         Function that handles the attachment of the sidebar to the main frame.
         """
-        self.content_frame.rowconfigure(0, weight=1)
-        self.content_frame.columnconfigure(1, weight=1)
 
-        sidebar_width = 150
-        button_sidebar_width = sidebar_width - 30
-        sidebar_frame = ctk.CTkScrollableFrame(self.content_frame,
-                                               width=sidebar_width)
-        sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky="ns")
+        sidebar_frame = ctk.CTkScrollableFrame(self.content_frame)
+        sidebar_frame.columnconfigure(0, weight=1)
+        sidebar_frame.grid(row=0, column=2, padx=5, pady=5, sticky="nsew")
 
         check_button = ctk.CTkButton(
             sidebar_frame,
-            width=button_sidebar_width,
             text="Check",
-            command=lambda: self.checkAnswers(questionStatusFrame,
-                                              button_sidebar_width)
+            command=self.checkAnswers
         )
-        check_button.grid(row=0, column=0, padx=5, pady=5)
+        check_button.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
         show_all_questions_button = ctk.CTkButton(
             sidebar_frame,
-            width=button_sidebar_width,
             text="Show All Questions",
             command=self.showAllQuestions
         )
-        show_all_questions_button.grid(row=1, column=0, padx=5, pady=5)
+        show_all_questions_button.grid(row=1, column=0, padx=5, pady=5,
+                                       sticky='ew')
 
-        questionStatusFrame = ctk.CTkFrame(sidebar_frame, width=sidebar_width)
-        questionStatusFrame.grid(row=2, column=0, padx=5, pady=5)
+        self.questionStatusFrame = ctk.CTkFrame(sidebar_frame)
+        self.questionStatusFrame.columnconfigure(0, weight=1)
+        self.questionStatusFrame.grid(row=2, column=0, padx=5, pady=5,
+                                      sticky='ew')
 
-        self.checkAnswers(questionStatusFrame, button_sidebar_width)
+        self.initAnswersButton()
+        self.checkAnswers()
 
     def SetFooter(self):
         """
         Function that handles the attachment of footer elements to the
         main frame.
         """
+
+        self.footer_frame.columnconfigure(0, weight=1)
         submit_button = ctk.CTkButton(
             self.footer_frame,
             text="Resubmit" if self.done else "Submit",
@@ -188,18 +209,13 @@ class QuizWindow(ActivityWindow):
         """
         Function that refreshes the QnA frame.
         """
-        self.qna_frame.destroy()
-        self.qna_frame = ctk.CTkScrollableFrame(self.content_frame,
-                                                width=self.qna_width,
-                                                height=self.qna_height)
-        self.qna_frame.grid(row=0, column=0, padx=5, pady=5)
 
-    def showAllQuestions(self):
-        """
-        Function that handles the attachment of  all questions onto
-        the main frame.
-        """
-        self.RefreshQnAFrame()
+        for children in self.qna_frame.winfo_children():
+            children.grid_forget()
+        self.qna_frame._parent_canvas.yview_moveto(0)
+
+    def genAllQuestions(self):
+        self.question_frames = []
         for index, questions in enumerate(self.ac.questions):
             q_frame = QuestionFrame(
                 self.qna_frame,
@@ -208,30 +224,35 @@ class QuizWindow(ActivityWindow):
                 self.question_width,
                 self.stdanswer[index]
             )
-            q_frame.grid(row=index, column=0, padx=5, pady=5)
+            self.question_frames.append(q_frame)
+
+    def showAllQuestions(self):
+        self.RefreshQnAFrame()
+        for index, frame in enumerate(self.question_frames):
+            frame.grid(row=index, column=0, padx=5, pady=5, sticky='ew')
 
     def showOneQuestion(self, index):
         """
         Function that attaches a singular question onto the main frame.
         """
         self.RefreshQnAFrame()
-        q_frame = QuestionFrame(
-            self.qna_frame,
-            self,
-            self.ac.questions[index],
-            self.question_width,
-            self.stdanswer[index]
-        )
-        q_frame.grid(row=0, column=0, padx=5, pady=5)
+        self.question_frames[index].grid(row=0, column=0, padx=5, pady=5,
+                                         sticky='ew')
 
-    def checkAnswers(self, questionStatusFrame: ctk.CTkFrame, max_width):
-        """
-        Function that checks the student's answers with the correct answers,
-        and displays the appropriate status.
-        """
-        for widget in questionStatusFrame.winfo_children():
-            widget.destroy()
+    def initAnswersButton(self):
+        student_answers = [x.get() for x in self.stdanswer]
+        self.statusButtons = []
 
+        for index, answer in enumerate(student_answers):
+            statusButton = ctk.CTkButton(
+                self.questionStatusFrame,
+                text=f"Question {index}",
+                command= lambda index=index: self.showOneQuestion(index)
+            )
+            self.statusButtons.append(statusButton)
+            statusButton.grid(row=index, column=0, padx=5, pady=5, sticky='ew')
+
+    def checkAnswers(self):
         student_answers = [x.get() for x in self.stdanswer]
 
         for index, answer in enumerate(student_answers):
@@ -245,15 +266,10 @@ class QuizWindow(ActivityWindow):
                 color = "#BB351E"
                 hover_color = "#962B18"
 
-            statusButton = ctk.CTkButton(
-                questionStatusFrame,
-                text=f"Question {index}",
+            self.statusButtons[index].configure(
                 hover_color=hover_color,
-                fg_color=color,
-                width=max_width,
-                command=lambda index=index: self.showOneQuestion(index)
+                fg_color=color
             )
-            statusButton.grid(row=index, column=0, padx=5, pady=5)
 
     def StudentSubmission(self):
         """
@@ -265,7 +281,7 @@ class QuizWindow(ActivityWindow):
         self.completion_database.updateStudentAnswer(self.std.username,
                                                      student_answer)
         print("Final Student Answer", student_answer)
-        App().go_back_history()
+        App().go_back_history() 
 
 
 if __name__ == "__main__":
@@ -273,8 +289,5 @@ if __name__ == "__main__":
         ActivityDictionary
 
     ActivityDictionary()
-    main = App()
-    q_frame = QuizWindow(Quiz("QZ0000"), Student("test_student"), main)
-    q_frame.grid(row=0, column=0, padx=5, pady=5)
-    main.main_frame.grid(row=0, column=0)
-    main.mainloop()
+    App().change_frame(QuizWindow(Quiz("QZ0000"), Student("testsd")))
+    App().mainloop()

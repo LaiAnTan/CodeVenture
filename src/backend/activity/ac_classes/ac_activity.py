@@ -1,15 +1,28 @@
-import os
 from enum import Enum
-from abc import ABC, abstractmethod
 from config import ACTIVITY_DIR, DATA_FILE
 
+
 class Activity():
+
+    """
+    Base class for activities.
+    """
     class Content_Type(Enum):
+
+        """
+        Enum for content type.
+        """
+
         Paragraph = 0
         Image = 1
         Code = 2
 
     class AType(Enum):
+
+        """
+        Enum for activity type.
+        """
+
         Module = 1
         Challenge = 2
         Quiz = 3
@@ -23,7 +36,10 @@ class Activity():
                 case 3:
                     return 'QZ'
 
-    def	__init__(self, filename: str, ac_type: AType) -> None:
+    def __init__(self, filename: str, ac_type: AType) -> None:
+        """
+        Initialises the class.
+        """
         self.ModulePath = f"{ACTIVITY_DIR}/{ac_type.name}/{filename}"
         self.content: list[str] = []
         self.footer: list[str] = []
@@ -35,13 +51,14 @@ class Activity():
         self.warnings = []
         self.errors = []
 
-        ## header values
+        # header values
         self.id = ''
         self.title = ''
         self.difficulty = ''
         self.tag = []
 
-    def SourcesExtractor(self, from_where: list[str], to_where: dict, stop: str, delimiter: str='-') -> None:
+    def SourcesExtractor(self, to_where: dict, stop: str,
+                         delimiter: str = '-') -> None:
         """
         Extracts sources
         Expects a list with 2 values, each seperated by the delimiter
@@ -56,12 +73,13 @@ class Activity():
                 self.warnings.append(
                     (
                         'SOURCES',
-                        f'Source asset has no value and will be ignored'
+                        'Source asset has no value and will be ignored'
                     )
                 )
                 continue
 
-            to_where[values[0]] = values[1]
+            # failsafe if the picture name consist of delimiter
+            to_where[values[0]] = delimiter.join(values[1:])
 
         self.warnings.append(
             (
@@ -71,15 +89,23 @@ class Activity():
         )
 
     def ParseSources(self) -> None:
+        """
+        Parses sources located in footer.
+        """
         while len(self.footer):
             contents = self.footer.pop(0)
             match contents:
                 case "IMG-CONT-START":
-                    self.SourcesExtractor(self.footer, self.img, "IMG-CONT-END")
+                    self.SourcesExtractor(self.img,
+                                          "IMG-CONT-END")
                 case "CODE-CONT-START":
-                    self.SourcesExtractor(self.footer, self.code, "CODE-CONT-END")
+                    self.SourcesExtractor(self.code,
+                                          "CODE-CONT-END")
 
     def ParseContent(self):
+        """
+        Parses content.
+        """
         for index, content in enumerate(self.content):
             if content.find("<IMG-CONT>") == 0:
                 content = content.removeprefix("<IMG-CONT>")
@@ -108,11 +134,15 @@ class Activity():
 
                 self.content[index] = (Activity.Content_Type.Code, content)
             else:
-                self.content[index] = (Activity.Content_Type.Paragraph, content)
+                self.content[index] = (Activity.Content_Type.Paragraph,
+                                       content)
 
         # print(self.content)
 
     def ParseHeader(self):
+        """
+        Parses header.
+        """
         for line in self.headerbuffer:
             kwarg = line.split('|')
 
@@ -151,13 +181,15 @@ class Activity():
                     )
 
         # check if all content is successfully parsed
-        # god please bless this code 
+        # god please bless this code
 
         header_content = [self.id, self.title, self.difficulty, self.tag]
         names = ['ID', 'Title', 'Difficulty', 'Tag']
 
         if all(header_content) is False:
-            missing_names = [ names[index] for index in range(len(header_content)) if not header_content[index]]
+            missing_names = [names[index] for index in
+                             range(len(header_content)) if not
+                             header_content[index]]
             self.warnings.append(
                 (
                     'HEADER',
@@ -165,14 +197,20 @@ class Activity():
                 )
             )
 
-    def	__get_Headers(self, file):
+    def __get_Headers(self, file):
+        """
+        Extracts header portion of file.
+        """
         for line in file:
             line = line.strip('\n')
             if line == "HEADER-END":
                 break
             self.headerbuffer.append(line)
 
-    def	__get_Content(self, file):
+    def __get_Content(self, file):
+        """
+        Extracts content portion of file.
+        """
         for line in file:
             line = line.strip('\n')
             if line == "CONTENT-END":
@@ -180,6 +218,9 @@ class Activity():
             self.content.append(line)
 
     def __get_Sources(self, file):
+        """
+        Extracts sources portion of file.
+        """
         for line in file:
             line = line.strip('\n')
             if line == "SOURCES-END":
@@ -187,6 +228,10 @@ class Activity():
             self.footer.append(line)
 
     def read_data_file(self):
+        """
+        Reads the .dat file and seperates the file into header, content and
+        footer sections.
+        """
         try:
             with open(f"{self.ModulePath}/{self.data_file}") as file:
                 for line in file:
@@ -203,6 +248,9 @@ class Activity():
             return False
 
     def __str__(self):
+        """
+        Dunder method for displaying info.
+        """
         # this is actually meant for developers only
         # will implement prettier one later
         description_msg = ''.join(self.content)
@@ -223,14 +271,14 @@ class Activity():
             f"Difficulty = {self.difficulty}",
             f"Associated Tags = {str(self.tag).strip('[]')}",
             "-" * line_len,
-            f"Contents",
+            "Contents",
             "-" * line_len
         ]
         data.extend(description)
         data.extend(
             [
                 "-" * line_len,
-                f"Footer",
+                "Footer",
                 "-" * line_len,
             ]
         )
@@ -239,23 +287,38 @@ class Activity():
         return "\n".join(data)
 
     def getWarning(self):
+        """
+        Getter for warnings.
+        """
         return self.warnings
 
     def getErrors(self):
+        """
+        Getter for errors.
+        """
         return self.errors
 
     def getHeaders(self):
+        """
+        Getter for headers, returned in a tuple.
+        """
         return (
             self.id,
             self.title,
             self.difficulty,
             self.tag,
         )
-    
+
     def getContent(self):
+        """
+        Getter for content.
+        """
         return self.content
 
     def getSources(self):
+        """
+        Getter for sources.
+        """
         return (
             self.img,
             self.code

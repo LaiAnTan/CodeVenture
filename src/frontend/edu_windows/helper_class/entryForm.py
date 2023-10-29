@@ -6,14 +6,12 @@ from .entryAdder import EntryAdder
 from .refreshScrollFrame import RefreshableScrollableFrame
 from .refreshScrollFrame import RSFWidget
 
-class EntryForm(RSFWidget):
-    def __init__(self, master: RefreshableScrollableFrame, main_editor, height, width):
-        super().__init__(master=master, width=width, height=height)
+class EntryForm(RSFWidget, ABC):
+    def __init__(self, master: RefreshableScrollableFrame, main_editor):
+        super().__init__(master=master)
         self.main_editor = main_editor
 
         self.type = "base"
-        self.height = height
-        self.width = width
 
         self.error = True
         self.error_msg = 'Entry Frame is left unused, Remove if not needed'
@@ -25,17 +23,18 @@ class EntryForm(RSFWidget):
         self.columnconfigure(0, weight=1)
 
         if not no_entry_adder:
-            entryform = ctk.CTkFrame(self)
+            entryform = ctk.CTkFrame(self, fg_color='#394764')
             entryform.grid(row=1, column=0, sticky='ew')
             entryform.rowconfigure((0, 1), weight=1)
             entryform.columnconfigure(0, weight=1)
         else:
             entryform = self
+            entryform.configure(fg_color='#394764')
 
-        self.header = ctk.CTkFrame(entryform)
+        self.header = ctk.CTkFrame(entryform, fg_color='transparent')
         self.header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        self.content = ctk.CTkFrame(entryform)
+        self.content = ctk.CTkFrame(entryform, fg_color='transparent')
         self.content.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
         self.SetHeader()
@@ -45,19 +44,21 @@ class EntryForm(RSFWidget):
             self.SetEntryAdder()
 
     def SetHeader(self):
+        self.header.columnconfigure((0, 1), weight=1)
+
         cool_label = ctk.CTkLabel(
             self.header,
             text=f'{self.type.capitalize()} Entry Form',
             corner_radius=10,
         )
-        cool_label.pack(side=ctk.LEFT)
+        cool_label.grid(row=0, column=0, sticky='w')
 
         remove_button = ctk.CTkButton(
             self.header,
             text="Remove",
             command= self.delete_self
         )
-        remove_button.pack(side=ctk.RIGHT, padx=5, pady=5)
+        remove_button.grid(row=0, column=1, sticky='e')
 
     @abstractmethod
     def SetContentFrame(self):
@@ -66,6 +67,10 @@ class EntryForm(RSFWidget):
     @abstractmethod
     def getData(self):
         pass
+
+    @abstractmethod
+    def importData(self, data: tuple[str]):
+        self.error = False
 
     def delete_self(self, confirm=True) -> None:
         if confirm:
@@ -79,8 +84,7 @@ class EntryForm(RSFWidget):
         entry_adder = EntryAdder(self, 
                                  self.parent_frame, 
                                  self.main_editor, 
-                                 45,
-                                 self.width)
+                                 )
         entry_adder.grid(row=0, column=0, pady=(0, 10), sticky='ew')
 
     def getNextSimilarType(self):

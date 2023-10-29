@@ -19,7 +19,8 @@ class ImageLabel(ctk.CTkFrame):
         """
         Initialises the class.
         """
-        super().__init__(master)
+
+        super().__init__(master, fg_color='transparent')
 
         self.img_path = img_path
         try:
@@ -50,10 +51,13 @@ class ImageLabel(ctk.CTkFrame):
 
         return int(width / percent), int(height / percent)
 
-    def SetUpFrame(self) -> None:
+    def SetUpFrame(self, has_invert: bool = False) -> None:
         """
         Creates and attaches the image to the main frame (master).
         """
+
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
         ctk.CTkLabel(
             self,
             image=ctk.CTkImage(
@@ -62,4 +66,4 @@ class ImageLabel(ctk.CTkFrame):
                 size=self.size
             ),
             text=""
-        ).grid(row=0, column=0)
+        ).grid(row=0, column=0, sticky='ew')

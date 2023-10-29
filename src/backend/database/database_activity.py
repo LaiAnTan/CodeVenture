@@ -50,3 +50,7 @@ class ActivityDB(DBBase):
     def getIDTypeTitle(cls):
         raw_data = cls.cursor.execute(f"SELECT id, type, title from {cls.db_name}").fetchall()
         return raw_data
+
+    @classmethod
+    def checkIDExists(cls, id):
+        return cls.fetch_attr(cls.db_idfield, id) != None

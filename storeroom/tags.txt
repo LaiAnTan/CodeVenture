@@ -2,3 +2,5 @@ input/output
 functions
 variables
 operators
+loops
+math

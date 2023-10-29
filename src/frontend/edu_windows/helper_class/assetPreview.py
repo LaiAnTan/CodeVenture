@@ -82,17 +82,14 @@ class AssetSelectionScreen(AssetWindow):
         return self.selected_asset
 
 class AssetPreview(EntryForm):
-    def __init__(self, master, parent, width, height, asset_list) -> None:
-        super().__init__(master, parent, width=width, height=height)
+    def __init__(self, master, parent, asset_list) -> None:
+        super().__init__(master, parent)
 
         self.type = 'asset'
-        self.width = width
-        self.height = height
 
         self.assets : list[tuple[str]] = asset_list
         self.displaying_value = None
         self.SetFrames()
-
 
     def SetContentFrame(self):
         self.content.rowconfigure((0, 1), weight=1)
@@ -137,6 +134,9 @@ class AssetPreview(EntryForm):
 
         self.error = False
         self.refreshPreview()
+
+    def set_displaying_value(self, display_val):
+        self.displaying_value = display_val
 
     def refreshPreview(self):
         if self.displaying_value is None:
@@ -190,7 +190,7 @@ class AssetPreview(EntryForm):
             case 'code':
                 preview_label = CodeBufferRunner(
                     previewframe,
-                    self.width - 15,
+                    450,
                     self.displaying_value[1],
                     self.displaying_value[2],
                     self.displaying_value[3]
@@ -199,8 +199,8 @@ class AssetPreview(EntryForm):
                 preview_label = ImageLabel(
                     previewframe,
                     self.displaying_value[2],
-                    self.height - 45,
-                    self.width - 15,
+                    450,
+                    250,
                 )
         preview_label.grid(row=0, column=0, padx=5, pady=5)
 
@@ -231,9 +231,16 @@ class AssetPreview(EntryForm):
         )
         self.button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
-
     def getData(self):
         return (
             'asset',
             self.displaying_value
         )
+
+    def importData(self, data: tuple[str]):
+        if data[0] != 'asset':
+            raise AssertionError('Wrong Type')
+        
+        super().importData(data)
+        self.displaying_value = data[1]
+        self.refreshPreview()

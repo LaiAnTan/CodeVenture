@@ -55,18 +55,23 @@ class SelectionScreen(App_Frame):
         Function that performs attachment of elements onto the main
         frame.
         """
+
+        self.rowconfigure(1, weight=1)
+        self.columnconfigure(0, weight=1)
         content_width = 650
 
         # header
 
         header = ctk.CTkFrame(self, fg_color="transparent")
-        header.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        header.grid(row=0, column=0, padx=5, pady=5, sticky="new")
+
+        header.rowconfigure(0, weight=1)
+        header.columnconfigure(0, weight=1)
 
         # search bar
 
         search_bar_frame = ctk.CTkFrame(
             header,
-            width=600,
             fg_color="transparent",
             height=30
         )
@@ -77,9 +82,12 @@ class SelectionScreen(App_Frame):
             sticky="ew"
         )
 
+        search_bar_frame.rowconfigure(0, weight=1)
+        search_bar_frame.columnconfigure(0, weight=1)
+
         search_bar = ctk.CTkEntry(
             search_bar_frame,
-            width=400,
+            # width=400,
             placeholder_text="Looking for something?",
             font=("Helvetica", 14),
             justify=ctk.LEFT,
@@ -87,7 +95,7 @@ class SelectionScreen(App_Frame):
 
         search_bar.grid(row=0,
                         column=0,
-                        sticky="w",
+                        sticky="ew",
                         padx=5,
                         pady=5)
 
@@ -138,15 +146,19 @@ class SelectionScreen(App_Frame):
 
         content = ctk.CTkFrame(self, height=450,
                                fg_color="transparent")
-        content.grid(row=1, column=0, padx=5, pady=5)
+        content.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
+
+        content.rowconfigure(0, weight=1)
+        content.columnconfigure(1, weight=1)
 
         side_selection_bar = ctk.CTkFrame(content, width=100)
-        side_selection_bar.grid(row=0, column=0, padx=5, pady=5, sticky="ns")
+        side_selection_bar.grid(row=0, column=0, padx=5, pady=5, sticky="nsw")
 
         main_contents_bar = ctk.CTkScrollableFrame(content,
                                                    height=450,
                                                    width=content_width)
-        main_contents_bar.grid(row=0, column=1, padx=5, pady=5)
+        main_contents_bar.columnconfigure(0, weight=1)
+        main_contents_bar.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
 
         self.display_all_info(0, content_width, main_contents_bar)
 
@@ -188,9 +200,9 @@ class SelectionScreen(App_Frame):
             widgets.destroy()
 
         for index, module in enumerate(ids):
-            ret = DataChunk(module, max_width - 40,
-                            self.student).generateChunk(attach_to)
-            ret.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
+            dc = DataChunk(attach_to, module, max_width - 40,
+                           self.student)
+            dc.grid(row=index, column=0, padx=5, pady=5, sticky="ew")
 
     def display_all_info(self, type, max_width,
                          attach_to: ctk.CTkScrollableFrame) -> None:
@@ -381,7 +393,7 @@ class SelectionScreen(App_Frame):
                                 padx=5, pady=5)
 
 
-class DataChunk():
+class DataChunk(ctk.CTkFrame):
 
     """
     Class that represents an activity tile containing:
@@ -391,13 +403,21 @@ class DataChunk():
     - button to enter activity
     """
 
-    def __init__(self, activity_id, width, student: Student):
+    def __init__(self, master, activity_id, width, student: Student):
         """
         Initialises the class.
         """
+
+        super().__init__(master=master,
+                         fg_color=LIGHTMODE_GRAY if App().settings
+                         .getSettingValue("lightmode")
+                         .lower() == "true" else DARKMODE_GRAY)
+
         self.activity = activity_id
         self.widget_width = width
         self.student = student
+
+        self.generateChunk()
 
     def GetData(self):
         """
@@ -408,18 +428,17 @@ class DataChunk():
         self.id = self.contents[database.field.id.value]
         self.type = self.contents[database.field.type.value]
 
-    def generateChunk(self, attach_main):
+    def generateChunk(self):
         """
         Generates the activity tile and attaches it to attach_main.
         """
+
         self.GetData()
 
-        ret_frame = ctk.CTkFrame(attach_main,
-                                 fg_color=LIGHTMODE_GRAY if App().settings
-                                 .getSettingValue("lightmode")
-                                 .lower() == "true" else DARKMODE_GRAY,
-                                 )
-        header_frame = ctk.CTkFrame(ret_frame, fg_color="transparent")
+        self.rowconfigure((0, 1), weight=1)
+        self.columnconfigure(0, weight=1)
+
+        header_frame = ctk.CTkFrame(self, fg_color="transparent")
         header_frame.grid(row=0, column=0, padx=5, pady=(5, 0), sticky="ew")
 
         # header_frame.rowconfigure(0, weight=1)
@@ -437,8 +456,9 @@ class DataChunk():
         )
         title_label.grid(row=0, column=1, padx=5, pady=5)
 
-        content_frame = ctk.CTkFrame(ret_frame, fg_color="transparent")
+        content_frame = ctk.CTkFrame(self, fg_color="transparent")
         content_frame.grid(row=1, column=0, padx=5, pady=(0, 5), sticky="ew")
+        content_frame.columnconfigure(0, weight=1)
 
         content_label = ctk.CTkLabel(
             content_frame,
@@ -448,11 +468,11 @@ class DataChunk():
             justify="left",
             anchor="w"
         )
-        content_label.grid(row=0, column=0, padx=5, pady=5)
+        content_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
 
         from ..ui_std_window_gen import dispatcher
 
-        student_done = ActivityDictionary.getDatabase(self.activity)\
+        student_done = ActivityDictionary().getDatabase(self.activity)\
             .getStudentEntry(self.student.username) is not None
 
         run_button = ctk.CTkButton(
@@ -461,6 +481,13 @@ class DataChunk():
             width=50,
             command=lambda: dispatcher(self.id, self.type, self.student)
         )
-        run_button.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
+        run_button.grid(row=0, column=1, padx=5, pady=5, sticky="e")
 
-        return ret_frame
+
+if __name__ == "__main__":
+    App()
+    from ...backend.user.user_student import Student
+
+    select_s = SelectionScreen(Student('teststd'))
+    App().change_frame(select_s)
+    App().mainloop()

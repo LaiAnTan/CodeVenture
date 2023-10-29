@@ -9,6 +9,7 @@ from .ui_std_activity_window import ActivityWindow
 from ...backend.activity.ac_classes.ac_challenge import Challange
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 from ...backend.user.user_student import Student
+from .helper_class.textdisplay import ParagraphDisplayer
 
 
 class ChallangeWindow(ActivityWindow):
@@ -17,18 +18,21 @@ class ChallangeWindow(ActivityWindow):
     Frame class for displaying the challenge window.
     """
 
-    def __init__(self, challenge: Challange, student: Student) -> None:
+    def __init__(self, challenge: Challange, student: Student,
+                 editor_view=False):
         """
         Initialize the class.
         """
-        super().__init__(challenge, student)
+
+        super().__init__(challenge, student, editor_view)
         self.attempted_count = 0
         self.suceeded = False
         self.percentage = 0
 
-        self.codeentry = self.completion_database.getStudentCode(self.std
-                                                                 .getUsername()
-                                                                 )
+        if not self.editor_view:
+            self.codeentry = self.completion_database.getStudentCode(self.std.getUsername())
+        else:
+            self.codeentry = None
 
         self.displayed_frame = None
         self.shittyIDE = None
@@ -41,14 +45,18 @@ class ChallangeWindow(ActivityWindow):
         """
         super().refresh_variables()
 
-        self.codeentry = self.completion_database.getStudentCode(self.std
-                                                                 .getUsername()
-                                                                 )
+        if not self.editor_view:
+            self.codeentry = self.completion_database.getStudentCode(self.std.getUsername())
 
     def SetContent(self):
         """
         Function that handles the setting of contents.
         """
+
+        self.content_frame.rowconfigure(0, weight=1)
+        self.content_frame.columnconfigure(0, weight=35)
+        self.content_frame.columnconfigure(1, weight=65)
+
         self.SetMainContent()
         self.SetSidebar()
 
@@ -57,112 +65,108 @@ class ChallangeWindow(ActivityWindow):
         Function that performs attachment of main frame elements onto the main
         frame.
         """
-        content_frame_height = 460
+
         content_frame_width = 350
 
         # left side of the frame
 
         main_content_frame = ctk.CTkFrame(self.content_frame)
+        main_content_frame.rowconfigure(1, weight=1)
+        main_content_frame.columnconfigure(0, weight=1)
+        main_content_frame.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5,
+            sticky='nsew'
+        )
 
         # buttons to switch between 3 frames, question, hint
 
         main_content_options_frame = ctk.CTkFrame(
             main_content_frame,
-            width=content_frame_width + 20,
-            height=95,
         )
-        main_content_options_frame.grid(row=0, column=0, padx=5, pady=5)
+        main_content_options_frame.rowconfigure(0, weight=1)
+        main_content_options_frame.columnconfigure((0, 1, 2, 3), weight=1)
+        main_content_options_frame.grid(row=0, column=0, padx=5, pady=5, sticky='new')
 
         question_button = ctk.CTkButton(
             main_content_options_frame,
-            width=85,
-            height=25,
             text="Question",
+            width=0,
             command=lambda: self.QuestionFrames(content_frame_width)
         )
-        question_button.grid(row=0, column=0, padx=5, pady=5)
+        question_button.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
         hint_button = ctk.CTkButton(
             main_content_options_frame,
-            width=85,
-            height=25,
             text="Hints",
+            width=0,
             command=lambda: self.HintFrames(content_frame_width)
         )
-        hint_button.grid(row=0, column=1, padx=5, pady=5)
+        hint_button.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
         solution_button = ctk.CTkButton(
             main_content_options_frame,
-            width=85,
-            height=25,
             text="Solution",
+            width=0,
             command=lambda: self.SolutionFrames(content_frame_width)
         )
-        solution_button.grid(row=0, column=2, padx=5, pady=5)
+        solution_button.grid(row=0, column=2, padx=5, pady=5, sticky='ew')
 
         mark_button = ctk.CTkButton(
             main_content_options_frame,
-            width=85,
-            height=25,
             text="Run Tests",
+            width=0,
             command=lambda: self.RunTestCases_GenFrame(content_frame_width)
         )
-        mark_button.grid(row=0, column=3, padx=5, pady=5)
+        mark_button.grid(row=0, column=3, padx=5, pady=5, sticky='ew')
 
         # main question frame
 
-        self.displayed_frame = ctk.CTkScrollableFrame(
-            main_content_frame,
-            width=content_frame_width,
-            height=content_frame_height - 40
-        )
-
-        self.QuestionFrames(content_frame_width)
-
+        self.displayed_frame = ctk.CTkScrollableFrame(main_content_frame)
+        self.displayed_frame.columnconfigure(0, weight=1)
         self.displayed_frame.grid(
             row=1,
             column=0,
             padx=5,
-            pady=5
+            pady=5,
+            sticky='nswe'
         )
 
-        main_content_frame.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5
-        )
+        self.QuestionFrames(content_frame_width)
 
     def SetSidebar(self):
         """
         Function that performs attachment of sidebar frame elements onto the
         main frame.
         """
-        sidebar_width = 350
+
         sidebar_frame = ctk.CTkScrollableFrame(
             self.content_frame,
-            width=sidebar_width,
-            height=460
         )
+        sidebar_frame.rowconfigure(0, weight=1)
+        sidebar_frame.columnconfigure(0, weight=1)
+        sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky='nswe')
 
         self.shittyIDE = IDE(
             sidebar_frame,
-            sidebar_width - 30,
-            360,
+            450,
+            250,
             self.ac.id.lower(),
-            self.std.username,
+            self.ac.id,
             self.ac.ModulePath,
             self.codeentry
         )
-        self.shittyIDE.grid(row=0, column=0, padx=5, pady=5)
-
-        sidebar_frame.grid(row=0, column=1, padx=5, pady=5)
+        self.shittyIDE.grid(row=0, column=0, padx=5, pady=5, sticky='nswe')
 
     def SetFooter(self):
         """
         Function that performs attachment of footer frame elements onto the
         main frame.
         """
+
+        self.footer_frame.columnconfigure(0, weight=1)
         submit_button = ctk.CTkButton(
             self.footer_frame,
             text="Resubmit" if self.done else "Submit",
@@ -171,8 +175,6 @@ class ChallangeWindow(ActivityWindow):
         )
 
         submit_button.grid(row=0, column=0, padx=0, pady=0)
-
-        # footer end ------------------------------------------
 
     def QuestionFrames(self, frame_width):
         """
@@ -185,24 +187,24 @@ class ChallangeWindow(ActivityWindow):
         for index, content in enumerate(self.ac.content):
             match content[0]:
                 case Challange.Content_Type.Paragraph:
-                    paragraph = ctk.CTkLabel(
+                    paragraph = ParagraphDisplayer(
                         self.displayed_frame,
-                        text=content[1],
-                        width=frame_width - 10,
-                        wraplength=frame_width - 20,
-                        anchor="w",
-                        justify="left"
+                        content[1]
                     )
-
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
-                        200,  # change height value later
+                        1600, # change height value later
                         frame_width,
                         self.displayed_frame
                     )
-
-            paragraph.grid(row=index, column=0, padx=5, pady=5)
+                case Challange.Content_Type.Code:
+                    paragraph = self.CodeHandler(
+                        content[1],
+                        frame_width,
+                        self.displayed_frame
+                    )
+            paragraph.grid(row=index, column=0, sticky='ew')
 
     def SolutionFrames(self, frame_width):
         """
@@ -222,15 +224,13 @@ class ChallangeWindow(ActivityWindow):
         else:
             solution_widget = ctk.CTkLabel(
                         self.displayed_frame,
-                        text="ERROR: Attempt More Times to Unlock Solution!",
-                        width=frame_width - 10,
-                        wraplength=frame_width - 20,
+                        text="ERROR: Attempt More Times to Unlock Solution",
                         anchor="w",
                         justify="left",
                         text_color="red",
                     )
 
-        solution_widget.grid(row=0, column=0, padx=5, pady=5)
+        solution_widget.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
     def HintFrames(self, frame_width):
         """
@@ -242,16 +242,10 @@ class ChallangeWindow(ActivityWindow):
         for index, content in enumerate(self.ac.hints.content):
             match content[0]:
                 case Challange.Content_Type.Paragraph:
-                    paragraph = ctk.CTkLabel(
+                    paragraph = ParagraphDisplayer(
                         self.displayed_frame,
-                        text=content[1],
-                        width=frame_width - 10,
-                        height=10,
-                        wraplength=frame_width - 20,
-                        anchor="w",
-                        justify="left"
+                        content[1]
                     )
-
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
@@ -261,7 +255,7 @@ class ChallangeWindow(ActivityWindow):
                         self.ac.hints
                     )
 
-            paragraph.grid(row=index, column=0, padx=5, pady=5)
+            paragraph.grid(row=index, column=0, sticky='ew')
 
     def RunTestCases(self, test_input):
         """
@@ -294,8 +288,10 @@ class ChallangeWindow(ActivityWindow):
                     self.displayed_frame,
                     text=f"Test {index} -- OK!",
                     text_color="limegreen",
-                    font=("Helvetica", 20),
-                    width=frame_width - 10,
+                    font=ctk.CTkFont(
+                        "Helvetica",
+                        size=20
+                    ),
                     justify="left",
                     anchor="w"
                 )
@@ -305,8 +301,10 @@ class ChallangeWindow(ActivityWindow):
                     self.displayed_frame,
                     text=f"Test {index} -- KO!",
                     text_color="red",
-                    font=("Helvetica", 20),
-                    width=frame_width - 10,
+                    font=ctk.CTkFont(
+                        "Helvetica",
+                        size=20
+                    ),
                     justify="left",
                     anchor="w"
                 )
@@ -320,8 +318,10 @@ class ChallangeWindow(ActivityWindow):
             self.displayed_frame,
             text=f"Test {correct_cases}/{cases} passed!",
             text_color="yellow",
-            font=("Helvetica", 20),
-            width=frame_width - 10,
+            font=ctk.CTkFont(
+                "Helvetica",
+                size=20
+            ),
             justify="left",
             anchor="w"
         )
@@ -342,7 +342,5 @@ class ChallangeWindow(ActivityWindow):
 
 if __name__ == "__main__":
     ActivityDictionary()
-    main = App()
-    ChallangeWindow(Challange("CH0001"), Student("james"), main).Attach()
-    main.main_frame.grid(row=0, column=0)
-    main.mainloop()
+    App().change_frame(ChallangeWindow(Challange("CH0001"), Student("james")))
+    App().mainloop()

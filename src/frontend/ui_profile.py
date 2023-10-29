@@ -55,6 +55,16 @@ class ProfileWindow(App_Frame):
 
         @return None
         """
+
+        self.rowconfigure((0, 1), weight=1)
+        self.columnconfigure((0, 2), weight=35)
+
+        pad = ctk.CTkFrame(self, fg_color='transparent')
+        pad.grid(row=0, column=0, rowspan=2, sticky='nsew')
+
+        pad = ctk.CTkFrame(self, fg_color='transparent')
+        pad.grid(row=0, column=2, rowspan=2, sticky='nsew')
+
         # header details -------------------------------------------
 
         header_frame = ctk.CTkFrame(
@@ -62,6 +72,14 @@ class ProfileWindow(App_Frame):
             width=self.full_width,
             height=self.header_height,
             fg_color="transparent"
+        )
+
+        header_frame.grid(
+            row=0,
+            column=1,
+            sticky="swe",
+            padx=5,
+            pady=5
         )
 
         profile_title = ctk.CTkLabel(
@@ -88,14 +106,6 @@ class ProfileWindow(App_Frame):
             pady=5
         )
 
-        header_frame.grid(
-            row=0,
-            column=0,
-            sticky="we",
-            padx=5,
-            pady=5
-        )
-
         # main content frame
 
         content_frame = ctk.CTkFrame(
@@ -104,10 +114,12 @@ class ProfileWindow(App_Frame):
             height=self.full_content_height,
             fg_color="transparent"
         )
+        content_frame.columnconfigure((0, 1), weight=1)
 
         content_frame.grid(
             row=1,
-            column=0
+            column=1,
+            sticky='new'
         )
 
         # user details
@@ -170,11 +182,12 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             height=self.half_content_height,
             fg_color="transparent"
         )
-
+        completion_frame.columnconfigure(0, weight=1)
+        completion_frame.rowconfigure(1, weight=1)
         completion_frame.grid(
             row=0,
-            rowspan=4,
             column=1,
+            sticky='nsew'
         )
 
         # completion header
@@ -183,7 +196,7 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             completion_frame,
             width=self.half_width,
             height=self.header_height,
-            fg_color="transparent"
+            fg_color='transparent'
         )
 
         completion_header_frame.grid(
@@ -195,13 +208,14 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
         completion_title = ctk.CTkLabel(
             completion_header_frame,
             justify="left",
-            text="Completed Activities"
+            text="Completed Activities",
+            fg_color='transparent'
         )
 
         completion_title.grid(
             row=0,
             column=0,
-            sticky="we"
+            sticky="ew"
         )
 
         completion_title.pack(
@@ -214,14 +228,17 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
 
         completion_content_frame = ctk.CTkScrollableFrame(
             completion_frame,
-            width=self.half_width,
-            height=self.half_content_height - self.header_height,
+            # width=self.half_width,
+            # height=self.half_content_height - self.header_height,
             fg_color="transparent"
         )
 
         completion_content_frame.grid(
             row=1,
-            rowspan=3,
             column=0,
-            sticky="wes"
+            sticky="nsew"
         )
+
+if __name__ == "__main__":
+    App().change_frame(ProfileWindow(Student('teststd')))
+    App().mainloop()

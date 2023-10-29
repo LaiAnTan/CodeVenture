@@ -3,8 +3,8 @@ from .entryForm import EntryForm
 from _tkinter import TclError
 
 class ParagraphEntryForm(EntryForm):
-    def __init__(self, master, main_editor, height, width):
-        super().__init__(master, main_editor, height, width)
+    def __init__(self, master, main_editor):
+        super().__init__(master, main_editor)
         self.type = "paragraph"
 
         self.error = False
@@ -13,16 +13,17 @@ class ParagraphEntryForm(EntryForm):
         self.SetFrames()
 
     def SetContentFrame(self):
+        self.content.rowconfigure(0, weight=1)
+        self.content.columnconfigure(0, weight=1)
         self.ContentEntryForm = ctk.CTkTextbox(
             self.content,
-            height=self.height * 0.95,
-            width=self.width - 15,
+            height=150,
             wrap="word"
         )
         self.set_focus_widget(self.ContentEntryForm)
 
         self.setContentFormEvent()
-        self.ContentEntryForm.grid(row=0, column=0, padx=5, pady=5)
+        self.ContentEntryForm.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
     
     def setContentFormEvent(self):
         self.ContentEntryForm.bind("<Return>", self.goNextChunk)
@@ -40,6 +41,11 @@ class ParagraphEntryForm(EntryForm):
             self.type,
             self.ContentEntryForm.get("0.0", ctk.END).strip()
         )
+
+    def getError(self):
+        if self.ContentEntryForm.get('0.0', ctk.END).strip() == '':
+            return (True, 'Paragraph Entry not used, removed if not needed')
+        return super().getError()
 
     def peek(self):
         """Check if there are content in the main entry form 
@@ -81,8 +87,6 @@ class ParagraphEntryForm(EntryForm):
         new = ParagraphEntryForm(
             self.parent_frame,
             self.main_editor,
-            self.height,
-            self.width,
         )
         new.insertData(content)
         new.focus()
@@ -116,3 +120,10 @@ class ParagraphEntryForm(EntryForm):
 
         current_chunk.focus()
         return "break"
+
+    def importData(self, data: tuple[str]):
+        if data[0] != 'paragraph':
+            raise AssertionError('Wrong Type')
+
+        super().importData(data)
+        self.insertData(data[1])

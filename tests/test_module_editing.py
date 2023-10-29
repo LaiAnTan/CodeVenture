@@ -28,7 +28,8 @@ class TestModuleExport(unittest.TestCase):
         App()
 
     def setUp(self) -> None:
-        self.md_editor = ModuleEditor(200, 200, None)
+        self.md_editor = ModuleEditor(None)
+        self.datafile_editor = self.md_editor.data_editor
 
     # Test Paragraph Entry
 
@@ -40,12 +41,13 @@ class TestModuleExport(unittest.TestCase):
         # add a paragraph widget
 
         # simulate user changing option to Paragraph
-        self.md_editor.chosen_para_type.set('Paragraph')
-        paragraph_entry = self.md_editor.AddEntryPoint()
+
+        self.datafile_editor.chosen_para_type.set('Paragraph')
+        paragraph_entry = self.datafile_editor.add_entry_point()
 
         # check if Paragraph entry widget is added
         self.assertEqual(
-            self.md_editor.content_frame.get_tracking_no(),
+            self.datafile_editor.content_frame.get_tracking_no(),
             1,
             'Entry point failed to be added'
         )
@@ -66,8 +68,8 @@ class TestModuleExport(unittest.TestCase):
         # add a paragraph widget
 
         # simulate user changing option to Paragraph
-        self.md_editor.chosen_para_type.set('Paragraph')
-        paragraph_entry = self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Paragraph')
+        paragraph_entry = self.datafile_editor.add_entry_point()
 
         # simulate user pasting data into paragraph
         self.md_editor.winfo_toplevel().clipboard_clear()
@@ -94,8 +96,8 @@ class TestModuleExport(unittest.TestCase):
         # add a paragraph widget
 
         # simulate user changing option to Paragraph
-        self.md_editor.chosen_para_type.set('Paragraph')
-        paragraph_entry = self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Paragraph')
+        paragraph_entry = self.datafile_editor.add_entry_point()
 
         # simulate user pasting data into paragraph
         self.md_editor.winfo_toplevel().clipboard_clear()
@@ -104,14 +106,14 @@ class TestModuleExport(unittest.TestCase):
 
         # check amount of new widget made
         self.assertEqual(
-            self.md_editor.content_frame.get_tracking_no(),
+            self.datafile_editor.content_frame.get_tracking_no(),
             3,
             'Amount of widget created isnt the expeceted value 3'
         )
 
         # check value in each paragraph entry
         expected_value = ['Foo', 'Bar', 'Baz']
-        for index, entry in enumerate(self.md_editor.content_frame.get_tracking_list()):
+        for index, entry in enumerate(self.datafile_editor.content_frame.get_tracking_list()):
             self.assertEqual(
                 entry.getData()[1],
                 expected_value[index],
@@ -124,8 +126,8 @@ class TestModuleExport(unittest.TestCase):
         """
 
         # Simulate user adding a paragraph entry point
-        self.md_editor.chosen_para_type.set('Paragraph')
-        paragraph = self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Paragraph')
+        paragraph = self.datafile_editor.add_entry_point()
         paragraph.insertData('Hello World!')
 
         # attempt to export
@@ -157,8 +159,8 @@ class TestModuleExport(unittest.TestCase):
         # add a paragraph widget
 
         # simulate user changing option to Paragraph
-        self.md_editor.chosen_para_type.set('Paragraph')
-        paragraph_entry = self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Paragraph')
+        paragraph_entry = self.datafile_editor.add_entry_point()
 
         # Remove self is binded to BackSpace
         # - Pressing BackSpace is equivalent to 
@@ -167,7 +169,7 @@ class TestModuleExport(unittest.TestCase):
 
         # check if Paragraph entry widget is removed
         self.assertEqual(
-            self.md_editor.content_frame.get_tracking_no(),
+            self.datafile_editor.content_frame.get_tracking_no(),
             0,
             'Entry point failed to be removed'
         )
@@ -272,12 +274,12 @@ class TestModuleExport(unittest.TestCase):
 
         # add a asset preview widget
         # simulate user changing option to Asset
-        self.md_editor.chosen_para_type.set('Asset')
-        asset_entry = self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Asset')
+        asset_entry = self.datafile_editor.add_entry_point()
 
         # check if asset preview widget is added
         self.assertEqual(
-            self.md_editor.content_frame.get_tracking_no(),
+            self.datafile_editor.content_frame.get_tracking_no(),
             1,
             'Entry point failed to be added'
         )
@@ -301,8 +303,8 @@ class TestModuleExport(unittest.TestCase):
         asset_window.save_data()
 
         # Simulate user adding the picture into a asset preview point
-        self.md_editor.chosen_para_type.set('Asset')
-        asset_preview = self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Asset')
+        asset_preview = self.datafile_editor.add_entry_point()
         asset_preview.displaying_value = pic_asset.getData()
         asset_preview.error = False
         asset_preview.refreshPreview()
@@ -326,8 +328,8 @@ class TestModuleExport(unittest.TestCase):
         asset_window.save_data()
 
         # Simulate user adding the picture into a asset preview point
-        self.md_editor.chosen_para_type.set('Asset')
-        asset_preview = self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Asset')
+        asset_preview = self.datafile_editor.add_entry_point()
         asset_preview.displaying_value = pic_asset.getData()
         asset_preview.error = False
         asset_preview.refreshPreview()
@@ -355,8 +357,8 @@ class TestModuleExport(unittest.TestCase):
 
     def test_invalid_unused_asset(self):
         # Simulate user adding a asset preview point
-        self.md_editor.chosen_para_type.set('Asset')
-        self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Asset')
+        self.datafile_editor.add_entry_point()
         # User did not choose what asset to preview
 
         # attempt to export
@@ -389,8 +391,8 @@ class TestModuleExport(unittest.TestCase):
         asset_window.save_data()
 
         # Simulate user adding the picture into a asset preview point
-        self.md_editor.chosen_para_type.set('Asset')
-        asset_preview = self.md_editor.AddEntryPoint()
+        self.datafile_editor.chosen_para_type.set('Asset')
+        asset_preview = self.datafile_editor.add_entry_point()
         asset_preview.displaying_value = pic_asset.getData()
         asset_preview.error = False
         asset_preview.refreshPreview()
@@ -400,7 +402,7 @@ class TestModuleExport(unittest.TestCase):
         pic_asset = asset_window.asset_frame.get_subframe(0)
         pic_asset.delete_self(confirm=False)
         asset_window.save_data()
-        self.md_editor.refresh_asset_widgets()
+        self.md_editor.data_editor.refresh_assets()
 
         # attempt to export
         error = self.md_editor.get_error_list()

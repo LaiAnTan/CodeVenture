@@ -1,9 +1,5 @@
 import customtkinter as ctk
 
-from PIL import Image
-
-from config import ASSET_FOLDER
-
 from .refreshScrollFrame import RefreshableScrollableFrame, RSFWidget
 
 class EntryAdder(ctk.CTkFrame):
@@ -14,36 +10,42 @@ class EntryAdder(ctk.CTkFrame):
     def __init__(self,
                  master: RSFWidget,
                  attached_form: RefreshableScrollableFrame, 
-                 main_editor,
-                 height, 
-                 width):
-        super().__init__(master, width=width, height=height)
+                 main_editor):
+        super().__init__(master, fg_color='#779DEB')
 
         self.master = master
         self.parent = attached_form
         self.main_editor = main_editor
+        self.columnconfigure((0, 1), weight=1)
+
+        option_frame = ctk.CTkFrame(
+            self,
+            fg_color='transparent',
+            
+        )
+        option_frame.grid(row=0, column=0, padx=5, pady=5, sticky='e')
+
+        option_label = ctk.CTkLabel(
+            option_frame,
+            text='Type: ',
+        )
+        option_label.grid(row=0, column=0, padx=5, pady=5)
+
+        self.para_types = self.main_editor.para_types
+        self.chosen_para_type = ctk.StringVar(value=self.para_types[0])
+        add_options = ctk.CTkOptionMenu(
+            option_frame,
+            values=self.para_types,
+            variable=self.chosen_para_type
+        )
+        add_options.grid(row=0, column=1, padx=5, pady=5)
 
         add_button = ctk.CTkButton(
             self,
             text="Add An Entry Widget Above",
             command=lambda : self.AddEntryPoint()
         )
-        add_button.pack(side=ctk.RIGHT, padx=5, pady=5)
-
-        option_label = ctk.CTkLabel(
-            self,
-            text='Type: ',
-        )
-        option_label.pack(side=ctk.LEFT, padx=5, pady=5)
-
-        self.chosen_para_type = ctk.StringVar(value='Paragraph')
-        self.para_types = ['Paragraph', 'Asset']
-        add_options = ctk.CTkOptionMenu(
-            self,
-            values=self.para_types,
-            variable=self.chosen_para_type
-        )
-        add_options.pack(side=ctk.LEFT, padx=5, pady=5)
+        add_button.grid(row=0, column=1, padx=5, pady=5, sticky='w')
 
     def AddEntryPoint(self):
         """Adds an certain type of entry form in a certain position
@@ -58,22 +60,7 @@ class EntryAdder(ctk.CTkFrame):
         index_to_add = self.master.get_index_instance()
         to_add = self.chosen_para_type.get()
 
-        match to_add:
-            case 'Paragraph':
-                entry_form = ParagraphEntryForm(
-                    self.parent,
-                    self.main_editor,
-                    self.main_editor.entry_widget_heigth,
-                    self.main_editor.entry_widget_width,
-                )
-            case 'Asset':
-                entry_form = AssetPreview(
-                    self.parent,
-                    self.main_editor,
-                    self.main_editor.entry_widget_width,
-                    self.main_editor.entry_widget_heigth,
-                    self.main_editor.assets
-                )
+        entry_form = self.main_editor.widget_factory(to_add)
 
         entry_form.focus()
         self.parent.add_element_specific(index_to_add, entry_form)
