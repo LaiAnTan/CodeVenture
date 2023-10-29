@@ -87,10 +87,6 @@ class RefreshableScrollableFrame(ctk.CTkScrollableFrame):
 
     def scroll_frame(self, how_much: float) -> None:
         """
-        okay rant
-        WHY THE FUCK ISNT THIS A THING???
-        rant over
-
         Adjusts the view in the window so that FRACTION of the
         total height of the canvas is off-screen to the top.
         """

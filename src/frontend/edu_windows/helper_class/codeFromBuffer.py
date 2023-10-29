@@ -56,12 +56,11 @@ class CodeBufferRunner(ctk.CTkFrame):
         ret_widget = ImageLabel(
             self.CodeFrame,
             self.temp_file,
-            1600, # TODO: Change the height value later
+            1600,
             self.max_width,
             True
         )
 
-        ## imagine if this is system24, LETS GO
         os.remove(self.temp_file)
 
         return ret_widget
@@ -106,12 +105,16 @@ class CodeBufferRunner(ctk.CTkFrame):
 
         font_color = "white"
         try:
-            code_output = subprocess.check_output(cmd, timeout=10, stdin=open(self.temp_file_input), stderr=subprocess.STDOUT, shell=True).decode()
+            code_output = subprocess.check_output(cmd,
+                                                  timeout=5,
+                                                  stdin=open(self.temp_file_input),
+                                                  stderr=subprocess.STDOUT,
+                                                  shell=True).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
             font_color = "red"
         except subprocess.TimeoutExpired:
-            code_output = "Timeout After Running For 10 seconds"
+            code_output = "Timeout After Running For 5 seconds"
             font_color = "red"
 
         # remove the file

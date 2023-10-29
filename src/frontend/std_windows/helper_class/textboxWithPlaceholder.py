@@ -1,9 +1,3 @@
-"""
-I shit you not
-
-how the fuck did no one think of this idea
-"""
-
 from typing import Tuple
 import customtkinter as ctk
 from tkinter import Event

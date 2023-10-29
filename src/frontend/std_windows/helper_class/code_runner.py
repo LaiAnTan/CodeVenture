@@ -117,14 +117,14 @@ class CodeRunner(ctk.CTkFrame):
         cmd = f"{sys.executable} \"{self.code_folder}/main.py\""
         testcase_in = open(testcase_path)
         try:
-            code_output = subprocess.check_output(cmd, timeout=10,
+            code_output = subprocess.check_output(cmd, timeout=5,
                                                   stdin=testcase_in,
                                                   stderr=subprocess.STDOUT,
                                                   shell=True).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
         except subprocess.TimeoutExpired:
-            code_output = "Timeout After Running For 10 seconds"
+            code_output = "Timeout After Running For 5 seconds"
 
         return code_output
 
@@ -143,7 +143,7 @@ class CodeRunner(ctk.CTkFrame):
 
         font_color = "white"
         try:
-            code_output = subprocess.check_output(cmd, timeout=10,
+            code_output = subprocess.check_output(cmd, timeout=5,
                                                   stdin=code_input,
                                                   stderr=subprocess.STDOUT,
                                                   shell=True).decode()
@@ -151,7 +151,7 @@ class CodeRunner(ctk.CTkFrame):
             code_output = errxc.output
             font_color = "red"
         except subprocess.TimeoutExpired:
-            code_output = "Timeout After Running For 10 seconds"
+            code_output = "Timeout After Running For 5 seconds"
             font_color = "red"
 
         placeholder = ctk.CTkLabel(
