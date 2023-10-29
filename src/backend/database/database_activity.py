@@ -37,7 +37,7 @@ class ActivityDB(DBBase):
             type = f"WHERE type = {type}"
 
         raw_data = cls.cursor.execute(f"SELECT {cls.db_idfield} from {cls.db_name} {type}").fetchall()
-        # stupid shit returning in tuple
+        # changes type from tuple to list
         ret_value = [id[0] for id in raw_data]
         return ret_value
 

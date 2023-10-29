@@ -30,13 +30,9 @@ class IDE(ctk.CTkFrame):
         self.activity_folder = activity_folder
 
         self.max_output_size = 45000
-
-        # fuck, max output size can change :'D
-        # self.max_output_size = 65000
         self.previous_input = content
 
-        # please change this to a reasonable timeout period
-        self.timeout_period = 10
+        self.timeout_period = 5
 
         self.setUpFrame()
 
@@ -197,14 +193,14 @@ class IDE(ctk.CTkFrame):
         cmd = f"{sys.executable} \"{self.activity_folder}/{self.code_name}\""
 
         try:
-            code_output = subprocess.check_output(cmd, timeout=10,
+            code_output = subprocess.check_output(cmd, timeout=self.timeout_period,
                                                   stdin=testcase_in,
                                                   stderr=subprocess.STDOUT,
                                                   shell=True).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
         except subprocess.TimeoutExpired:
-            code_output = "Timeout After Running For 10 seconds"
+            code_output = f"Timeout After Running For {self.timeout_period} seconds"
 
         # remove the file
         os.remove(f"{self.activity_folder}/{self.code_name}")
@@ -262,7 +258,7 @@ class IDE(ctk.CTkFrame):
         user_input = bytes(user_input, "utf-8")
         try:
             code_runner = subprocess.run(cmd,
-                                         timeout=10,
+                                         timeout=5,
                                          input=user_input,
                                          capture_output=True,
                                          shell=True)
@@ -271,7 +267,7 @@ class IDE(ctk.CTkFrame):
         except subprocess.TimeoutExpired as err:
             # does not work for some reason, god hates me
             code_output = err.stdout.decode() if err.stdout is not None else ''
-            error_output = bytes("Timeout After Running For 10 seconds",
+            error_output = bytes("Timeout After Running For 5 seconds",
                                  "utf-8")
 
         # remove the file

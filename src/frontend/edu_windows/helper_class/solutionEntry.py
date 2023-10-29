@@ -10,7 +10,7 @@ from config import DEFAULT_IDE_MESSAGE, DEFAULT_INPUT_MESSAGE
 
 class Modified_IDE(IDE):
     """
-    Method overriding fuck fest
+    A heavily modifed IDE class
     """
     def __init__(self, master, content = None) -> None:
         super().__init__(master, 450, 350, 'temp', '', '.', content)

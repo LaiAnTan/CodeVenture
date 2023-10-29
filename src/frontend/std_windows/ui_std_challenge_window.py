@@ -35,7 +35,7 @@ class ChallangeWindow(ActivityWindow):
             self.codeentry = None
 
         self.displayed_frame = None
-        self.shittyIDE = None
+        self.IDE = None
 
         self.SetFrames()
 
@@ -149,7 +149,7 @@ class ChallangeWindow(ActivityWindow):
         sidebar_frame.columnconfigure(0, weight=1)
         sidebar_frame.grid(row=0, column=1, padx=5, pady=5, sticky='nswe')
 
-        self.shittyIDE = IDE(
+        self.IDE = IDE(
             sidebar_frame,
             450,
             250,
@@ -158,7 +158,7 @@ class ChallangeWindow(ActivityWindow):
             self.ac.ModulePath,
             self.codeentry
         )
-        self.shittyIDE.grid(row=0, column=0, padx=5, pady=5, sticky='nswe')
+        self.IDE.grid(row=0, column=0, padx=5, pady=5, sticky='nswe')
 
     def SetFooter(self):
         """
@@ -261,7 +261,7 @@ class ChallangeWindow(ActivityWindow):
         """
         Function that runs all the test cases.
         """
-        own_code = self.shittyIDE.RunTestCases(test_input)
+        own_code = self.IDE.RunTestCases(test_input)
         test_code = CodeRunner(None, None, "solution",
                                self.ac.ModulePath).RunTestCases(f"{self.ac.ModulePath}/{test_input}")
         if own_code == test_code:
@@ -333,7 +333,7 @@ class ChallangeWindow(ActivityWindow):
         Function that handles the submission event when button is pressed.
         """
         print("Submitting code attempt")
-        codecontent = self.shittyIDE.getCodeContent()
+        codecontent = self.IDE.getCodeContent()
         self.completion_database.updateStudentCode(self.std.username,
                                                    self.percentage,
                                                    codecontent)
