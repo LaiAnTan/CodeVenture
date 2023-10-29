@@ -31,7 +31,7 @@ class EditorWindow(App_Frame):
             "Helvatica",
             size=24
         )
-        
+
         bigtitle = ctk.CTkLabel(
             self.header,
             text="Create a New Activity Here",
