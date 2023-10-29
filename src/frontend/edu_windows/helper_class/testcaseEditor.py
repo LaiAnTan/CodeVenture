@@ -130,10 +130,7 @@ class testCaseFrame(EntryForm):
         return self.ide.getInputContent()
 
     def getError(self):
-        return (
-            False,
-            'nothing here'
-        )
+        return []
     
     def SetContentFrame(self):
         self.content.columnconfigure(0, weight=1)
@@ -179,7 +176,8 @@ class testCaseEditor(ctk.CTkFrame):
         return [x.getData() for x in self.testcase_frame.get_tracking_list()]
 
     def get_error_list(self):
-        # this is probably the only error checked for this
-        if self.get_content_data == []:
-            return [('Test Case', 'No Test Case Provided')]
-        return []
+        error_list = []
+        if self.get_content_data() == []:
+            error_list.append(('Test Case', ['No Test Case Provided']))
+
+        return error_list

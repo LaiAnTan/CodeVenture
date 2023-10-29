@@ -85,7 +85,7 @@ class CodeEntryForm(EntryForm):
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
-        self.error, self.error_msg = self.ide.get_code_from_filepath(file_path)
+        self.error = self.ide.get_code_from_filepath(file_path)
         if self.error != True:
             name = path.split(file_path)[-1]
             self.nameVar.set(name.split('.')[0])
@@ -95,7 +95,7 @@ class CodeEntryForm(EntryForm):
         if not file_path:
             return
         else:
-            self.error, self.error_msg = self.ide.get_input_from_file(file_path)
+            self.error = self.ide.get_input_from_file(file_path)
 
     def getData(self):
         """returns data input into the frame in the following format
@@ -109,13 +109,22 @@ class CodeEntryForm(EntryForm):
         )
 
     def getError(self):
-        if self.ide.getCodeContent() == "":
-            return (
-                True,
-                'Entry Frame is left unused, Remove if not needed'
-            )
-        return super().getError()
-    
+        errorlist = []
+
+        if self.ide.getCodeContent() == "" and self.nameVar.get().strip() == '':
+            errorlist.append('Entry Frame is left unused, Remove if not needed')
+        else:
+            if self.nameVar.get().strip() == '':
+                errorlist.append('Name not given')
+
+            if self.error == True:
+                if self.ide.getCodeContent() == 'Invalid File Type, Please only import python files':
+                    errorlist.append('Invalid File Type for Code Import')
+                if self.ide.getInputContent() == 'Invalid File Type, Please import Text Files only!':
+                    errorlist.append('Invalid File Type for Code Input Import')
+
+        return errorlist
+
     def importData(self, data: tuple[str]):
         if data[0] != 'code':
             assert AssertionError("Wrong Type")

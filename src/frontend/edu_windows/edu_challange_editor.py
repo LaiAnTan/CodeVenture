@@ -112,13 +112,6 @@ class ChallangeEditor(ActivityEditor):
         error = self.get_error_list()
         content = self.GetContentData()
 
-        if content[0] == []:
-            error[0].append(('Prompt', 'Empty Prompt'))
-        if content[2] == []:
-            error[2].append(('Hints', 'Empty Hints'))
-        if content[3] == []:
-            error[3].append(('Test Cases', 'No Test Cases'))
-
         if error != ([], [], [], []): # all empty
             error_window = Ch_ErrorWindow(self, 450, 550, error)
             self.winfo_toplevel().wait_window(error_window)

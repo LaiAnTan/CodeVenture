@@ -61,8 +61,8 @@ class QuizEditor(ActivityEditor):
         error_list = []
         for index, question in enumerate(self.questions.get_tracking_list()):
             error = question.getError()
-            if error is not None:
-                error_list.append((index + 1, question.getError()))
+            if error:
+                error_list.append((f'Question {index + 1}', error))
         return error_list
 
     def ExportData(self):

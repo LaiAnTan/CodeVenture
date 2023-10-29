@@ -99,24 +99,26 @@ class QuestionPreview(EntryForm):
         pass
 
     def getError(self):
+        error_list = []
+
         if not self.inner_content[0]:
-            return 'Empty Question, remove if not needed'
+            return ['Empty Question, remove if not needed']
 
         checker = dataFileEditor(self, self.assets)
         checker.import_data_list(self.inner_content[0])
 
         error_list = checker.get_error_list()
         if error_list:
-            return 'There is an issue with this question, check question content'
+            error_list.append('There is an issue with this question, check question content')
         checker.destroy()
 
         if not self.inner_content[1][1]:
-            return 'No options for question'
+            error_list.append('No options for question')
 
         if self.inner_content[1][0] == -1:
-            return 'No answer for question'
+            error_list.append('No answer for question')
 
-        return None
+        return error_list
 
     def getData(self):
         return self.inner_content

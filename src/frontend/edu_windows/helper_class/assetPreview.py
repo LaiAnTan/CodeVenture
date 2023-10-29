@@ -130,9 +130,8 @@ class AssetPreview(EntryForm):
 
         self.displaying_value = selection.get_Selection()
         if self.displaying_value is None:
-            return 
+            return
 
-        self.error = False
         self.refreshPreview()
 
     def set_displaying_value(self, display_val):
@@ -205,8 +204,7 @@ class AssetPreview(EntryForm):
         preview_label.grid(row=0, column=0, padx=5, pady=5)
 
     def displayError(self):
-        self.error = True
-        self.error_msg = 'Invalid Asset Selected'
+        self.displaying_value = -1
 
         for children in self.content.winfo_children():
             children.grid_forget()
@@ -244,3 +242,13 @@ class AssetPreview(EntryForm):
         super().importData(data)
         self.displaying_value = data[1]
         self.refreshPreview()
+
+    def getError(self):
+        error_list = []
+
+        if self.displaying_value == -1:
+            error_list.append('Invalid Asset Chosen')
+        elif self.displaying_value is None:
+            error_list.append('Entry Frame is left unused, Remove if not needed')
+
+        return error_list

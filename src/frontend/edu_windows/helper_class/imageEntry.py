@@ -11,6 +11,7 @@ class ImageEntryForm(EntryForm):
         self.type = "image"
         self.max_image_height = 250
         self.max_image_width = 550
+        self.error_msg = ''
         self.SetFrames(True)
 
     def SetContentFrame(self):
@@ -95,7 +96,6 @@ class ImageEntryForm(EntryForm):
         self.PreviewImage(file_path)
 
     def ErrorImage(self, error_msg, original_dir):
-        self.error = True
         self.error_msg = error_msg
 
         self.PreviewLabel.configure(
@@ -132,8 +132,6 @@ class ImageEntryForm(EntryForm):
             except (FileNotFoundError, UnidentifiedImageError):
                 return self.ErrorImage('Error in Image Asset - Unable to Open File', directory)
 
-        self.error = False
-
         self.PreviewLabel.configure(
             text='',
             image=ctk.CTkImage(
@@ -156,3 +154,18 @@ class ImageEntryForm(EntryForm):
         super().importData(data)
         self.PreviewImage(data[2])
         self.NameVar.set(data[1])
+
+    def getError(self):
+        error_list = []
+
+        if self.DirectoryEntry.get() == '' and self.NameEntry.get() == '':
+            error_list.append('Image entry not used, remove if not needed')
+        else:
+            if self.DirectoryEntry.get() == '':
+                error_list.append('No image provided')
+            if self.NameEntry.get() == '':
+                error_list.append('No name provided')
+            if self.DirectoryEntry.cget('text_color') == 'red':
+                error_list.append(self.error_msg)
+
+        return error_list

@@ -13,9 +13,6 @@ class EntryForm(RSFWidget, ABC):
 
         self.type = "base"
 
-        self.error = True
-        self.error_msg = 'Entry Frame is left unused, Remove if not needed'
-
     def SetFrames(self, no_entry_adder: bool = False):
         """Builds both Header and Content Frame"""
 
@@ -95,8 +92,6 @@ class EntryForm(RSFWidget, ABC):
                 return (self_index + 1) + x
         return -1
 
+    @abstractmethod
     def getError(self):
-        return (
-            self.error,
-            self.error_msg
-        )
+        pass

@@ -294,12 +294,12 @@ class IDE(ctk.CTkFrame):
         """
         probably shhhouldd have placed it here in the first place
         """
-        return_val = (False, '')
+        return_val = False
         file_name = os.path.split(filepath)[-1]
         extension = file_name.split('.')[-1]
         if len(file_name.split('.')) < 2 or extension != 'py':
             content = 'Invalid File Type, Please only import python files'
-            return_val = (True, 'Error in code entry - Invalid File Type')
+            return_val = True
         else:
             with open(filepath) as file:
                 content = ''.join(file.readlines())
@@ -312,13 +312,13 @@ class IDE(ctk.CTkFrame):
         return return_val
 
     def get_input_from_file(self, filepath, switch= True):
-        return_val = (False, '')
+        return_val = False
         with open(filepath) as file:
             try:
                 content = ''.join(file.readlines())
             except UnicodeDecodeError:
                 content = 'Invalid File Type, Please import Text Files only!'
-                return_val = (True, 'Error in Code Entry - Invalid File Type for Code Input Import')
+                return_val = True
 
         self.ClearContent(2)
         self.InsertContent("0.0", content, 2)
