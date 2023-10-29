@@ -1,0 +1,24 @@
+HEADER-START
+ID|CH0002
+TITLE|FizzBuzz
+DIFFICULTY|****
+TAG|py001,py002,py004
+HEADER-END
+
+CONTENT-START
+Write a program that prints the numbers from 1 to 100, each separated by a newline.
+If the number is a multiple of 3, it prints 'fizz' instead.
+If the number is a multiple of 5, it prints 'buzz' instead.
+If the number is both a multiple of 3 and a multiple of 5, it prints 'fizzbuzz' instead.
+Example:
+<IMG-CONT>IMG001
+CONTENT-END
+
+SOURCES-START
+IMG-CONT-START
+IMG001-example.png
+IMG-CONT-END
+CODE-CONT-START
+CODE-CONT-END
+SOURCES-END
+

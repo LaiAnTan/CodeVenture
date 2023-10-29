@@ -31,7 +31,7 @@ class EditorWindow(App_Frame):
             "Helvatica",
             size=24
         )
-        
+
         bigtitle = ctk.CTkLabel(
             self.header,
             text="Create a New Activity Here",
@@ -57,7 +57,7 @@ class EditorWindow(App_Frame):
         )
         new_ac.grid(row=1, column=0, padx=5, pady=5)
 
-    ## helper functions
+    # helper functions
 
     def newActivity(self):
         option = self.chosen.get()
