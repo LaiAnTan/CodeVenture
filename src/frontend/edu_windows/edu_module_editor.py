@@ -1,14 +1,7 @@
-import customtkinter as ctk
-import os
-from PIL import Image
-from config import ASSET_FOLDER
-
 from ..ui_app import App
 from .edu_activity_editor import ActivityEditor
 from ...backend.activity.ac_classes.ac_module import Activity, Module
 
-from .helper_class.paragraphEntry import ParagraphEntryForm
-from .helper_class.assetPreview import AssetPreview
 from .helper_class.errorWindow import ErrorWindow
 from .helper_class.dataFileEditor import dataFileEditor
 

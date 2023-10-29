@@ -1,9 +1,8 @@
-import os
 from enum import Enum
 from abc import ABC, abstractmethod
 from config import ACTIVITY_DIR, DATA_FILE
 
-class Activity():
+class Activity(ABC):
     class Content_Type(Enum):
         Paragraph = 0
         Image = 1

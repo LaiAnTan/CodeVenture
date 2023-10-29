@@ -1,5 +1,4 @@
 from __future__ import annotations
-from tkinter import Misc
 import customtkinter as ctk
 
 from src.frontend.edu_windows.helper_class.refreshScrollFrame import RefreshableScrollableFrame

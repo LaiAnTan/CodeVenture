@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from .imageEntry import ImageEntryForm, EntryForm
+from .imageEntry import ImageEntryForm
 from .codeEntry import CodeEntryForm
 from .errorWindow import ErrorWindow
 from .refreshScrollFrame import RefreshableScrollableFrame

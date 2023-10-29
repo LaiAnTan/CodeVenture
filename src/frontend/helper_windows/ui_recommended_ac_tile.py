@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from customtkinter.windows.widgets.font import CTkFont
 
 lazy_count = 0
 

@@ -111,15 +111,15 @@ class RSFWidget(ctk.CTkFrame):
                  master: RefreshableScrollableFrame,
                  width: int = 200,
                  height: int = 200,
-                 corner_radius: Optional[Union[int, str]] = None,
-                 border_width: Optional[Union[int, str]] = None,
+                 corner_radius = None,
+                 border_width = None,
 
-                 bg_color: Union[str, Tuple[str, str]] = "transparent",
-                 fg_color: Optional[Union[str, Tuple[str, str]]] = None,
-                 border_color: Optional[Union[str, Tuple[str, str]]] = None,
+                 bg_color = "transparent",
+                 fg_color = None,
+                 border_color = None,
 
-                 background_corner_colors: Union[Tuple[Union[str, Tuple[str, str]]], None] = None,
-                 overwrite_preferred_drawing_method: Union[str, None] = None,
+                 background_corner_colors = None,
+                 overwrite_preferred_drawing_method = None,
                  **kwargs):
         super().__init__(master, width, height, 
                          corner_radius, border_width,

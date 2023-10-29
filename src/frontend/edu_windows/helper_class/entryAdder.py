@@ -1,9 +1,5 @@
 import customtkinter as ctk
 
-from PIL import Image
-
-from config import ASSET_FOLDER
-
 from .refreshScrollFrame import RefreshableScrollableFrame, RSFWidget
 
 class EntryAdder(ctk.CTkFrame):
