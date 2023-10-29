@@ -2,6 +2,7 @@ import customtkinter as ctk
 from abc import ABC, abstractmethod
 from .confirmationWindow import ConfirmationWindow
 from .entryAdder import EntryAdder
+from .entryShifter import EntryShifterConfig
 
 from .refreshScrollFrame import RefreshableScrollableFrame
 from .refreshScrollFrame import RSFWidget
@@ -79,11 +80,10 @@ class EntryForm(RSFWidget, ABC):
         return super().delete_self()
 
     def SetEntryAdder(self):
-        entry_adder = EntryAdder(self, 
-                                 self.parent_frame, 
-                                 self.main_editor, 
-                                 )
-        # entry_adder.grid(row=0, column=0, pady=(0, 10), sticky='ew')
+        EntryShifterConfig(self,
+                           self.parent_frame,
+                           self.main_editor,
+                           )
 
     def getNextSimilarType(self):
         parent_tracking = self.parent_frame.get_tracking_list()
