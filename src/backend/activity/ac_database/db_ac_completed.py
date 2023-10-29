@@ -6,7 +6,15 @@ from src.backend.activity.ac_classes.ac_activity import Activity
 
 
 class CompletedDB():
+
+    """
+    Database for storing completions of students.
+    """
+
     def __init__(self, ac_id, ac_type, fields: str) -> None:
+        """
+        Initialises the class.
+        """
 
         self.db_name = "completed"
 
@@ -26,22 +34,40 @@ class CompletedDB():
         self.new_db()
 
     def db_exist(self):
-        self.cursor.execute(f"SELECT tbl_name FROM sqlite_master WHERE type='table' AND tbl_name=(?)", (self.db_name,))
+        """
+        checks if the database with name db_name currently exists
+        """
+        self.cursor.execute("SELECT tbl_name FROM sqlite_master WHERE type='table' AND tbl_name=(?)", (self.db_name,))
         return self.cursor.fetchone() is not None
 
     def new_db(self):
-        if self.db_exist() == False:
+        """
+        creates a new database with:
+        - name specified in db_name
+        - fields specified in db_fields
+        (only works if the database doesnt currently exist)
+        """
+        if self.db_exist() is False:
             self.cursor.execute(f"CREATE TABLE {self.db_name}({self.db_fields})")
             self.connect.commit()
 
     def getStudentEntry(self, student_id):
+        """
+        Retrieves the student entry from the database.
+        """
         value = self.cursor.execute(f"SELECT * from {self.db_name} WHERE {self.db_idfield}=(?)",(student_id,)).fetchone()
         return value
 
     def StudentEntryExist(self, student_id):
-        return self.getStudentEntry(student_id) != None
+        """
+        Check if the student entry already exists in the database.
+        """
+        return self.getStudentEntry(student_id) is not None
 
     def addStudentEntry(self, values: tuple[str]):
+        """
+        Adds an entry into the database.
+        """
         if self.StudentEntryExist(values[0]):
             return
         self.cursor.execute(f"INSERT INTO {self.db_name} VALUES {self.db_placeholder}", values)
