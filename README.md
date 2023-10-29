@@ -10,10 +10,12 @@ This project was developed following the waterfall model, where all documents
 ## Features
 - Coding Modules, Quizzes, Challenges
 - Functional IDE
-- Accounts system w/ database
+- Account Logins
+- New Account Registration
+- Password Change
+- Light / Dark Mode
 - User Interface
 - Fully Customizable Modular Activities with Inbuilt Editor
-- Statistics tracker (Coming Soon)
 
 ## Dependencies
 
