@@ -1,7 +1,16 @@
 from .ac_activity import Activity
 
+
 class Question():
+
+    """
+    Class representing a singular question in a quiz.
+    """
+
     def __init__(self, question_block: list[str], id):
+        """
+        Initialises the class.
+        """
         self.id = id
         self.prompt: list[str] = []
         self.options: list[str] = []
@@ -18,8 +27,11 @@ class Question():
                 self.prompt.append(content)
 
     def __str__(self):
+        """
+        Dunder method to construct string representation of a question.
+        """
         line_len = 32
-        
+
         data = [
             f"Question -- {self.id}",
             "-" * line_len,
@@ -33,23 +45,42 @@ class Question():
                 ", ".join(self.options)
             ]
         )
-        data.extend( [ "-" * line_len ] )
+        data.extend(["-" * line_len])
 
         return "\n".join(data)
 
-    def	get_ID(self):
+    def get_ID(self):
+        """
+        Getter for id.
+        """
         return self.id
-    
+
     def get_Prompt(self):
+        """
+        Getter for prompt.
+        """
         return self.prompt
-    
+
     def get_Options(self):
+        """
+        Getter for options.
+        """
         return self.options
 
+
 class Quiz(Activity):
+
+    """
+    Quiz class to parse a quiz.
+    """
+
     answer_sheet = "answer.ans"
 
     def __init__(self, filename: str) -> None:
+        """
+        Initialises the class.
+        """
+
         self.answers = []
         self.questions: list[Question] = []
 
@@ -61,20 +92,36 @@ class Quiz(Activity):
         self.__getAnswers()
 
     def getQuestionAnswer(self, index):
+        """
+        Get the answer for a specific question.
+        """
+
         return self.answers[index]
 
     def checkAnswers(self, index, answer) -> bool:
         """
-        True if correct, False if wrong
+        Checks the answer of a specific question with the anwer passed as
+        paremeter.
+
+        True if correct, False if wrong.
         """
+
         return self.getQuestionAnswer(index) == answer
 
     def __getAnswers(self) -> None:
+        """
+        Extract the answers from a file.
+        """
+
         with open(f"{self.ModulePath}/{Quiz.answer_sheet}") as file:
             for line in file:
                 self.answers.append(int(line.strip()))
 
-    def	__init_Questions(self) -> None:
+    def __init_Questions(self) -> None:
+        """
+        Extract the questions from a file.
+        """
+
         start = 0
         stop = 0
         question_no = 0
@@ -85,8 +132,13 @@ class Quiz(Activity):
                 question_no += 1
                 start = stop
             start += 1
-    
+
     def __str__(self):
+        """
+        Dunder method to construct string representation of a quiz to be
+        displayed.
+        """
+
         line_len = 32
 
         data = [
@@ -96,20 +148,21 @@ class Quiz(Activity):
             f"Difficulty = {self.difficulty}",
             f"Associated Tags = {str(self.tag).strip('[]')}",
             "-" * line_len,
-            f"Contents",
+            "Contents",
             "-" * line_len
         ]
         data.extend([str(x) for x in self.questions])
         data.extend(
             [
                 "-" * line_len,
-                f"Answers",
+                "Answers",
                 "-" * line_len
             ]
         )
         data.extend([f"{question} - {answer}" for question, answer in self.answers.items()])
 
         return "\n".join(data)
+
 
 if __name__ == "__main__":
     test = Quiz("QZ0000")

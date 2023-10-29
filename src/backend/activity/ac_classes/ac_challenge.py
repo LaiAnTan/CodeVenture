@@ -4,7 +4,7 @@ from .ac_activity import Activity
 class Hints(Activity):
 
     """
-    Hints class for displaying hints in challenges.
+    Hints class for parsing hints in challenges.
     """
 
     def __init__(self, filename: str) -> None:
@@ -20,7 +20,16 @@ class Hints(Activity):
 
 
 class Challange(Activity):
+
+    """
+    Challenge class for parsing challenges.
+    """
+
     def __init__(self, filename: str) -> None:
+        """
+        Initialises the class.
+        """
+
         super().__init__(filename, Activity.AType["Challenge"])
 
         self.read_data_file()
@@ -31,6 +40,11 @@ class Challange(Activity):
         self.hints = Hints(filename)
 
     def __str__(self):
+        """
+        Dunder method to construct string representation of a challenge to be
+        displayed.
+        """
+
         description_msg = ''.join([x[1] for x in self.content])
         line_len = 32
         desc_len = 10
