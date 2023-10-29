@@ -162,4 +162,7 @@ class DBBase(object):
 
     @classmethod
     def retrieve_all_attr(cls, data_id):
+        """
+        gets all the attributes for a certain entry with (data_id)
+        """
         return cls.cursor.execute(f"SELECT * from {cls.db_name} WHERE {cls.db_idfield}=:{cls.db_idfield}", {cls.db_idfield: data_id}).fetchone()

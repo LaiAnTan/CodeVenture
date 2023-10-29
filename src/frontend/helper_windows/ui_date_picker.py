@@ -4,8 +4,15 @@ from tkcalendar import Calendar
 
 
 class DatePickerWindow(ctk.CTkToplevel):
+    
+    """
+    Top level window class for displaying a date picker window.
+    """
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialises the class.
+        """
         super().__init__(*args, **kwargs)
         self.width = 400
         self.height = 300
@@ -15,9 +22,16 @@ class DatePickerWindow(ctk.CTkToplevel):
         self.title("Date Picker")
 
     def getSelectedDate(self):
+        """
+        Getter for date selected.
+        """
         return self.date
 
     def show_window(self):
+
+        """
+        Attaches the elements onto the main frame.
+        """
 
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)

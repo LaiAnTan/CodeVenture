@@ -39,6 +39,8 @@ class User(ABC):
 
     def login(self, pw_input) -> bool:
         """
+        Function that authenticates user login.
+
         Tries to match pw_input with password from db
         """
         db = UserDB()
@@ -59,6 +61,9 @@ class User(ABC):
             return False
 
     def logout(self) -> bool:
+        """
+        Function that logs out a user.
+        """
         self.login_status = False
 
     # @abstractmethod

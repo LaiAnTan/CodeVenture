@@ -1,12 +1,17 @@
+import os
+import shutil as sht
 from config import ACTIVITY_DIR, DATA_FILE
+from ..database.database_base import DBBase
 from .ActivityFactory import ActivityFactory
 from ..database.database_activity import ActivityDB
-from ..database.database_base import DBBase
-import shutil as sht
-import os
 
 
 class ModuleFactory(ActivityFactory):
+
+    """
+    Factory class for modules.
+    """
+
     def __init__(self, header, content, assets) -> None:
         self.header = header
         # serialize the tag list
@@ -27,7 +32,6 @@ class ModuleFactory(ActivityFactory):
         self.code_count = 0
 
         self.data_fd = None
-
 
     def build_Module(self):
         self.prepare_folders()
@@ -63,14 +67,14 @@ class ModuleFactory(ActivityFactory):
                         self.image_dict[asset] = f'IMG{self.image_count:03d}'
                         self.image_count += 1
 
-
     def prepare_folders(self):
-        """prepare the main activity folder"""
+        """
+        prepare the main activity folder
+        """
         try:
             os.mkdir(self.activity_folder_dir)
         except FileExistsError:
             pass
-
 
     def build_Header(self):
         self.data_fd.write("HEADER-START\n")
@@ -83,7 +87,6 @@ class ModuleFactory(ActivityFactory):
         for key, value in header_elements.items():
             self.data_fd.write(f'{key}|{value}\n')
         self.data_fd.write("HEADER-END\n\n")
-
 
     def build_Content(self):
         self.data_fd.write("CONTENT-START\n")
@@ -103,7 +106,6 @@ class ModuleFactory(ActivityFactory):
             self.data_fd.write('\n')
         self.data_fd.write("CONTENT-END\n\n")
 
-
     def generate_Files(self):
         print('[LOG]: Generating Required Files...')
 
@@ -112,7 +114,6 @@ class ModuleFactory(ActivityFactory):
 
         for data, id in self.code_dict.items():
             self.make_code_dir(data, id)
-
 
     def copy_over_image(self, image_data, image_id):
         source_file = image_data[2]
@@ -123,7 +124,6 @@ class ModuleFactory(ActivityFactory):
         sht.copy(source_file, destination_file)
 
         self.id_name_image[image_id] = new_name
-
 
     def make_code_dir(self, code_data, code_id):
         code_name = code_data[1] if code_data[1] else f'Code-{code_id}'
@@ -159,7 +159,6 @@ class ModuleFactory(ActivityFactory):
 
         self.data_fd.write("CODE-CONT-END\n")
         self.data_fd.write("SOURCES-END\n\n")
-
 
     def add_EntrytoDatabase(self):
         print(tuple(self.header))

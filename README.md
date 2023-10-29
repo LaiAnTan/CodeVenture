@@ -1,6 +1,6 @@
 # CodeVenture
 
-A webapp built to teach python programming.
+An application built to teach python programming.
 
 Created for Monash's FIT1056: Collaborative Development for Web Applications' Group Project.
 
@@ -42,6 +42,10 @@ List of test accounts:
 |testedu     |testedu         |Educator    |
 
 Code to bypass Subscription Paywall: ```99999```
+
+## Troubleshooting
+
+- Certain fonts might have to be installed if an error occurs.
 
 ## Authors
 - [@SphagettiCodes](https://github.com/SpaghettiCodes)
