@@ -11,7 +11,7 @@ from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 class ModuleWindow(ActivityWindow):
 
     """
-    Frame clas for displaying the module window.
+    Frame class for displaying the module window.
     """
 
     def __init__(self, module: Module, student: Student) -> None:

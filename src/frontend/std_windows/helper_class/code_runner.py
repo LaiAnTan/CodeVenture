@@ -31,7 +31,7 @@ class CodeRunner(ctk.CTkFrame):
         self.code_folder = f"{self.activity_folder}/{self.code_name}"
         self.runnable = os.path.isfile(f'{self.code_folder}/input')
 
-        if master is None:
+        if master is not None:
             super().__init__(master)
 
             self.HeaderFrame = ctk.CTkFrame(self)
@@ -59,7 +59,7 @@ class CodeRunner(ctk.CTkFrame):
                 file.read(),
                 PythonLexer(),
                 ImageFormatter(
-                    font_name="DejaVu Sans Mono",
+                    font_name="Helvetica",
                     font_size=12
                 ),
                 outfile=f"{self.code_folder}/temp"

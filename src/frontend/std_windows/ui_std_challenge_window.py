@@ -294,7 +294,7 @@ class ChallangeWindow(ActivityWindow):
                     self.displayed_frame,
                     text=f"Test {index} -- OK!",
                     text_color="limegreen",
-                    font=("Helvetica Bold", 20),
+                    font=("Helvetica", 20),
                     width=frame_width - 10,
                     justify="left",
                     anchor="w"
@@ -305,7 +305,7 @@ class ChallangeWindow(ActivityWindow):
                     self.displayed_frame,
                     text=f"Test {index} -- KO!",
                     text_color="red",
-                    font=("Helvetica Bold", 20),
+                    font=("Helvetica", 20),
                     width=frame_width - 10,
                     justify="left",
                     anchor="w"
@@ -320,7 +320,7 @@ class ChallangeWindow(ActivityWindow):
             self.displayed_frame,
             text=f"Test {correct_cases}/{cases} passed!",
             text_color="yellow",
-            font=("Helvetica Bold", 20),
+            font=("Helvetica", 20),
             width=frame_width - 10,
             justify="left",
             anchor="w"
