@@ -78,7 +78,8 @@ class Activity():
                 )
                 continue
 
-            to_where[values[0]] = values[1]
+            # failsafe if the picture name consist of delimiter
+            to_where[values[0]] = delimiter.join(values[1:])
 
         self.warnings.append(
             (
