@@ -57,10 +57,14 @@ class EditorWindow(App_Frame):
         )
         new_ac.grid(row=1, column=0, padx=5, pady=5)
 
+        def logout_event():
+            from ..ui_std_window_gen import loginPage
+            loginPage()
+
         temp_log_out = ctk.CTkButton(
             self.content,
             text='Log Out',
-            command=lambda : App().go_back_history()
+            command=logout_event
         )
         temp_log_out.grid(row=2, column=0, padx=5, pady=5)
 
