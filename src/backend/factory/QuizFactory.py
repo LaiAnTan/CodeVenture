@@ -45,7 +45,7 @@ class QuizFactory(ActivityFactory):
                         to_where.write(f'{segment[1]}')
                     case 'asset':
                         asset_content = segment[1]
-                        match segment[0]:
+                        match asset_content[0]:
                             case 'code':
                                 id = self.code_dict.get(asset_content)
                                 to_where.write(f'<CODE-CONT>{id}')
