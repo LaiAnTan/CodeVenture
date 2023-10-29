@@ -1,14 +1,7 @@
-import customtkinter as ctk
-import os
-from PIL import Image
-from config import ASSET_FOLDER
-
 from ..ui_app import App
 from .edu_activity_editor import ActivityEditor
 from ...backend.activity.ac_classes.ac_module import Activity, Module
 
-from .helper_class.paragraphEntry import ParagraphEntryForm
-from .helper_class.assetPreview import AssetPreview
 from .helper_class.errorWindow import ErrorWindow
 from .helper_class.dataFileEditor import dataFileEditor
 
@@ -46,13 +39,14 @@ class ModuleEditor(ActivityEditor):
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages, 'export Module')
             self.winfo_toplevel().wait_window(error_window)
-            return
+            return False
 
         header = self.GetHeaderData()
         content = self.GetContentData()
 
         ModuleFactory(header, content, self.assets).build()
         print('Export Complete!')
+        return True
 
     def get_asset_list(self):
         return self.assets

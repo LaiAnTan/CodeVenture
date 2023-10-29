@@ -70,15 +70,24 @@ class QuestionFrame(ctk.CTkFrame):
 
 
 class QuizWindow(ActivityWindow):
-    def __init__(self, quiz: Quiz, student: Student):
-        super().__init__(quiz, student)
+    def __init__(self, quiz: Quiz, student: Student, editor_view=False):
+        super().__init__(quiz, student, editor_view)
         self.ac: Quiz
 
-        self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
+        if not self.editor_view:
+            self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
+        else:
+            self.stdanswer = self.processAnswer(None)
+
         self.SetFrames()
 
     def refresh_variables(self):
-        self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
+        super().refresh_variables()
+
+        if not self.editor_view:
+            self.stdanswer = self.processAnswer(self.completion_database.getStudentAnswer(self.std.username))
+        else:
+            self.stdanswer = self.processAnswer(None)
 
     def SetContent(self):
         self.content_frame.rowconfigure(0, weight=1)

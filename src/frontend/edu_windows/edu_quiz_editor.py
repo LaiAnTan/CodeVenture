@@ -73,10 +73,11 @@ class QuizEditor(ActivityEditor):
         if error_list:
             error_window = ErrorWindow(self, 450, 550, error_list, 'exporting quiz activity')
             self.winfo_toplevel().wait_window(error_window)
-            return
+            return False
 
         QuizFactory(self.GetHeaderData(), content, self.asset).build()
         print("Exported Quiz!")
+        return True
 
 if __name__ == "__main__":
     App().change_frame(QuizEditor())

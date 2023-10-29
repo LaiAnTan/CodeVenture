@@ -1,6 +1,5 @@
 import customtkinter as ctk
 
-from .ui_app import App
 from .ui_app_frame import App_Frame
 
 from .ui_std_window_gen import registerPage, studentMenuPage, subscribePage, \

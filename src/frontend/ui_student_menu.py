@@ -4,7 +4,6 @@ from .ui_std_window_gen import loginPage, profilePage, settingsPage
 from .helper_windows.ui_activity_tile import ActivityTile
 from .helper_windows.ui_more_info_tile import MoreInfoTile
 from .helper_windows.ui_recommended_ac_tile import RecommendedAcFrame
-from .ui_app import App
 from .ui_app_frame import App_Frame
 from ..backend.user.user_student import Student
 

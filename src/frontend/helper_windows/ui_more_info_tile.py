@@ -1,7 +1,6 @@
 import customtkinter as ctk
 
 from ..ui_app import App
-from ...backend.user.user_student import Student
 
 from config import LIGHTMODE_GRAY, DARKMODE_GRAY
 
@@ -11,8 +10,9 @@ class MoreInfoTile(ctk.CTkFrame):
     """
     Class for activity tiles.
 
-    Consists of a frame which displays summarized information of
-    an activity.
+    Consists of a frame which displays a "..." label
+    which means "more"
+    which does nothing but look pretty :D
     """
 
     font = ("Helvetica", 12)

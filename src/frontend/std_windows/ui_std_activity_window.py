@@ -13,16 +13,24 @@ from .helper_class.imagelabel import ImageLabel
 
 class ActivityWindow(App_Frame, ABC):
 
-    def __init__(self, activity: Activity, student: Student):
+    def __init__(self, activity: Activity, student: Student, editor_view=False):
         super().__init__()
         self.ac = activity
         self.std = student
+        self.editor_view = editor_view
+
+        if student == None:
+            self.editor_view = True
+
         self.completion_database = ActivityDictionary().getDatabase(self.ac.id)
-        
-        self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
+        if not self.editor_view:
+            self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
+        else:
+            self.done = False
 
     def refresh_variables(self):
-        self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
+        if not self.editor_view:
+            self.done = self.completion_database.StudentEntryExist(self.std.getUsername())
 
     def attach_elements(self):
         self.SetFrames()
@@ -38,7 +46,9 @@ class ActivityWindow(App_Frame, ABC):
         self.content_frame.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
 
         self.footer_frame = ctk.CTkFrame(self, fg_color='transparent')
-        self.footer_frame.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')
+
+        if self.editor_view == False:
+            self.footer_frame.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')
 
         self.SetHeader()
         self.SetContent()
