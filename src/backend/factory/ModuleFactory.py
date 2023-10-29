@@ -8,8 +8,8 @@ class ModuleFactory(ActivityFactory):
     def __init__(self, header, content, assets) -> None:
         super().__init__(header, content, assets, 'Module')
 
-        self.used_image = {}
-        self.used_code = {}
+        self.used_image = set()
+        self.used_code = set()
 
     def build(self):
         self.prepare_folders()

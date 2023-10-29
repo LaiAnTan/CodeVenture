@@ -9,8 +9,8 @@ class QuizFactory(ActivityFactory):
     def __init__(self, header, content, assets) -> None:
         super().__init__(header, content, assets, 'Quiz')
 
-        self.image_used = {}
-        self.code_used = {}
+        self.image_used = set()
+        self.code_used = set()
         self.answer = []
 
 

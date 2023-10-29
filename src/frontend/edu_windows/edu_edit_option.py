@@ -57,6 +57,13 @@ class EditorWindow(App_Frame):
         )
         new_ac.grid(row=1, column=0, padx=5, pady=5)
 
+        temp_log_out = ctk.CTkButton(
+            self.content,
+            text='Log Out',
+            command=lambda : App().go_back_history()
+        )
+        temp_log_out.grid(row=2, column=0, padx=5, pady=5)
+
     ## helper functions
 
     def newActivity(self):

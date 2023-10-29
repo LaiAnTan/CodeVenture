@@ -12,8 +12,8 @@ class ChallengeFactory(ActivityFactory):
         self.testcases = content[3]
 
         # [[images], [codes]]
-        self.asset_in_content: list[set[tuple]] = [{}, {}]
-        self.asset_in_hints: list[set[tuple]] = [{}, {}]
+        self.asset_in_content: list[set[tuple]] = [set(), set()]
+        self.asset_in_hints: list[set[tuple]] = [set(), set()]
 
     def build(self):
         self.prepare_folders()
