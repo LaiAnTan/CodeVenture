@@ -41,21 +41,22 @@ class EntryForm(RSFWidget, ABC):
             self.SetEntryAdder()
 
     def SetHeader(self):
-        self.header.columnconfigure((0, 1), weight=1)
+        self.header.columnconfigure((1, 2), weight=40)
 
+        # theres a reason why these two are at 1 and 2...
         cool_label = ctk.CTkLabel(
             self.header,
             text=f'{self.type.capitalize()} Entry Form',
             corner_radius=10,
         )
-        cool_label.grid(row=0, column=0, sticky='w')
+        cool_label.grid(row=0, column=1, sticky='w')
 
         remove_button = ctk.CTkButton(
             self.header,
             text="Remove",
             command= self.delete_self
         )
-        remove_button.grid(row=0, column=1, sticky='e')
+        remove_button.grid(row=0, column=2, sticky='e')
 
     @abstractmethod
     def SetContentFrame(self):
@@ -82,7 +83,7 @@ class EntryForm(RSFWidget, ABC):
                                  self.parent_frame, 
                                  self.main_editor, 
                                  )
-        entry_adder.grid(row=0, column=0, pady=(0, 10), sticky='ew')
+        # entry_adder.grid(row=0, column=0, pady=(0, 10), sticky='ew')
 
     def getNextSimilarType(self):
         parent_tracking = self.parent_frame.get_tracking_list()

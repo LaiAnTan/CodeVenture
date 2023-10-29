@@ -7,45 +7,89 @@ class EntryAdder(ctk.CTkFrame):
     
     this widget allows EntryForm objects to make a new instance in the main editor instance
     The new instance is placed ABOVE the object (there is a button to add at the bottom)"""
+
+    # depreciated cringe adder
+
+    # def __init__(self,
+    #              master: RSFWidget,
+    #              attached_form: RefreshableScrollableFrame, 
+    #              main_editor):
+    #     super().__init__(master, fg_color='#779DEB')
+
+    #     self.master = master
+    #     self.parent = attached_form
+    #     self.main_editor = main_editor
+    #     self.columnconfigure((0, 1), weight=1)
+
+    #     option_frame = ctk.CTkFrame(
+    #         self,
+    #         fg_color='transparent',
+            
+    #     )
+    #     option_frame.grid(row=0, column=0, padx=5, pady=5, sticky='e')
+
+    #     option_label = ctk.CTkLabel(
+    #         option_frame,
+    #         text='Type: ',
+    #     )
+    #     option_label.grid(row=0, column=0, padx=5, pady=5)
+
+    #     self.para_types = self.main_editor.para_types
+    #     self.chosen_para_type = ctk.StringVar(value=self.para_types[0])
+    #     add_options = ctk.CTkOptionMenu(
+    #         option_frame,
+    #         values=self.para_types,
+    #         variable=self.chosen_para_type
+    #     )
+    #     add_options.grid(row=0, column=1, padx=5, pady=5)
+
+    #     add_button = ctk.CTkButton(
+    #         self,
+    #         text="Add An Entry Widget Above",
+    #         command=lambda : self.AddEntryPoint()
+    #     )
+    #     add_button.grid(row=0, column=1, padx=5, pady=5, sticky='w')
+
     def __init__(self,
-                 master: RSFWidget,
+                 master,
                  attached_form: RefreshableScrollableFrame, 
                  main_editor):
-        super().__init__(master, fg_color='#779DEB')
+        # super().__init__(master, fg_color='#779DEB')
 
         self.master = master
         self.parent = attached_form
         self.main_editor = main_editor
-        self.columnconfigure((0, 1), weight=1)
 
-        option_frame = ctk.CTkFrame(
-            self,
-            fg_color='transparent',
-            
+        self.master.header.columnconfigure((0, 3), weight=10)
+        bring_up = ctk.CTkButton(
+            self.master.header,
+            text='▲',
+            width=0,
+            command=self.swap_up
         )
-        option_frame.grid(row=0, column=0, padx=5, pady=5, sticky='e')
+        bring_up.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
-        option_label = ctk.CTkLabel(
-            option_frame,
-            text='Type: ',
+        bring_down = ctk.CTkButton(
+            self.master.header,
+            text='▼',
+            width=0,
+            command=self.swap_down
         )
-        option_label.grid(row=0, column=0, padx=5, pady=5)
+        bring_down.grid(row=0, column=3, padx=5, pady=5, sticky='ew')
 
-        self.para_types = self.main_editor.para_types
-        self.chosen_para_type = ctk.StringVar(value=self.para_types[0])
-        add_options = ctk.CTkOptionMenu(
-            option_frame,
-            values=self.para_types,
-            variable=self.chosen_para_type
-        )
-        add_options.grid(row=0, column=1, padx=5, pady=5)
+    def swap_up(self):
+        index = self.master.get_index_instance()
+        if index == 0:
+            return
+        self.parent.swap_order(index, index - 1)
+        self.parent.refresh_elements()
 
-        add_button = ctk.CTkButton(
-            self,
-            text="Add An Entry Widget Above",
-            command=lambda : self.AddEntryPoint()
-        )
-        add_button.grid(row=0, column=1, padx=5, pady=5, sticky='w')
+    def swap_down(self):
+        index = self.master.get_index_instance()
+        if index == (self.parent.get_tracking_no() - 1):
+            return
+        self.parent.swap_order(index, index + 1)
+        self.parent.refresh_elements()
 
     def AddEntryPoint(self):
         """Adds an certain type of entry form in a certain position
@@ -54,9 +98,6 @@ class EntryAdder(ctk.CTkFrame):
         for the edu_module_editor instead
 
         God bless this spaghetti code"""
-        from .paragraphEntry import ParagraphEntryForm
-        from .assetPreview import AssetPreview
-
         index_to_add = self.master.get_index_instance()
         to_add = self.chosen_para_type.get()
 
