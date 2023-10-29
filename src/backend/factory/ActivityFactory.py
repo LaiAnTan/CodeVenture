@@ -1,9 +1,11 @@
+import os
+import shutil as sht
 from abc import ABC, abstractmethod
-from config import ACTIVITY_DIR, DATA_FILE
+
+from config import ACTIVITY_DIR
 from ..database.database_activity import ActivityDB
 from ..database.database_base import DBBase
-import shutil as sht
-import os
+
 
 class ActivityFactory(ABC):
 
@@ -25,7 +27,8 @@ class ActivityFactory(ABC):
 
         self.header = header
         # serialize the tag list
-        self.header[4] = str(self.header[4]).strip('[]').replace("'", '').replace(' ', '')
+        self.header[4] = (str(self.header[4]).strip('[]').replace("'", '')
+                          .replace(' ', ''))
 
         self.image_dict = {}
         self.code_dict = {}
@@ -39,6 +42,10 @@ class ActivityFactory(ABC):
         self.data_fd = None
 
     def build_Header(self):
+        """
+        Builds the header portion of the file.
+        """
+
         self.data_fd.write("HEADER-START\n")
         header_elements = {
             "ID": self.header[0],
@@ -55,7 +62,9 @@ class ActivityFactory(ABC):
         pass
 
     def prepare_folders(self):
-        """prepare the main activity folder"""
+        """
+        Prepares the main activity folder
+        """
         try:
             os.mkdir(self.activity_folder_dir)
         except FileExistsError:
@@ -72,21 +81,22 @@ class ActivityFactory(ABC):
         for asset in self.assets:
             match asset[0]:
                 case 'code':
-                    if self.code_dict.get(asset) == None:
+                    if self.code_dict.get(asset) is None:
                         self.code_dict[asset] = f'CD{self.code_count:03d}'
                         self.code_count += 1
                 case 'image':
-                    if self.image_dict.get(asset) == None:
+                    if self.image_dict.get(asset) is None:
                         self.image_dict[asset] = f'IMG{self.image_count:03d}'
                         self.image_count += 1
 
-
-    def build_content(self, to_where, from_where, used_image: set[tuple], used_code: set[tuple]):
+    def build_content(self, to_where, from_where, used_image: set[tuple],
+                      used_code: set[tuple]):
         """
         builds content in file specified in to_where (usually data.dat)
 
         saves assets used in used_image and used_code
         """
+
         to_where.write("CONTENT-START\n")
         for content in from_where:
             match content[0]:
@@ -108,15 +118,15 @@ class ActivityFactory(ABC):
             to_where.write('\n')
         to_where.write("CONTENT-END\n\n")
 
-
     def copy_over_image(self, image_data, image_id):
         """
-        copies over image from directory in image_data into 
+        copies over image from directory in image_data into
         activity folder with name specified in image_data
         """
         source_file = image_data[2]
         extension = image_data[2].split('.')[-1]
-        new_name = f'{image_data[1]}.{extension}' if image_data else f'Image_{image_id}.{extension}'
+        new_name = (f'{image_data[1]}.{extension}' if image_data else
+                    f'Image_{image_id}.{extension}')
         destination_file = f'{self.activity_folder_dir}/{new_name}'
 
         sht.copy(source_file, destination_file)

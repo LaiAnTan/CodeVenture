@@ -3,7 +3,6 @@ from argon2 import PasswordHasher
 
 from .ui_app import App
 from .ui_app_frame import App_Frame
-from .ui_std_window_gen import loginPage
 from ..backend.database.database_user import UserDB
 
 
@@ -315,12 +314,6 @@ class RegisterWindow(App_Frame):
             padx=20,
             pady=30
         )
-
-        def loginButtonEvent():
-            """
-            Handles event where back to login button is pressed.
-            """
-            loginPage()
 
         login_button = ctk.CTkButton(button_frame,
                                      text="Back to Login",

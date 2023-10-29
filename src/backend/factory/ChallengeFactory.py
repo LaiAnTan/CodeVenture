@@ -1,8 +1,11 @@
-from .ActivityFactory import ActivityFactory
-from config import DATA_FILE, HINT_FILE, TESTCASE_FOLDER
 import os
 
+from .ActivityFactory import ActivityFactory
+from config import DATA_FILE, HINT_FILE, TESTCASE_FOLDER
+
+
 class ChallengeFactory(ActivityFactory):
+
     def __init__(self, header, content, assets) -> None:
         super().__init__(header, content, assets, 'Challenge')
 
@@ -46,10 +49,12 @@ class ChallengeFactory(ActivityFactory):
         self.add_EntrytoDatabase()
 
     def build_Data(self):
-        self.build_content(self.data_fd, self.data_content, self.asset_in_content[0], self.asset_in_content[1])
+        self.build_content(self.data_fd, self.data_content,
+                           self.asset_in_content[0], self.asset_in_content[1])
 
     def build_Hint(self):
-        self.build_content(self.hint_fd, self.hints_content, self.asset_in_hints[0], self.asset_in_hints[1])
+        self.build_content(self.hint_fd, self.hints_content,
+                           self.asset_in_hints[0], self.asset_in_hints[1])
 
     def build_Testcase(self):
         for test_no, test_case in enumerate(self.testcases):

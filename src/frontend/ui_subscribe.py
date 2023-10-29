@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 from .ui_app_frame import App_Frame
+from .ui_app import App
 from src.frontend.ui_std_window_gen import loginPage
 from src.backend.user.user_student import Student
 from src.backend.database.database_student import StudentDB
@@ -211,6 +212,7 @@ class SubscribeWindow(App_Frame):
             padx=20,
             pady=20
         )
+
 
 if __name__ == "__main__":
     App().change_frame(SubscribeWindow(Student("test")))

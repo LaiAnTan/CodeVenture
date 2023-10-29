@@ -239,6 +239,7 @@ Subscription End Date: {self.student.getSubscriptionEndDate()}
             sticky="nsew"
         )
 
+
 if __name__ == "__main__":
     App().change_frame(ProfileWindow(Student('teststd')))
     App().mainloop()
