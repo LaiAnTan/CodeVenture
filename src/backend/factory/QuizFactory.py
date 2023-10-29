@@ -1,20 +1,27 @@
-"""
-Quiz factory will not be as clean as the other two, too bad, so sad
-"""
-
-from .ActivityFactory import ActivityFactory
 from config import DATA_FILE, ANSWER_FILE
+from .ActivityFactory import ActivityFactory
 
 class QuizFactory(ActivityFactory):
+
+    """
+    Factory class for quizzes.
+    """
+
     def __init__(self, header, content, assets) -> None:
+        """
+        Initialises the class.
+        """
+
         super().__init__(header, content, assets, 'Quiz')
 
         self.image_used = set()
         self.code_used = set()
         self.answer = []
 
-
     def build(self):
+        """
+        Builds the quiz.
+        """
         self.prepare_folders()
         self.set_AssetDict()
 
@@ -23,15 +30,18 @@ class QuizFactory(ActivityFactory):
             self.build_question(self.data_fd, self.image_used, self.code_used)
             self.generate_Files(self.image_used, self.code_used)
             self.build_Link(self.data_fd)
-        
+
         with open(f'{self.activity_folder_dir}/{ANSWER_FILE}', '+w') as self.answer_fd:
             self.build_answer(self.answer_fd)
 
         # disabled temporary
         self.add_EntrytoDatabase()
 
-
     def build_question(self, to_where, used_image: set, used_code: set):
+        """
+        Builds a question in the quiz.
+        """
+
         to_where.write('CONTENT-START\n')
         for question in self.content:
             prompt = question[0]
@@ -64,5 +74,9 @@ class QuizFactory(ActivityFactory):
         to_where.write('CONTENT-END\n\n')
 
     def build_answer(self, to_where):
+        """
+        Builds the answer to a question in the quiz.
+        """
+
         answer_line = '\n'.join(map(str, self.answer))
         to_where.write(f"{answer_line}")

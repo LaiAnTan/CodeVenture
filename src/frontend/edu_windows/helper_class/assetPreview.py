@@ -4,6 +4,7 @@ from .entryForm import EntryForm
 from ...std_windows.helper_class.imagelabel import ImageLabel
 from .codeFromBuffer import CodeBufferRunner
 
+
 class AssetSelectionScreen(AssetWindow):
     class DescriptionMessage(ctk.CTkFrame):
         def __init__(self, master, parent, width, height, name: str, data: tuple[str]):
@@ -15,7 +16,7 @@ class AssetSelectionScreen(AssetWindow):
 
             nameLabel = ctk.CTkLabel(
                 self,
-                text=f'Attachment Name: '
+                text='Attachment Name: '
             )
             nameLabel.pack(side=ctk.LEFT, padx=5, pady=5)
 

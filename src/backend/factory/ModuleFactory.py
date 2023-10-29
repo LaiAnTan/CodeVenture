@@ -9,7 +9,6 @@ class ModuleFactory(ActivityFactory):
     """
 
     def __init__(self, header, content, assets) -> None:
-
         """
         Initialises the class.
         """
@@ -20,6 +19,10 @@ class ModuleFactory(ActivityFactory):
         self.used_code = set()
 
     def build(self):
+        """
+        Builds the module.
+        """
+
         self.prepare_folders()
         self.set_AssetDict()
 
@@ -36,10 +39,19 @@ class ModuleFactory(ActivityFactory):
     # helper functions
 
     def build_Data(self):
+        """
+        Builds the data of the module.
+        """
         self.build_content(self.data_fd, self.content, self.used_image, self.used_code)
 
     def generate_Data_Files(self):
+        """
+        Generates files.
+        """
         self.generate_Files(self.used_image, self.used_code)
 
     def build_Data_Link(self):
+        """
+        Builds data link.
+        """
         self.build_Link(self.data_fd)

@@ -6,7 +6,15 @@ from config import DATA_FILE, HINT_FILE, TESTCASE_FOLDER
 
 class ChallengeFactory(ActivityFactory):
 
+    """
+    Factory class for challenges.
+    """
+
     def __init__(self, header, content, assets) -> None:
+        """
+        Initialises the class.
+        """
+
         super().__init__(header, content, assets, 'Challenge')
 
         self.data_content = content[0]
@@ -19,6 +27,10 @@ class ChallengeFactory(ActivityFactory):
         self.asset_in_hints: list[set[tuple]] = [set(), set()]
 
     def build(self):
+        """
+        Builds the challenge.
+        """
+
         self.prepare_folders()
         self.set_AssetDict()
 
@@ -49,19 +61,31 @@ class ChallengeFactory(ActivityFactory):
         self.add_EntrytoDatabase()
 
     def build_Data(self):
+        """
+        Builds the data of the challenge.
+        """
         self.build_content(self.data_fd, self.data_content,
                            self.asset_in_content[0], self.asset_in_content[1])
 
     def build_Hint(self):
+        """
+        Builds the hints for the challenge.
+        """
         self.build_content(self.hint_fd, self.hints_content,
                            self.asset_in_hints[0], self.asset_in_hints[1])
 
     def build_Testcase(self):
+        """
+        Builds a test case for the challenge.
+        """
         for test_no, test_case in enumerate(self.testcases):
             with open(f'{self.activity_folder_dir}/{TESTCASE_FOLDER}/{test_no}', '+w') as fd:
                 fd.write(test_case)
 
     def prepare_folders(self):
+        """
+        Prepares the folders to store relevant challenge files.
+        """
         super().prepare_folders()
 
         # prepare the hints folder as well
