@@ -25,15 +25,18 @@ class CodeBufferRunner(ctk.CTkFrame):
         self.temp_file = f"{ROOT_DIR}/temp"
         self.temp_file_input = f"{ROOT_DIR}/temp2"
 
+        self.runnable = input_buffer is not None
+
         self.HeaderFrame = ctk.CTkFrame(self)
         self.HeaderFrame.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
         self.CodeFrame = ctk.CTkFrame(self)
         self.CodeFrame.grid(row=1, column=0, padx=5, pady=5)
 
-        self.RunButtonFrame = ctk.CTkFrame(self)
-        self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
-        self.RunButtonFrame.columnconfigure(0, weight=1)
+        if self.runnable:
+            self.RunButtonFrame = ctk.CTkFrame(self)
+            self.RunButtonFrame.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+            self.RunButtonFrame.columnconfigure(0, weight=1)
 
         self.outputFrame = ctk.CTkFrame(self)
 
@@ -70,13 +73,15 @@ class CodeBufferRunner(ctk.CTkFrame):
         )
         title.grid(row=0, column=0, padx=5)
 
-        RunButton = ctk.CTkButton(
-            self.RunButtonFrame,
-            text="Run",
-            command=self.RunCode,
-            height=10
-        )
-        RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+
+        if self.runnable:
+            RunButton = ctk.CTkButton(
+                self.RunButtonFrame,
+                text="Run",
+                command=self.RunCode,
+                height=10
+            )
+            RunButton.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         CodeContent = self.DisplayCodeline_FromBuffer()
         CodeContent.grid(row=0, column=0, padx=5, pady=5)

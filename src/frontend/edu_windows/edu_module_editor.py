@@ -51,8 +51,7 @@ class ModuleEditor(ActivityEditor):
         header = self.GetHeaderData()
         content = self.GetContentData()
 
-        print(header, content)
-        # ModuleFactory(header, content, self.assets).build_Module()
+        ModuleFactory(header, content, self.assets).build()
         print('Export Complete!')
 
     def get_asset_list(self):

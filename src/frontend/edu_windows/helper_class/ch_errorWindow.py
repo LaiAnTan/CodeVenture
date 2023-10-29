@@ -29,7 +29,7 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
         self.screen_var = ctk.StringVar(value = 'Challange Question Prompt')
         segmented_button = ctk.CTkSegmentedButton(
             self,
-            values=['Challange Question Prompt', 'Solution', 'Hints'],
+            values=['Challange Question Prompt', 'Solution', 'Hints', 'Test Cases'],
             variable=self.screen_var,
             dynamic_resizing=False,
             command=self.switch
@@ -44,6 +44,7 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
         self.prompt_error = ErrorFrame(self, self.widget_width, self.error_lists[0])
         self.solution_error = ErrorFrame(self, self.widget_width, self.error_lists[1])
         self.hint_error = ErrorFrame(self, self.widget_width, self.error_lists[2])
+        self.test_case_error = ErrorFrame(self, self.widget_width, self.error_lists[3])
 
     def switch(self, placeholder):
         match self.screen_var.get():
@@ -53,6 +54,8 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
                 self.show_solution_error()
             case 'Hints':
                 self.show_hint_error()
+            case 'Test Cases':
+                self.show_test_case_error()
 
     def show_prompt_error(self):
         self.nowdisplaying.grid_forget()
@@ -71,3 +74,9 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
 
         self.nowdisplaying = self.hint_error
         self.hint_error.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')
+
+    def show_test_case_error(self):
+        self.nowdisplaying.grid_forget()
+
+        self.nowdisplaying = self.test_case_error
+        self.test_case_error.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')

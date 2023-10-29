@@ -104,6 +104,9 @@ class IDE(ctk.CTkFrame):
         self.outputFrame = ctk.CTkFrame(self, fg_color='black')
         self.outputFrame.columnconfigure(0, weight=1)
 
+        self.terminal = self.terminalOutputLabel(self.outputFrame)
+        self.terminal.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
+
         self.IDEHeader.rowconfigure((0,1), weight=1)
         self.IDEHeader.columnconfigure((0,1), weight=1)
 
@@ -217,22 +220,21 @@ class IDE(ctk.CTkFrame):
 
         ## remove the file
         os.remove(f"{self.activity_folder}/{self.code_name}")
-        if code_output or error_output:
-            self.display_output_terminal(code_output, error_output)
+        self.display_output_terminal(code_output, error_output)
 
     def display_output_terminal(self, code_output, error_output):
-        for widget in self.outputFrame.winfo_children():
-            widget.destroy()
+        self.terminal.configure(state='normal')
+        self.terminal.delete('0.0', ctk.END)
 
-        self.outputFrame.grid(row=3, column=0, padx=5, pady=5, sticky='ew')
-
-        code_output_label = self.terminalOutputLabel(self.outputFrame)
-        code_output_label.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
-        if code_output:
-            self.insertTerminal(code_output_label, code_output, False)
-        if error_output:
-            self.insertTerminal(code_output_label, error_output, True)
-        code_output_label.configure(state='disabled')
+        if code_output or error_output:
+            self.outputFrame.grid(row=3, column=0, padx=5, pady=5, sticky='ew')
+            if code_output:
+                self.insertTerminal(self.terminal, code_output, False)
+            if error_output:
+                self.insertTerminal(self.terminal, error_output, True)
+            self.terminal.configure(state='disabled')
+        else:
+            self.outputFrame.grid_forget()
 
     # used in code entry and nowhere else
 

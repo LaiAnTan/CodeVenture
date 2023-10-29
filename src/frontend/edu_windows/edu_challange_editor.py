@@ -8,6 +8,8 @@ from ...backend.activity.ac_classes.ac_challenge import Activity, Challange
 from .helper_class.dataFileEditor import dataFileEditor
 from .helper_class.solutionEntry import Modified_IDE
 from .helper_class.ch_errorWindow import Ch_ErrorWindow
+from .helper_class.testcaseEditor import testCaseEditor
+from ...backend.factory.ChallengeFactory import ChallengeFactory
 
 class ChallangeEditor(ActivityEditor):
     def __init__(self, existing_module: Challange = None):
@@ -22,7 +24,7 @@ class ChallangeEditor(ActivityEditor):
         self.screen_var = ctk.StringVar(value = 'Challange Question Prompt')
         segmented_button = ctk.CTkSegmentedButton(
             self.content_data,
-            values=['Challange Question Prompt', 'Solution', 'Hints'],
+            values=['Challange Question Prompt', 'Solution', 'Hints', 'Test Cases'],
             variable=self.screen_var,
             dynamic_resizing=False,
             command=self.switch
@@ -45,6 +47,8 @@ class ChallangeEditor(ActivityEditor):
                 self.display_solution()
             case 'Hints':
                 self.display_hints()
+            case 'Test Cases':
+                self.display_testcases()
 
     def init_all_frames(self):
         self.prompt = dataFileEditor(
@@ -59,6 +63,11 @@ class ChallangeEditor(ActivityEditor):
         self.hints = dataFileEditor(
             self.now_displaying,
             self.asset
+        )
+
+        self.testcase = testCaseEditor(
+            self.now_displaying,
+            self
         )
 
     def display_PromptEditor(self):
@@ -76,18 +85,25 @@ class ChallangeEditor(ActivityEditor):
             children.grid_forget()
         self.hints.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
 
+    def display_testcases(self):
+        for children in self.now_displaying.winfo_children():
+            children.grid_forget()
+        self.testcase.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
+
     def GetContentData(self):
         return (
             self.prompt.get_content_data(),
             self.solution.get_content(),
-            self.hints.get_content_data()
+            self.hints.get_content_data(),
+            self.testcase.get_content_data()
         )
 
     def get_error_list(self):
         return (
             self.prompt.get_error_list(),
             self.solution.get_error(),
-            self.hints.get_error_list()
+            self.hints.get_error_list(),
+            self.testcase.get_error_list()
         )
 
     def ExportData(self):
@@ -100,10 +116,17 @@ class ChallangeEditor(ActivityEditor):
             error[0].append(('Prompt', 'Empty Prompt'))
         if content[2] == []:
             error[2].append(('Hints', 'Empty Hints'))
+        if content[3] == []:
+            error[3].append(('Test Cases', 'No Test Cases'))
 
-        if error != ([], [], []): # all empty
+        if error != ([], [], [], []): # all empty
             error_window = Ch_ErrorWindow(self, 450, 550, error)
             self.winfo_toplevel().wait_window(error_window)
+            return
+ 
+        # print(content)
+        ChallengeFactory(self.GetHeaderData(), content, self.asset).build()
+
         print("Export Complete!")
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ from .entryAdder import EntryAdder
 from .refreshScrollFrame import RefreshableScrollableFrame
 from .refreshScrollFrame import RSFWidget
 
-class EntryForm(RSFWidget):
+class EntryForm(RSFWidget, ABC):
     def __init__(self, master: RefreshableScrollableFrame, main_editor):
         super().__init__(master=master)
         self.main_editor = main_editor

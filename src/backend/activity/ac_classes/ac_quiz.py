@@ -1,8 +1,8 @@
 from .ac_activity import Activity
 
 class Question():
-    def __init__(self, question_block: list[str]):
-        self.id = question_block.pop(0).split('|')[1]
+    def __init__(self, question_block: list[str], id):
+        self.id = id
         self.prompt: list[str] = []
         self.options: list[str] = []
 
@@ -11,7 +11,7 @@ class Question():
     def __get_values(self, q_block: list[str]):
         while len(q_block):
             content = q_block.pop(0)
-            if content == "OPTION":
+            if content == "<OPTION>":
                 content = q_block.pop(0)
                 self.options = content.split('|')
             else:
@@ -77,10 +77,12 @@ class Quiz(Activity):
     def	__init_Questions(self) -> None:
         start = 0
         stop = 0
+        question_no = 0
         while start < len(self.content):
-            if self.content[start].split('|')[0] == "QUESTION":
-                stop = self.content.index("QUESTION-END", start)
-                self.questions.append(Question(self.content[start:stop]))
+            if self.content[start] == "<QUESTION-START>":
+                stop = self.content.index("<QUESTION-END>", start)
+                self.questions.append(Question(self.content[start+1:stop], question_no))
+                question_no += 1
                 start = stop
             start += 1
     

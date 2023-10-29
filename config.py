@@ -19,9 +19,15 @@ PINK = "#fa84c1"
 
 ASSET_FOLDER = 'asset'
 ASSET_DIR = f'{ROOT_DIR}/{ASSET_FOLDER}'
+
 ACTIVITY_FOLDER = 'storeroom'
 ACTIVITY_DIR = f'{ROOT_DIR}/{ACTIVITY_FOLDER}'
+
 DATA_FILE = 'data.dat'
+HINT_FILE = 'hints'
+ANSWER_FILE = 'answer.ans'
+TESTCASE_FOLDER = 'testcase'
+
 DATABASE_FOLDER = 'database'
 DATABASE_DIR = f'{ROOT_DIR}/{DATABASE_FOLDER}'
 TAG_FILENAME = 'tags.txt'

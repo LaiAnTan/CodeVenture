@@ -5,6 +5,19 @@ class ErrorFrame(ctk.CTkScrollableFrame):
         super().__init__(master)
         self.columnconfigure(0, weight=1)
 
+        if not error_list:
+            all_goodframe = ctk.CTkFrame(self, fg_color='#00FF6F')
+            all_goodframe.columnconfigure(0, weight=1)
+            all_goodframe.grid(row=0, column=0, padx=5, pady=5, sticky='new')
+
+            all_good_label = ctk.CTkLabel(
+                all_goodframe,
+                text='All Good!',
+                text_color='black'
+            )
+            all_good_label.grid(row=0, column=0, padx=5, pady=5)
+            return
+
         for index, error in enumerate(error_list):
             error_frame = ctk.CTkFrame(self, fg_color='#169398')
             error_frame.grid(row=index, column=0, padx=5, pady=5, sticky='new')

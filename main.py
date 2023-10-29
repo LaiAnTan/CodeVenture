@@ -4,7 +4,6 @@ from src.frontend.ui_app import App
 from src.setup import populate_databases, reset_databases
 import src.frontend.ui_std_window_gen as wingen
 
-
 def main() -> None:
     """
     Main function of the program.

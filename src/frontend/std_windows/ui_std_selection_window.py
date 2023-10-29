@@ -17,7 +17,6 @@ from config import LIGHTMODE_GRAY, DARKMODE_GRAY, TAG_DIR
 # u gotta be kidding me
 # https://stackoverflow.com/questions/66662493/how-to-progress-to-next-window-in-tkinter
 
-
 class SelectionScreen(App_Frame):
 
     def __init__(self, student) -> None:

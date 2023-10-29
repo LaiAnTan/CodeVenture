@@ -10,6 +10,8 @@ from .helper_class.refreshScrollFrame import RefreshableScrollableFrame
 from .helper_class.errorWindow import ErrorWindow
 from .helper_class.questionPreview import QuestionPreview
 
+from ...backend.factory.QuizFactory import QuizFactory
+
 class QuizEditor(ActivityEditor):
     def __init__(self, existing_quiz: Quiz = None):
         super().__init__(Activity.AType['Quiz'], existing_quiz)
@@ -68,12 +70,12 @@ class QuizEditor(ActivityEditor):
 
         error_list = self.get_error_list()
         content = self.GetContentData()
-        print(content)
         if error_list:
             error_window = ErrorWindow(self, 450, 550, error_list, 'exporting quiz activity')
             self.winfo_toplevel().wait_window(error_window)
             return
 
+        QuizFactory(self.GetHeaderData(), content, self.asset).build()
         print("Exported Quiz!")
 
 if __name__ == "__main__":
