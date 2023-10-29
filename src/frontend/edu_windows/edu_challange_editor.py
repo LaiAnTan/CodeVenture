@@ -122,12 +122,13 @@ class ChallangeEditor(ActivityEditor):
         if error != ([], [], [], []): # all empty
             error_window = Ch_ErrorWindow(self, 450, 550, error)
             self.winfo_toplevel().wait_window(error_window)
-            return
+            return False
  
         # print(content)
         ChallengeFactory(self.GetHeaderData(), content, self.asset).build()
 
         print("Export Complete!")
+        return True
 
 if __name__ == "__main__":
     App().change_frame(ChallangeEditor(None))

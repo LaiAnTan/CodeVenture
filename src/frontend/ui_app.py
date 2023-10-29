@@ -59,8 +59,8 @@ class App():
         if len(cls.history) == 1:
             return cls.history[0]
 
-        if cls.tracked:
-            cls.history.pop()
+        # if cls.tracked:
+        cls.history.pop()
         previous = cls.history[-1]
 
         cls.clean_frame()

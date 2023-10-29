@@ -15,13 +15,16 @@ from .helper_class.textdisplay import ParagraphDisplayer
 
 class ChallangeWindow(ActivityWindow):
 
-    def __init__(self, challenge: Challange, student: Student):
-        super().__init__(challenge, student)
+    def __init__(self, challenge: Challange, student: Student, editor_view=False):
+        super().__init__(challenge, student, editor_view)
         self.attempted_count = 0
         self.suceeded = False
         self.percentage = 0
 
-        self.codeentry = self.completion_database.getStudentCode(self.std.username)
+        if not self.editor_view:
+            self.codeentry = self.completion_database.getStudentCode(self.std.username)
+        else:
+            self.codeentry = None
 
         self.displayed_frame = None
         self.shittyIDE = None
@@ -31,7 +34,8 @@ class ChallangeWindow(ActivityWindow):
     def refresh_variables(self):
         super().refresh_variables()
 
-        self.codeentry = self.completion_database.getStudentCode(self.std.username)
+        if not self.editor_view:
+            self.codeentry = self.completion_database.getStudentCode(self.std.username)
 
     def SetContent(self):
         self.content_frame.rowconfigure(0, weight=1)
@@ -128,7 +132,7 @@ class ChallangeWindow(ActivityWindow):
             450,
             250,
             self.ac.id.lower(),
-            self.std.username,
+            self.ac.id,
             self.ac.ModulePath,
             self.codeentry
         )

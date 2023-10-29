@@ -26,7 +26,7 @@ class CompletedDB():
         self.new_db()
 
     def db_exist(self):
-        self.cursor.execute(f"SELECT tbl_name FROM sqlite_master WHERE type='table' AND tbl_name='{self.db_name}'")
+        self.cursor.execute(f"SELECT tbl_name FROM sqlite_master WHERE type='table' AND tbl_name=(?)", (self.db_name,))
         return self.cursor.fetchone() is not None
 
     def new_db(self):
@@ -103,7 +103,7 @@ class QuizCompleted_DB(CompletedDB):
     def updateStudentAnswer(self, std_id, new_answer) -> None:
         if self.getStudentEntry(std_id) == None:
             return self.addStudentEntry((std_id, new_answer))
-        self.cursor.execute(f"UPDATE {self.db_name} SET answer='{new_answer}' WHERE {self.db_idfield}=(?)", (std_id,))
+        self.cursor.execute(f"UPDATE {self.db_name} SET answer=(?) WHERE {self.db_idfield}=(?)", (new_answer, std_id))
         self.connect.commit()
 
 
@@ -139,7 +139,17 @@ class ActivityDictionary():
 
     @classmethod
     def getDatabase(cls, id) -> ModuleCompleted_DB | ChallangeCompleted_DB | QuizCompleted_DB:
-        return cls.dictionary.get(id, None)
+        from src.backend.database.database_activity import ActivityDB
+
+        if ActivityDB().checkIDExists(id):
+            id_dict = cls.dictionary.get(id, None)
+            if id_dict is not None:
+                return id_dict
+            else:
+                ac_type = ActivityDB().fetch_attr('type', id)
+                cls.dictionary[id] = cls.databaseDispatcher(id, ac_type)
+                return cls.dictionary[id]
+        return None
 
 
 if __name__ == "__main__":

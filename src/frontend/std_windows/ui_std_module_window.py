@@ -12,8 +12,8 @@ from .helper_class.textdisplay import ParagraphDisplayer
 
 class ModuleWindow(ActivityWindow):
 
-    def __init__(self, module: Module, student: Student):
-        super().__init__(module, student)
+    def __init__(self, module: Module, student: Student, editor_view=False):
+        super().__init__(module, student, editor_view)
 
         self.SetFrames()
 

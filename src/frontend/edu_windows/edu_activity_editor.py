@@ -5,6 +5,8 @@ from ..ui_app_frame import App_Frame
 from ...backend.activity.ac_classes.ac_activity import Activity
 from ...backend.database.database_activity import ActivityDB
 from abc import abstractmethod, ABC
+from .helper_class.confirmationWindow import ConfirmationWindow
+from .helper_class.sucessWindow import successWindow
 
 class ActivityEditor(App_Frame, ABC):
     def __init__(self, type: Activity.AType, activity: Activity=None):
@@ -58,7 +60,7 @@ class ActivityEditor(App_Frame, ABC):
         submit_button = ctk.CTkButton(
             self.header,
             text="Finish and Export",
-            command=self.ExportData
+            command=self.PreExportData
         )
         submit_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
@@ -190,6 +192,37 @@ class ActivityEditor(App_Frame, ABC):
     @abstractmethod
     def ContentData(self):
         pass
+
+    def PreExportData(self):
+        confirm = ConfirmationWindow(self, f'export {self.ac_type_name}')
+        self.winfo_toplevel().wait_window(confirm)
+        if not confirm.get_value():
+            return
+
+        if self.ExportData():
+            ok_win = successWindow(self, f'exported {self.ac_type_name} {self.id_variable.get()}')
+            ok_win.add_a_action_button('Back To Selection', lambda : App().go_back_history())
+            ok_win.add_a_action_button('Preview Window', self.preview_win)
+            self.winfo_toplevel().wait_window(ok_win)
+
+    def preview_win(self):
+        from ..std_windows.ui_std_module_window import ModuleWindow
+        from ..std_windows.ui_std_quiz_window import QuizWindow
+        from ..std_windows.ui_std_challenge_window import ChallangeWindow
+
+        from ...backend.activity.ac_classes.ac_module import Module
+        from ...backend.activity.ac_classes.ac_quiz import Quiz
+        from ...backend.activity.ac_classes.ac_challenge import Challange
+
+        ac_id = self.id_variable.get()
+        App().clean_frame()
+        match self.ac_type:
+            case Activity.AType.Module:
+                App().change_frame(ModuleWindow(Module(ac_id), None, True), False)
+            case Activity.AType.Quiz:
+                App().change_frame(QuizWindow(Quiz(ac_id), None, True), False)
+            case Activity.AType.Challenge:
+                App().change_frame(ChallangeWindow(Challange(ac_id), None, True), False)
 
     @abstractmethod
     def ExportData(self):

@@ -46,13 +46,14 @@ class ModuleEditor(ActivityEditor):
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages, 'export Module')
             self.winfo_toplevel().wait_window(error_window)
-            return
+            return False
 
         header = self.GetHeaderData()
         content = self.GetContentData()
 
         ModuleFactory(header, content, self.assets).build()
         print('Export Complete!')
+        return True
 
     def get_asset_list(self):
         return self.assets
