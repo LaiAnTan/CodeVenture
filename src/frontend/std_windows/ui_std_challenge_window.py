@@ -166,7 +166,7 @@ class ChallangeWindow(ActivityWindow):
                 case Challange.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
-                        200, # change height value later
+                        1600, # change height value later
                         frame_width,
                         self.displayed_frame
                     )
