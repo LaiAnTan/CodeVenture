@@ -82,7 +82,7 @@ class ActivityWindow(App_Frame, ABC):
     def ImageHandler(self, content, max_img_height, max_img_width, attach_to, source=None):
         if source is None:
             source = self.ac
-        
+
         if source.img.get(content):
             ret_widget = ImageLabel(
                 attach_to,

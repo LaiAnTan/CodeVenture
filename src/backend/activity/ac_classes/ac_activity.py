@@ -95,10 +95,10 @@ class Activity():
             contents = self.footer.pop(0)
             match contents:
                 case "IMG-CONT-START":
-                    self.SourcesExtractor(self.footer, self.img,
+                    self.SourcesExtractor(self.img,
                                           "IMG-CONT-END")
                 case "CODE-CONT-START":
-                    self.SourcesExtractor(self.footer, self.code,
+                    self.SourcesExtractor(self.code,
                                           "CODE-CONT-END")
 
     def ParseContent(self):
