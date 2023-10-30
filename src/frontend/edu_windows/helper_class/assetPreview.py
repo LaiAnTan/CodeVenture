@@ -6,7 +6,17 @@ from .codeFromBuffer import CodeBufferRunner
 
 
 class AssetSelectionScreen(AssetWindow):
+    """
+    Window that allows the user to select the asset to be previewed
+
+    Used in conjection with Asset Preview Frame
+    """
     class DescriptionMessage(ctk.CTkFrame):
+        """
+        Frame that displays a very brief information on an attachment
+
+        With a selectable button that returns the attachment details back to parent
+        """
         def __init__(self, master, parent, width, height, name: str, data: tuple[str]):
             super().__init__(master, width=width, height=height)
 
@@ -37,6 +47,10 @@ class AssetSelectionScreen(AssetWindow):
             button.pack(side=ctk.RIGHT, padx=5, pady=5)
         
         def selection(self):
+            """
+            Sets parent AssetSelectionScreen stored data to the selected data
+            Destroys parent AssetSelectionScreen
+            """
             self.parent.selected_asset = self.data
             self.parent.destroy()
 
@@ -50,6 +64,9 @@ class AssetSelectionScreen(AssetWindow):
         self.selected_asset = None
 
     def set_Header(self):
+        """
+        Initializes header of frame
+        """
         guide = ctk.CTkLabel(
             self.header,
             text="Select the asset to attach to the file"
@@ -59,6 +76,9 @@ class AssetSelectionScreen(AssetWindow):
         guide.grid(row=0, column=0, padx=10, pady=10)
 
     def set_Content(self):
+        """
+        Initializes content of frame
+        """
         self.description_frames = ctk.CTkScrollableFrame(
             self.content,
             width=self.width - 45,
@@ -80,9 +100,17 @@ class AssetSelectionScreen(AssetWindow):
             data_repr.grid(row=index, column=0, padx=10, pady=10, sticky='new')
 
     def get_Selection(self):
+        """
+        Returns selected asset
+        """
         return self.selected_asset
 
 class AssetPreview(EntryForm):
+    """
+    Entry form for attachments
+
+    used to include a form of attachment (images, codes) in data.dat
+    """
     def __init__(self, master, parent, asset_list) -> None:
         super().__init__(master, parent)
 
@@ -93,6 +121,10 @@ class AssetPreview(EntryForm):
         self.SetFrames()
 
     def SetContentFrame(self):
+        """
+        Sets contents of the frame
+        Displayes default message
+        """
         self.content.rowconfigure((0, 1), weight=1)
         self.content.columnconfigure(0, weight=1)
 
@@ -101,6 +133,9 @@ class AssetPreview(EntryForm):
 
 
     def display_default(self):
+        """
+        Function to replace content with the default prompt message
+        """
         for children in self.content.winfo_children():
             children.grid_forget()
 
@@ -126,6 +161,10 @@ class AssetPreview(EntryForm):
     
 
     def display_Selection(self):
+        """
+        Displays the AssetSelectionScreen for user to select attachment
+        to be attached to the content of the activity
+        """
         selection = AssetSelectionScreen(self, 450, 700, self.assets)
         self.winfo_toplevel().wait_window(selection)
 
@@ -136,9 +175,21 @@ class AssetPreview(EntryForm):
         self.refreshPreview()
 
     def set_displaying_value(self, display_val):
+        """
+        Sets what is currently displayed by the assetPreview frame
+        """
         self.displaying_value = display_val
 
     def refreshPreview(self):
+        """
+        Refreshes preview window of the widget
+
+        displays content of displaying_value
+        
+        displays default prompt message if displaying_value is not set
+        
+        displays error message if displaying_value cannot be found in asset list
+        """
         if self.displaying_value is None:
             return self.display_default()
 
@@ -205,6 +256,11 @@ class AssetPreview(EntryForm):
         preview_label.grid(row=0, column=0, padx=5, pady=5)
 
     def displayError(self):
+        """
+        Displays error message
+
+        sets displaying_value to -1 for error identification
+        """
         self.displaying_value = -1
 
         for children in self.content.winfo_children():
@@ -231,12 +287,27 @@ class AssetPreview(EntryForm):
         self.button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
     def getData(self):
+        """
+        Gets data stored in asset preview (displayed value)
+        """
         return (
             'asset',
             self.displaying_value
         )
 
     def importData(self, data: tuple[str]):
+        """
+        Imports data
+
+        data must be in the form of
+        - ('asset', type)
+        
+        type can be
+        - a image ('image', image_name, image_dir)
+        - a code ('code', code_name, code_content, input_content)
+
+        displaying value will be set to what is imported
+        """
         if data[0] != 'asset':
             raise AssertionError('Wrong Type')
         
@@ -245,6 +316,13 @@ class AssetPreview(EntryForm):
         self.refreshPreview()
 
     def getError(self):
+        """
+        Gets error occured in widget
+
+        Potential errors
+        - Invalid Asset Chosen
+        - Entry Frame is Empty
+        """
         error_list = []
 
         if self.displaying_value == -1:

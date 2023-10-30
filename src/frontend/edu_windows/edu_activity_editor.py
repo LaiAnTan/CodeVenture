@@ -306,6 +306,7 @@ class ActivityEditor(App_Frame, ABC):
         self.id_variable.set(self.GetActivityID())
         self.name_variable.set(self.GetActivityName())
         self.difficulty_value.set(self.GetActivityDifficulty())
+        self.UpdateDifficultyLabel()
 
         if self.editing:
             self.tag_entry.import_values(self.ac.tag)
@@ -382,9 +383,10 @@ class ActivityEditor(App_Frame, ABC):
 
     # helper function
 
-    def UpdateDifficultyLabel(self, value):
+    def UpdateDifficultyLabel(self):
         """
-        Updates the difficulty label to (value)
+        Updates the difficulty label
+        value is obtained through difficulty_value widget
         """
 
         self.difficulty_display.configure(text=self.difficulty_value.get())
