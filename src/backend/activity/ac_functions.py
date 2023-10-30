@@ -87,7 +87,7 @@ def sort_results(results: list[tuple[str]], mode: str, option: str):
             weights = [adb.fetch_attr("difficulty", result[0]) for result in
                        results]
         case "name":
-            weights = [adb.fetch_attr("title", result[0]) for result in
+            weights = [adb.fetch_attr("title", result[0]).lower() for result in
                        results]
         case _:
             return []
