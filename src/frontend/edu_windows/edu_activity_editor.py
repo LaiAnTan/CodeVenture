@@ -306,7 +306,7 @@ class ActivityEditor(App_Frame, ABC):
         self.id_variable.set(self.GetActivityID())
         self.name_variable.set(self.GetActivityName())
         self.difficulty_value.set(self.GetActivityDifficulty())
-        self.UpdateDifficultyLabel()
+        self.UpdateDifficultyLabel(None)
 
         if self.editing:
             self.tag_entry.import_values(self.ac.tag)
