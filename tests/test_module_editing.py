@@ -399,7 +399,7 @@ class TestModuleExport(unittest.TestCase):
 
         # Simulate user removing the asset from the asset list
         asset_window = AssetWindow(self.md_editor, 200, 200, self.md_editor.get_asset_list())
-        pic_asset = asset_window.asset_frame.get_subframe(0)
+        pic_asset = asset_window.asset_frame.get_specific_frame(0)
         pic_asset.delete_self(confirm=False)
         asset_window.save_data()
         self.md_editor.data_editor.refresh_assets()

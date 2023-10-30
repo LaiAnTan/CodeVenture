@@ -48,18 +48,35 @@ class RefreshableScrollableFrame(ctk.CTkScrollableFrame):
         self.tracking: list[RSFWidget] = []
 
     def add_element_specific(self, index, frame) -> None:
+        """
+        Adds a element in a specific location 
+        """
         self.tracking.insert(index, frame)
 
     def get_tracking_no(self) -> int:
+        """
+        Gets the number of elements that are tracked by the RSF
+        """
         return len(self.tracking)
 
     def track_element(self, frame) -> None:
+        """
+        Appends the RSFWidget into the tracking list
+        """
         self.tracking.append(frame)
 
     def get_tracking_list(self) -> list[RSFWidget]:
+        """
+        Returns the tracking list of the RSF
+        """
         return self.tracking
 
-    def get_subframe(self, index) -> None | RSFWidget:
+    def get_specific_frame(self, index) -> None | RSFWidget:
+        """
+        Returns the tracked RSFWidget based on the index given
+
+        Returns None if nothing is there
+        """
         try:
             return self.tracking[index]
         except IndexError:
@@ -83,11 +100,14 @@ class RefreshableScrollableFrame(ctk.CTkScrollableFrame):
                             sticky='ew')
 
     def remove_element(self, to_remove: RSFWidget) -> None:
+        """
+        Removes a specific RSFWidget from the tracking list
+        """
         self.tracking.remove(to_remove)
 
     def swap_order(self, index1, index2) -> None:
         """
-        Swaps order of 2 widgets, thats all it does
+        Swaps order of 2 widgets
         """
 
         self.tracking[index1], self.tracking[index2] = \
@@ -108,8 +128,7 @@ class RSFWidget(ctk.CTkFrame):
     """
     Widget to use together with refreshable scrollable frame
 
-    allows you to remove the widget no matter where it is
-    with (hopefully), no cursed grid operation
+    Grants the ability to remove the widget no matter where it is
     """
 
     def __init__(self,
@@ -172,7 +191,7 @@ class RSFWidget(ctk.CTkFrame):
         else:
             scroll_to = 0
 
-        next_index_widget = self.parent_frame.get_subframe(next_index)
+        next_index_widget = self.parent_frame.get_specific_frame(next_index)
         if next_index_widget is None:
             if parent_tracking:
                 parent_tracking[-1].focus()
@@ -184,4 +203,7 @@ class RSFWidget(ctk.CTkFrame):
         self.destroy()
 
     def focus(self) -> None:
+        """
+        Focuses onto the focus_widget instead of the inner frame
+        """
         self.focus_widget.focus()

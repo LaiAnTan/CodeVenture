@@ -104,7 +104,7 @@ class ParagraphEntryForm(EntryForm):
         next_index = self.getNextSimilarType()
         # check next one
         if next_index != -1 and next_index == self_index + 1:
-            next_chunk = self.parent_frame.get_subframe(next_index)
+            next_chunk = self.parent_frame.get_specific_frame(next_index)
             # next chunk is empty, just use this one
             if not next_chunk.peek():
                 next_chunk.insertData(extracted_data)
@@ -147,7 +147,7 @@ class ParagraphEntryForm(EntryForm):
             else:
                 current_chunk.goNextChunk(None, line.strip())
                 current_index += 1
-                current_chunk = self.parent_frame.get_subframe(current_index)
+                current_chunk = self.parent_frame.get_specific_frame(current_index)
 
         current_chunk.focus()
         return "break"
