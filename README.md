@@ -51,6 +51,7 @@ Code to bypass Subscription Paywall: ```99999```
 ## Troubleshooting
 
 - Certain fonts might have to be installed if an error occurs.
+- contact [@SphagettiCodes] at chuashixiang@gmail.com for any bug reports, we do not have a bug report page
 
 ## Authors
 - [@SphagettiCodes](https://github.com/SpaghettiCodes)
