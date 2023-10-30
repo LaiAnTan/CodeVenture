@@ -308,10 +308,25 @@ class SelectionScreen(App_Frame):
                 label = ctk.CTkLabel(attach_to, text="Difficulty Range")
                 label.grid(row=0, column=0, columnspan=3, padx=5, pady=5)
 
+                def callback(entry):
+                    if str.isdigit(entry) or entry in ["", "Min", "Max"]:
+                        return True
+                    else:
+                        return False
+
+                # command to validate contents of textbox
+                vcmd = (self.register(callback))
+
+                # validate option: choose what to validate
+                # validatecommand: what happens to validate
+                # https://www.tcl.tk/man/tcl8.5/TkCmd/entry.html#M-validate
                 min_diff = ctk.CTkEntry(attach_to,
                                         width=50,
                                         placeholder_text="Min",
-                                        font=("Helvetica", 14),)
+                                        font=("Helvetica", 14),
+                                        validate='all',
+                                        validatecommand=(vcmd, '%P')
+                                        )
                 min_diff.grid(row=1, column=0, padx=(5, 0), pady=5)
 
                 to_label = ctk.CTkLabel(attach_to, text="-")
@@ -320,7 +335,10 @@ class SelectionScreen(App_Frame):
                 max_diff = ctk.CTkEntry(attach_to,
                                         width=50,
                                         placeholder_text="Max",
-                                        font=("Helvetica", 14))
+                                        font=("Helvetica", 14),
+                                        validate='all',
+                                        validatecommand=(vcmd, '%P')
+                                        )
                 max_diff.grid(row=1, column=2, padx=(0, 5), pady=5)
 
                 apply_filter_button = ctk.CTkButton(attach_to,
