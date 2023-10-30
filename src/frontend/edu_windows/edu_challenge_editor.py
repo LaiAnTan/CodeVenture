@@ -173,8 +173,8 @@ class ChallengeEditor(ActivityEditor):
             self.winfo_toplevel().wait_window(error_window)
             return False
  
-        print(content)
-        # ChallengeFactory(self.GetHeaderData(), content, self.asset).build()
+        # print(content)
+        ChallengeFactory(self.GetHeaderData(), content, self.asset).build()
 
         print("Export Complete!")
         return True

@@ -60,7 +60,6 @@ class ActivityEditor(App_Frame, ABC):
             self.format_image_chunks(self.ac.hints, asset)
             self.format_code_chunks(self.ac.hints, asset)
 
-        print(self.ref_asset_dic)
         return asset
 
     def format_image_chunks(self, source, append_to):

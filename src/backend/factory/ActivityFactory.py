@@ -119,7 +119,8 @@ class ActivityFactory(ABC):
         new_name = f'{image_data[1]}.{extension}' if image_data else f'Image_{image_id}.{extension}'
         destination_file = f'{self.activity_folder_dir}/{new_name}'
 
-        sht.copy(source_file, destination_file)
+        if source_file != destination_file:
+            sht.copy(source_file, destination_file)
 
         self.id_name_image[image_id] = new_name
 
@@ -152,7 +153,6 @@ class ActivityFactory(ABC):
         """
         adds activity to database
         """
-        print(tuple(self.header))
         try:
             ActivityDB().add_entry(tuple(self.header))
         except DBBase.DuplicateEntryException:

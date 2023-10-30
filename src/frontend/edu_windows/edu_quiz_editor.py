@@ -106,8 +106,8 @@ class QuizEditor(ActivityEditor):
             self.winfo_toplevel().wait_window(error_window)
             return False
 
-        print(content)
-        # QuizFactory(self.GetHeaderData(), content, self.asset).build()
+        # print(content)
+        QuizFactory(self.GetHeaderData(), content, self.asset).build()
         print("Exported Quiz!")
         return True
 
