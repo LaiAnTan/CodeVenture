@@ -9,6 +9,9 @@ class Modified_IDE(IDE):
 
     """
     New iteration of IDE class.
+
+    Never import with Modified_IDE in solutionEntry.py, will cause undefined
+    behavior.
     """
 
     def __init__(self, master, editor):

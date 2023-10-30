@@ -46,7 +46,8 @@ class TestSearchDatabase(unittest.TestCase):
         Test searching for a module with an empty module name
         """
         module = search_database("")
-        test = [('MD0000', 1), ('QZ0000', 3), ('CH0000', 2), ('CH0001', 2)]
+        test = [('MD0000', 1), ('QZ0000', 3), ('CH0000', 2), ('CH0001', 2),
+                ('CH0002', 2)]
         for entry in module:
             self.assertEqual(len(entry), 2,
                              "Entry is not a tuple of length 2")
