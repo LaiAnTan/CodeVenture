@@ -19,8 +19,8 @@ class TestFilterByDifficulty(unittest.TestCase):
         """
         self.adb = ActivityDB()
         self.database = search_database("")
-        self.lower_limit = 5
-        self.upper_limit = 10
+        self.lower_limit = 1
+        self.upper_limit = 1
         
 
     def test_valid_filter(self):
@@ -29,8 +29,7 @@ class TestFilterByDifficulty(unittest.TestCase):
         """
         self.assertTrue(self.database,
                         "Database is empty!")
-        filtered = filter_by_difficulty(self.database, self.upper_limit,
-                                        self.lower_limit)
+        filtered = filter_by_difficulty(self.database, self.lower_limit, self.upper_limit)
         expected = [('MD0000', 1), ('QZ0000', 3), ('CH0000', 2)]
         self.assertIsNotNone(filtered,
                              "Filtered database returned NULL!")

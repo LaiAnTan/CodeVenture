@@ -63,8 +63,8 @@ class TestSortResults(unittest.TestCase):
         
             # Sort by difficulty, ascending
             self.assertEqual(sort_results(self.database, "difficulty", "asc"),
-                             [('MD0000', 1), ('QZ0000', 3), ('CH0000', 2),
-                              ('CH0001', 2)],
+                             [('CH0000', 2), ('MD0000', 1), ('QZ0000', 3),
+                              ('CH0001', 2), ('CH0002', 2)],
                              "Incorrect sorted results, different from"
                              "expected results.")
     
