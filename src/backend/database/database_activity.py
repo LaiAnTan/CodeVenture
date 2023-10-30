@@ -54,3 +54,10 @@ class ActivityDB(DBBase):
     @classmethod
     def checkIDExists(cls, id):
         return cls.fetch_attr(cls.db_idfield, id) != None
+    
+    @classmethod
+    def getAllowedTags(cls):
+        from config import TAG_DIR
+        with open(TAG_DIR, 'r') as tag_fd:
+            tag_labels = [x.strip('\n') for x in tag_fd.readlines()]
+        return tag_labels

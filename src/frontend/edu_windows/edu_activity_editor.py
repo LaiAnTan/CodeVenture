@@ -7,8 +7,9 @@ from ...backend.database.database_activity import ActivityDB
 from abc import abstractmethod, ABC
 from .helper_class.confirmationWindow import ConfirmationWindow
 from .helper_class.sucessWindow import successWindow
+from .helper_class.tagSelection import TagSelection
 
-from ...backend.activity.ac_classes.ac_challenge import Hints, Challenge
+from ...backend.activity.ac_classes.ac_challenge import Challenge
 from os import path
 
 class ActivityEditor(App_Frame, ABC):
@@ -25,14 +26,14 @@ class ActivityEditor(App_Frame, ABC):
 
         self.ac_type_name = type.name
 
-        self.id_variable = ctk.StringVar(value=self.GetActivityID())
-        self.name_variable = ctk.StringVar(value=self.GetActivityName())
-        self.difficulty_value = ctk.IntVar(value=self.GetActivityDifficulty())
+        self.id_variable = ctk.StringVar()
+        self.name_variable = ctk.StringVar()
+        self.difficulty_value = ctk.IntVar()
 
         # only used for editing
         self.ref_asset_dic = {}
-
         self.asset = self.get_correct_format_asset()
+
 
     # most probably not used since 
     # theres no way you can 
@@ -204,40 +205,49 @@ class ActivityEditor(App_Frame, ABC):
             self.header_data,
             corner_radius=0
         )
+        second_row.columnconfigure(0, weight=30)
+        second_row.columnconfigure(1, weight=70)
         second_row.grid(row=1, column=0, sticky="ew")
 
+        difficulty_frame = ctk.CTkFrame(second_row, fg_color='transparent')
+        difficulty_frame.columnconfigure(1, weight=1)
+        difficulty_frame.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
+
         difficulty_label = ctk.CTkLabel(
-            second_row,
+            difficulty_frame,
             text=f"{self.ac_type_name}'s Difficulty: "
         )
         difficulty_label.grid(row=0, column=0, padx=5, pady=5)
 
         difficulty_slider = ctk.CTkSlider(
-            second_row,
+            difficulty_frame,
             from_=1,
             to=10,
             variable=self.difficulty_value,
             command=self.UpdateDifficultyLabel
         )
-        difficulty_slider.grid(row=0, column=1, padx=5, pady=5)
+        difficulty_slider.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
         self.difficulty_display = ctk.CTkLabel(
-            second_row,
+            difficulty_frame,
             text=self.difficulty_value.get()
         )
         self.difficulty_display.grid(row=0, column=2, padx=5, pady=5)
 
+        tag_frame = ctk.CTkFrame(second_row, fg_color='transparent')
+        tag_frame.columnconfigure(1, weight=1)
+        tag_frame.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+
         tag_label = ctk.CTkLabel(
-            second_row,
+            tag_frame,
             text=f'{self.ac_type_name}\'s Tags'
         )
-        tag_label.grid(row=0, column=3, padx=5, pady=5)
+        tag_label.grid(row=0, column=0, padx=5, pady=5)
 
-        tag_entry = ctk.CTkLabel(
-            second_row,
-            text="TODO: Implement Tag Choosing"
+        self.tag_entry = TagSelection(
+            tag_frame
         )
-        tag_entry.grid(row=0, column=4, padx=5, pady=5, sticky='ew')
+        self.tag_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
         ## third row
         thirdrow = ctk.CTkFrame(
@@ -259,7 +269,18 @@ class ActivityEditor(App_Frame, ABC):
             height=65
         )
         self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+
+        if self.editing:
+            self.import_header_data()
+
+
+    def import_header_data(self):
+        self.id_variable.set(self.GetActivityID())
+        self.name_variable.set(self.GetActivityName())
+        self.difficulty_value.set(self.GetActivityDifficulty())
+        self.tag_entry.import_values(self.ac.tag)
         self.SetActivtiyDescription()
+
 
     @abstractmethod
     def ContentData(self):
