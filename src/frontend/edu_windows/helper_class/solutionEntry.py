@@ -10,6 +10,9 @@ class Modified_IDE(IDE):
 
     """
     A heavily modifed IDE class
+
+    Never import with Modified_IDE in testcaseEditor.py, will cause undefined
+    behavior.
     """
 
     def __init__(self, master, content=None) -> None:
