@@ -4,12 +4,13 @@ from ..ui_app_frame import App_Frame
 
 # depreciated
 
-class EditorWindow(App_Frame):
+class EditorWindow(App_Frame, DeprecationWarning):
+    
+
     def __init__(self):
         super().__init__()
         self.rowconfigure((0, 1), weight=1)
         self.columnconfigure(0, weight=1)
-
         self.SetFrames()
 
     def refresh_variables(self):

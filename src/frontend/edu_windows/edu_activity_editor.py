@@ -34,9 +34,10 @@ class ActivityEditor(App_Frame, ABC):
 
         self.asset = self.get_correct_format_asset()
 
-    # most probably not used since theres no way you can 
+    # most probably not used since 
+    # theres no way you can 
     # go back to this page
-    # just init just in case
+    # just re-init just in case
     def refresh_variables(self):
         self.id_variable.set(self.GetActivityID())
         self.name_variable.set(self.GetActivityName())
@@ -66,7 +67,7 @@ class ActivityEditor(App_Frame, ABC):
         ac_dir = self.ac.ModulePath
 
         for id, value in source.img.items():
-            name = ''.join(value.split('.')[:-1]) # failsafe if file somehow has... multiple dot... # m dont think that will happen
+            name = '.'.join(value.split('.')[:-1]) # failsafe if file somehow has... multiple dot... # m dont think that will happen
             img_dir = f'{ac_dir}/{value}'
             asset_chunk = ('image', name, img_dir)
             if asset_chunk not in append_to:
@@ -363,10 +364,12 @@ class ActivityEditor(App_Frame, ABC):
                 break
         return f'{self.ac_type.getSubScript()}{index:04d}'
 
-# if __name__ == "__main__":
-#     master = App()
-#     editwin = ActivityEditor(master, 620, 450, Activity.AType['Module'])
-#     editwin.grid(row=0, column=0)
+    def get_header_errors(self):
+        error_list = []
 
-#     master.main_frame.grid(row=0, column=0)
-#     master.mainloop()
+        if self.name_variable.get().strip() == '':
+            error_list.append('Name is Empty')
+        if self.description_entry.get('0.0', ctk.END).strip() == '':
+            error_list.append('No description for activity')
+
+        return ('Header', error_list)

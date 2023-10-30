@@ -89,7 +89,11 @@ class QuizEditor(ActivityEditor):
         return [x.getData() for x in self.questions.get_tracking_list()]
     
     def get_error_list(self):
-        error_list = []
+        error_list = [self.get_header_errors()]
+
+        if self.questions.get_tracking_no() == 0:
+            error_list.append(('Questions', ['No Questions!']))
+
         for index, question in enumerate(self.questions.get_tracking_list()):
             error = question.getError()
             if error:
@@ -106,7 +110,6 @@ class QuizEditor(ActivityEditor):
             self.winfo_toplevel().wait_window(error_window)
             return False
 
-        # print(content)
         QuizFactory(self.GetHeaderData(), content, self.asset).build()
         print("Exported Quiz!")
         return True

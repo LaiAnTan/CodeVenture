@@ -23,12 +23,15 @@ class QuizFactory(ActivityFactory):
             self.build_question(self.data_fd, self.image_used, self.code_used)
             self.generate_Files(self.image_used, self.code_used)
             self.build_Link(self.data_fd)
-        
+        self.used_file_dir.append(f'{self.activity_folder_dir}/{DATA_FILE}')
+
         with open(f'{self.activity_folder_dir}/{ANSWER_FILE}', '+w') as self.answer_fd:
             self.build_answer(self.answer_fd)
+        self.used_file_dir.append(f'{self.activity_folder_dir}/{ANSWER_FILE}')
 
         # disabled temporary
         self.add_EntrytoDatabase()
+        self.clean_up()
 
 
     def build_question(self, to_where, used_image: set, used_code: set):

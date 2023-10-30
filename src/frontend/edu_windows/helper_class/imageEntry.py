@@ -125,7 +125,7 @@ class ImageEntryForm(EntryForm):
             return self.ErrorImage('Error in Image Attachment - Invalid File Format', directory)
         else:
             txt_c = 'white'
-            name = path.split(file_path)[-1].split('.')[0]
+            name = '.'.join(path.split(file_path)[-1].split('.')[:-1]) # failsafe if the name has multiple dots... which should not be allowed in the first place
             try:
                 previewimage = Image.open(directory)
                 size=self.ratio_resizing(previewimage, self.max_image_height, self.max_image_width)

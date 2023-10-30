@@ -119,8 +119,8 @@ class QuestionPreview(EntryForm):
         checker = dataFileEditor(self, self.assets)
         checker.import_data_list(self.inner_content[0])
 
-        error_list = checker.get_error_list()
-        if error_list:
+        inner_errors = checker.get_error_list()
+        if inner_errors:
             error_list.append('There is an issue with this question, check question content')
         checker.destroy()
 
