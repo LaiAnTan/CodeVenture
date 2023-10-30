@@ -383,7 +383,7 @@ class ActivityEditor(App_Frame, ABC):
 
     # helper function
 
-    def UpdateDifficultyLabel(self):
+    def UpdateDifficultyLabel(self, placeholder):
         """
         Updates the difficulty label
         value is obtained through difficulty_value widget

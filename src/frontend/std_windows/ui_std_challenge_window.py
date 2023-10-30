@@ -254,7 +254,13 @@ class ChallengeWindow(ActivityWindow):
                         self.displayed_frame,
                         self.ac.hints
                     )
-
+                case Challenge.Content_Type.Code:
+                    paragraph = self.CodeHandler(
+                        content[1],
+                        frame_width,
+                        self.displayed_frame,
+                        self.ac.hints
+                    )
             paragraph.grid(row=index, column=0, sticky='ew')
 
     def RunTestCases(self, test_input):
