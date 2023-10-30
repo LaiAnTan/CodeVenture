@@ -42,7 +42,6 @@ class LoginWindow(App_Frame):
         pass
 
     def attach_elements(self):
-
         """
         Performs attachment of frame elements onto the main frame in root.
 

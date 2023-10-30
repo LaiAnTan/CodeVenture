@@ -1,7 +1,9 @@
 from .refreshScrollFrame import RefreshableScrollableFrame
 from .entryForm import EntryForm
 import customtkinter as ctk
-from ...std_windows.helper_class.ide import IDE, TextBox_Placeholder, DEFAULT_INPUT_MESSAGE
+from ...std_windows.helper_class.ide import IDE, TextBox_Placeholder, \
+    DEFAULT_INPUT_MESSAGE
+
 
 class Modified_IDE(IDE):
     """
@@ -65,8 +67,11 @@ class Modified_IDE(IDE):
         )
         import_input_button.grid(row=2, column=0, padx=5, pady=5, sticky='ew')
 
-
     def InitFrames(self):
+        """
+        Initialises the IDE Frame.
+        """
+
         font = ctk.CTkFont(
             "Helvetica",
             size=12,
@@ -90,21 +95,19 @@ class Modified_IDE(IDE):
         )
         self.InputTextBox.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
 
-
     def GetInputFromFile(self):
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
         else:
-            self.error, self.error_msg = self.get_input_from_file(file_path, False)
-
+            self.error, self.error_msg = self.get_input_from_file(file_path,
+                                                                  False)
 
     def RunCode(self):
         solution_code = self.editor.solution.getCodeContent()
         self.IDETextBox.delete('0.0', ctk.END)
         self.IDETextBox.insert('0.0', solution_code)
         return super().RunCode()
-
 
     def display_output_terminal(self, code_output, error_output):
         """
@@ -134,7 +137,7 @@ class testCaseFrame(EntryForm):
             False,
             'nothing here'
         )
-    
+
     def SetContentFrame(self):
         self.content.columnconfigure(0, weight=1)
         self.content.rowconfigure(0, weight=1)
@@ -145,6 +148,7 @@ class testCaseFrame(EntryForm):
 
     def importData(self, data: tuple[str]):
         pass
+
 
 class testCaseEditor(ctk.CTkFrame):
     def __init__(self, master, editor):
@@ -163,7 +167,8 @@ class testCaseEditor(ctk.CTkFrame):
         self.testcase_frame = RefreshableScrollableFrame(
             self
         )
-        self.testcase_frame.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
+        self.testcase_frame.grid(row=1, column=0, padx=5, pady=5,
+                                 sticky='nsew')
 
     def add_a_test_case(self):
         new = testCaseFrame(

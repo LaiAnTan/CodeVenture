@@ -8,8 +8,18 @@ from abc import abstractmethod, ABC
 from .helper_class.confirmationWindow import ConfirmationWindow
 from .helper_class.sucessWindow import successWindow
 
+
 class ActivityEditor(App_Frame, ABC):
-    def __init__(self, type: Activity.AType, activity: Activity=None):
+
+    """
+    Abstract base class for displaying all types of activity editors.
+    """
+
+    def __init__(self, type: Activity.AType, activity: Activity = None):
+        """
+        Initialises the class.
+        """
+
         super().__init__()
         self.ac = activity
 
@@ -29,10 +39,20 @@ class ActivityEditor(App_Frame, ABC):
     def refresh_variables(self):
         pass
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame.
+
+        @return None
+        """
+
         self.SetFrames()
 
     def SetFrames(self):
+        """
+        Setup the frame and elements.
+        """
+
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
 
@@ -46,6 +66,10 @@ class ActivityEditor(App_Frame, ABC):
         self.SetContent()
 
     def SetHeader(self):
+        """
+        Setup the frames in the header.
+        """
+
         if self.editing:
             label_content = f"Now editing {self.ac.title}"
         else:
@@ -67,11 +91,15 @@ class ActivityEditor(App_Frame, ABC):
         back_button = ctk.CTkButton(
             self.header,
             text="Back",
-            command=lambda : App().go_back_history()
+            command=lambda: App().go_back_history()
         )
         back_button.pack(side=ctk.RIGHT, padx=5, pady=5)
 
     def SetContent(self):
+        """
+        Setup the frames in content.
+        """
+
         self.content.rowconfigure(1, weight=1)
         self.content.columnconfigure(0, weight=1)
 
@@ -90,12 +118,16 @@ class ActivityEditor(App_Frame, ABC):
         self.ContentData()
 
     def HeaderData(self):
-        self.header_data.rowconfigure((0,1,2), weight=1)
+        """
+        Setup the elements in header.
+        """
+
+        self.header_data.rowconfigure((0, 1, 2), weight=1)
         self.header_data.columnconfigure(0, weight=1)
 
-        ## first row
+        # first row
         first_row = ctk.CTkFrame(
-            self.header_data, 
+            self.header_data,
             corner_radius=0
         )
         first_row.rowconfigure(0, weight=1)
@@ -128,7 +160,7 @@ class ActivityEditor(App_Frame, ABC):
         )
         title_entry.grid(row=0, column=3, padx=5, pady=5, sticky='ew')
 
-        ## second row
+        # second row
         second_row = ctk.CTkFrame(
             self.header_data,
             corner_radius=0
@@ -168,7 +200,7 @@ class ActivityEditor(App_Frame, ABC):
         )
         tag_entry.grid(row=0, column=4, padx=5, pady=5, sticky='ew')
 
-        ## third row
+        # third row
         thirdrow = ctk.CTkFrame(
             self.header_data,
             corner_radius=0
@@ -187,13 +219,18 @@ class ActivityEditor(App_Frame, ABC):
             thirdrow,
             height=65
         )
-        self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+        self.description_entry.grid(row=0, column=1, padx=5, pady=5,
+                                    sticky='ew')
 
     @abstractmethod
     def ContentData(self):
         pass
 
     def PreExportData(self):
+        """
+        Handles the event before data is to be exported.
+        """
+
         confirm = ConfirmationWindow(self, f'export {self.ac_type_name}')
         self.winfo_toplevel().wait_window(confirm)
         if not confirm.get_value():
@@ -201,11 +238,16 @@ class ActivityEditor(App_Frame, ABC):
 
         if self.ExportData():
             ok_win = successWindow(self, f'exported {self.ac_type_name} {self.id_variable.get()}')
-            ok_win.add_a_action_button('Back To Selection', lambda : App().go_back_history())
+            ok_win.add_a_action_button('Back To Selection',
+                                       lambda: App().go_back_history())
             ok_win.add_a_action_button('Preview Window', self.preview_win)
             self.winfo_toplevel().wait_window(ok_win)
 
     def preview_win(self):
+        """
+        Handles the preview activity event.
+        """
+
         from ..std_windows.ui_std_module_window import ModuleWindow
         from ..std_windows.ui_std_quiz_window import QuizWindow
         from ..std_windows.ui_std_challenge_window import ChallangeWindow
@@ -218,11 +260,14 @@ class ActivityEditor(App_Frame, ABC):
         App().clean_frame()
         match self.ac_type:
             case Activity.AType.Module:
-                App().change_frame(ModuleWindow(Module(ac_id), None, True), False)
+                App().change_frame(ModuleWindow(Module(ac_id), None, True),
+                                   False)
             case Activity.AType.Quiz:
-                App().change_frame(QuizWindow(Quiz(ac_id), None, True), False)
+                App().change_frame(QuizWindow(Quiz(ac_id), None, True),
+                                   False)
             case Activity.AType.Challenge:
-                App().change_frame(ChallangeWindow(Challange(ac_id), None, True), False)
+                App().change_frame(ChallangeWindow(Challange(ac_id), None,
+                                                   True), False)
 
     @abstractmethod
     def ExportData(self):
@@ -233,9 +278,11 @@ class ActivityEditor(App_Frame, ABC):
         pass
 
     def GetHeaderData(self):
-        """Returns header data in the format of
-        
-        [id, type_num, name, difficulty_index, tags, description]"""
+        """
+        Returns header data in the format of
+        [id, type_num, name, difficulty_index, tags, description]
+        """
+
         return [
             self.id_variable.get(),
             self.ac_type.value,
@@ -245,33 +292,50 @@ class ActivityEditor(App_Frame, ABC):
             self.description_entry.get("0.0", ctk.END)
         ]
 
-    ## helper function
+    # helper function
 
     def UpdateDifficultyLabel(self, value):
+        """
+        Updates the difficulty label to (value)
+        """
+
         self.difficulty_display.configure(text=self.difficulty_value.get())
 
     def GetActivityName(self):
+        """
+        Getter for activity name
+        """
+
         if self.editing:
             return self.ac.title
         else:
             return ''
 
     def GetActivityID(self):
+        """
+        Getter for activity id
+        """
+
         if self.editing:
             return self.ac.id
         else:
             return self.GetEmptyActivityID()
 
     def GetEmptyActivityID(self):
-        """Gets the next empty ActivityID based on the list of ActivityIDs from the database
-        Used for auto indexing activities"""
+        """
+        Gets the next empty ActivityID based on the list of ActivityIDs
+        from the database
+
+        Used for auto indexing activities
+        """
+
         id_list = ActivityDB().getListID(self.ac_type.value)
 
-        ## first 2 will be the type, last 3 is the value
+        # first 2 will be the type, last 3 is the value
         id_list = [int(x[2:]) for x in id_list]
         id_list.sort()
 
-        ## search for closest empty spot
+        # search for closest empty spot
         index = len(id_list)
         for actual_index, ac_index in enumerate(id_list):
             if actual_index != ac_index:

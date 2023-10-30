@@ -1,9 +1,20 @@
 import customtkinter as ctk
+
 from ..ui_app import App
 from ..ui_app_frame import App_Frame
 
+
 class EditorWindow(App_Frame):
+
+    """
+    Frame class for displaying the main selection screen for educators.
+    """
+
     def __init__(self):
+        """
+        Initialises the class.
+        """
+
         super().__init__()
         self.rowconfigure((0, 1), weight=1)
         self.columnconfigure(0, weight=1)
@@ -13,17 +24,27 @@ class EditorWindow(App_Frame):
     def refresh_variables(self):
         pass
 
-    def attach_elements(self):
+    def attach_elements(self) -> None:
+        """
+        Performs attachment of frame elements onto the main frame.
+
+        @return None
+        """
+
         self.SetFrames()
 
     def SetFrames(self):
+        """
+        Setup the frame and elements.
+        """
+
         self.header = ctk.CTkFrame(self)
         self.header.rowconfigure(0, weight=1)
         self.header.columnconfigure(0, weight=1)
         self.header.grid(row=0, column=0, sticky="s")
 
         self.content = ctk.CTkFrame(self)
-        self.content.rowconfigure((0,1), weight=1)
+        self.content.rowconfigure((0, 1), weight=1)
         self.content.columnconfigure(0, weight=1)
         self.content.grid(row=1, column=0, sticky="n")
 
@@ -58,6 +79,9 @@ class EditorWindow(App_Frame):
         new_ac.grid(row=1, column=0, padx=5, pady=5)
 
         def logout_event():
+            """
+            Handles the logout event.
+            """
             from ..ui_std_window_gen import loginPage
             loginPage()
 
@@ -68,14 +92,18 @@ class EditorWindow(App_Frame):
         )
         temp_log_out.grid(row=2, column=0, padx=5, pady=5)
 
-    ## helper functions
+    # helper functions
 
     def newActivity(self):
+        """
+        Handles the event where a certain activity is chosen to be created.
+        """
         option = self.chosen.get()
         print(f"{option} chosed")
 
         from ..ui_edu_window_gen import dispatcher
         dispatcher(option, None)
+
 
 if __name__ == "__main__":
     App().change_frame(EditorWindow())
