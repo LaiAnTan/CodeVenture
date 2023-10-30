@@ -43,9 +43,8 @@ class ActivityEditor(App_Frame, ABC):
         self.ref_asset_dic = {}
         self.asset = self.get_correct_format_asset()
 
-
-    # most probably not used since 
-    # theres no way you can 
+    # most probably not used since
+    # theres no way you can
     # go back to this page
     # just re-init just in case
     def refresh_variables(self):
@@ -77,7 +76,8 @@ class ActivityEditor(App_Frame, ABC):
         ac_dir = self.ac.ModulePath
 
         for id, value in source.img.items():
-            name = '.'.join(value.split('.')[:-1]) # failsafe if file somehow has... multiple dot... # m dont think that will happen
+            # failsafe if file somehow has... multiple dot...
+            name = '.'.join(value.split('.')[:-1])
             img_dir = f'{ac_dir}/{value}'
             asset_chunk = ('image', name, img_dir)
             if asset_chunk not in append_to:
@@ -97,7 +97,7 @@ class ActivityEditor(App_Frame, ABC):
             try:
                 with open(f'{full_dir}/input', 'r') as input_fd:
                     input_val = ''.join(input_fd.readlines())
-            except FileNotFoundError: # code is NOT runnable
+            except FileNotFoundError:  # code is NOT runnable
                 input_val = None
 
             asset_chunk = ('code', value, code_val, input_val)
@@ -299,7 +299,8 @@ class ActivityEditor(App_Frame, ABC):
             thirdrow,
             height=65
         )
-        self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+        self.description_entry.grid(row=0, column=1, padx=5, pady=5,
+                                    sticky='ew')
         self.SetActivtiyDescription()
 
         self.id_variable.set(self.GetActivityID())
@@ -308,7 +309,6 @@ class ActivityEditor(App_Frame, ABC):
 
         if self.editing:
             self.tag_entry.import_values(self.ac.tag)
-
 
     @abstractmethod
     def ContentData(self):
@@ -354,7 +354,8 @@ class ActivityEditor(App_Frame, ABC):
                 App().change_frame(QuizWindow(Quiz(ac_id), None, True),
                                    False)
             case Activity.AType.Challenge:
-                App().change_frame(ChallengeWindow(Challenge(ac_id), None, True), False)
+                App().change_frame(ChallengeWindow(Challenge(ac_id), None,
+                                                   True), False)
 
     @abstractmethod
     def ExportData(self):
@@ -390,7 +391,9 @@ class ActivityEditor(App_Frame, ABC):
 
     def SetActivtiyDescription(self):
         if self.editing:
-            description = ActivityDB().fetch_attr(ActivityDB().field.description.name, self.ac.id)
+            description = ActivityDB().fetch_attr(ActivityDB().field
+                                                  .description.name,
+                                                  self.ac.id)
         else:
             description = ''
         self.description_entry.insert('0.0', description)

@@ -7,6 +7,7 @@ from .refreshScrollFrame import RefreshableScrollableFrame
 from PIL import Image
 from config import ASSET_FOLDER
 
+
 class dataFileEditor(ctk.CTkFrame):
     def __init__(self, master, asset_list):
         super().__init__(master=master, fg_color='transparent')

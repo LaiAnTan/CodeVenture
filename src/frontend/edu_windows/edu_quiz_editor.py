@@ -29,7 +29,7 @@ class QuizEditor(ActivityEditor):
 
     def import_data(self):
         data = ()
-        self.ac : Quiz
+        self.ac: Quiz
 
         for index, question in enumerate(self.ac.questions):
             prompt_data = []
@@ -44,7 +44,7 @@ class QuizEditor(ActivityEditor):
                         widget_type = 'asset'
                         widget_content = self.ref_asset_dic[value]
                 prompt_data.append((widget_type, widget_content))
-            
+
             options_data = []
             for answer in question.options:
                 options_data.append(answer)
@@ -136,7 +136,7 @@ class QuizEditor(ActivityEditor):
 
         error_list = self.get_error_list()
         content = self.GetContentData()
-        
+
         if error_list:
             error_window = ErrorWindow(self, 450, 550, error_list,
                                        'exporting quiz activity')

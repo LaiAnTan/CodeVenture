@@ -1,11 +1,17 @@
 import customtkinter as ctk
 from os import path, listdir
 
+from ...frontend.ui_app import App
 from .edu_activity_editor import ActivityEditor
-from ...backend.activity.ac_classes.ac_activity import Activity
+from ...backend.factory.ChallengeFactory import ChallengeFactory
 from ...backend.activity.ac_classes.ac_challenge import Activity, Challenge
+from ...frontend.edu_windows.helper_class.dataFileEditor import dataFileEditor
+from ...frontend.edu_windows.helper_class.solutionEntry import Modified_IDE
+from ...frontend.edu_windows.helper_class.testcaseEditor import testCaseEditor
+from ...frontend.edu_windows.helper_class.ch_errorWindow import Ch_ErrorWindow
 
-class ChallangeEditor(ActivityEditor):
+
+class ChallengeEditor(ActivityEditor):
 
     """
     Frame class for displaying the challenge editor window for educators.
@@ -21,7 +27,7 @@ class ChallangeEditor(ActivityEditor):
         self.SetFrames()
         if self.editing:
             self.import_data()
-    
+
     def import_data(self):
         solution_path = f'{self.ac.ModulePath}/solution'
         testcases_path = f'{self.ac.ModulePath}/testcase'
@@ -73,7 +79,6 @@ class ChallangeEditor(ActivityEditor):
                     data.append(''.join(tc_fd.readlines()))
             self.testcase.import_data(data)
 
-
     def ContentData(self):
         """
         Add content data into frame.
@@ -81,10 +86,11 @@ class ChallangeEditor(ActivityEditor):
         self.content_data.rowconfigure(1, weight=1)
         self.content_data.columnconfigure(0, weight=1)
 
-        self.screen_var = ctk.StringVar(value = 'Challenge Question Prompt')
+        self.screen_var = ctk.StringVar(value='Challenge Question Prompt')
         segmented_button = ctk.CTkSegmentedButton(
             self.content_data,
-            values=['Challenge Question Prompt', 'Solution', 'Hints', 'Test Cases'],
+            values=['Challenge Question Prompt', 'Solution', 'Hints',
+                    'Test Cases'],
             variable=self.screen_var,
             dynamic_resizing=False,
             command=self.switch
@@ -212,7 +218,7 @@ class ChallangeEditor(ActivityEditor):
         error = self.get_error_list()
         content = self.GetContentData()
 
-        if error != ([], [], [], [], []): # all empty
+        if error != ([], [], [], [], []):  # all empty
             error_window = Ch_ErrorWindow(self, 450, 550, error)
             self.winfo_toplevel().wait_window(error_window)
             return False
