@@ -269,17 +269,14 @@ class ActivityEditor(App_Frame, ABC):
             height=65
         )
         self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+        self.SetActivtiyDescription()
 
-        if self.editing:
-            self.import_header_data()
-
-
-    def import_header_data(self):
         self.id_variable.set(self.GetActivityID())
         self.name_variable.set(self.GetActivityName())
         self.difficulty_value.set(self.GetActivityDifficulty())
-        self.tag_entry.import_values(self.ac.tag)
-        self.SetActivtiyDescription()
+
+        if self.editing:
+            self.tag_entry.import_values(self.ac.tag)
 
 
     @abstractmethod
@@ -334,7 +331,7 @@ class ActivityEditor(App_Frame, ABC):
             self.ac_type.value,
             self.name_variable.get(),
             self.difficulty_value.get(),
-            ["py001", 'py002', 'py004'],
+            self.tag_entry.get(),
             self.description_entry.get("0.0", ctk.END)
         ]
 
@@ -392,5 +389,7 @@ class ActivityEditor(App_Frame, ABC):
             error_list.append('Name is Empty')
         if self.description_entry.get('0.0', ctk.END).strip() == '':
             error_list.append('No description for activity')
+        if len(self.tag_entry.get()) == 0:
+            error_list.append('Tag is not chosen for the activity')
 
         return ('Header', error_list)
