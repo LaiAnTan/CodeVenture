@@ -5,6 +5,10 @@ from .errorWindow import ErrorWindow
 from .refreshScrollFrame import RefreshableScrollableFrame
 
 class AssetWindow(ctk.CTkToplevel):
+    """
+    Asset window used to add, remove and display asset used
+    in an activity
+    """
     def __init__(self, master, height, width, assets) -> None:
         super().__init__(master)
         self.master = master
@@ -35,10 +39,16 @@ class AssetWindow(ctk.CTkToplevel):
         self.set_Frames()
 
     def set_Frames(self):
+        """
+        Sets frames in the window
+        """
         self.set_Header()
         self.set_Content()
 
     def set_Header(self):
+        """
+        initializes the header frame of the window
+        """
         save_and_quit = ctk.CTkButton(
             self.header,
             text="Save and Exit",
@@ -62,6 +72,9 @@ class AssetWindow(ctk.CTkToplevel):
         add_new.pack(side=ctk.LEFT, padx=5, pady=5)
 
     def set_Content(self):
+        """
+        initializes the content frame of the window
+        """
         self.asset_frame = RefreshableScrollableFrame(
             self.content,
             width=self.width - 25,
@@ -75,6 +88,12 @@ class AssetWindow(ctk.CTkToplevel):
             self.asset_frame.refresh_elements()
 
     def add_existing_asset(self, data):
+        """
+        adds an asset with the information provided in data
+
+        information provided in data may be a 
+        Image
+        """
         match data[0]:
             case 'image':
                 entry_form = ImageEntryForm(
