@@ -8,14 +8,17 @@ This project was developed following the waterfall model, where all documents
 (i.e. requirements, design, software quality assurance) were created.
 
 ## Features
-- Coding Modules, Quizzes, Challenges
 - Functional IDE
 - Account Logins
 - New Account Registration
 - Password Change
 - Light / Dark Mode
 - User Interface
-- Fully Customizable Modular Activities with Inbuilt Editor
+- Coding Modules, Quizzes, Challenges
+- Modular Activities with image and code block support
+- Activity selection screen with search & filters
+- Editor Page to create / edit activities
+- Activity Preview screen
 
 ## Dependencies
 
