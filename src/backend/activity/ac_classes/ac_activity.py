@@ -109,7 +109,6 @@ class Activity():
         for index, content in enumerate(self.content):
             if content.find("<IMG-CONT>") == 0:
                 content = content.removeprefix("<IMG-CONT>")
-
                 if not content:
                     self.warnings.append(
                         (
@@ -118,11 +117,9 @@ class Activity():
                         )
                     )
                     continue
-
                 self.content[index] = (Activity.Content_Type.Image, content)
             elif content.find("<CODE-CONT>") == 0:
                 content = content.removeprefix("<CODE-CONT>")
-
                 if not content:
                     self.warnings.append(
                         (
@@ -131,13 +128,11 @@ class Activity():
                         )
                     )
                     continue
-
                 self.content[index] = (Activity.Content_Type.Code, content)
             else:
                 self.content[index] = (Activity.Content_Type.Paragraph,
                                        content)
 
-        # print(self.content)
 
     def ParseHeader(self):
         """
@@ -145,7 +140,6 @@ class Activity():
         """
         for line in self.headerbuffer:
             kwarg = line.split('|')
-
             if len(kwarg) < 2:
                 self.warnings.append(
                     (
@@ -154,7 +148,6 @@ class Activity():
                     )
                 )
                 continue
-
             if kwarg[1] == '':
                 self.warnings.append(
                     (
@@ -162,7 +155,6 @@ class Activity():
                         f'Keyword {kwarg[0]} content is empty!'
                     )
                 )
-
             match kwarg[0]:
                 case "ID":
                     self.id = kwarg[1]

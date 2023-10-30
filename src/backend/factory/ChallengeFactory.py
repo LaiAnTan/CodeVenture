@@ -40,6 +40,7 @@ class ChallengeFactory(ActivityFactory):
             self.build_Data()
             self.generate_Files(self.asset_in_content[0], self.asset_in_content[1])
             self.build_Link(self.data_fd)
+        self.used_file_dir.append(f'{self.activity_folder_dir}/{DATA_FILE}')
 
         # clear stored image and code
         self.id_name_image.clear()
@@ -50,6 +51,7 @@ class ChallengeFactory(ActivityFactory):
             self.build_Hint()
             self.generate_Files(self.asset_in_hints[0], self.asset_in_hints[1])
             self.build_Link(self.hint_fd)
+        self.used_file_dir.append(f'{self.activity_folder_dir}/{HINT_FILE}')
 
         # build solution folder
         temp_buffer = ('code', 'solution', self.solution[0], self.solution[1])
@@ -59,6 +61,7 @@ class ChallengeFactory(ActivityFactory):
         self.build_Testcase()
 
         self.add_EntrytoDatabase()
+        self.clean_up()
 
     def build_Data(self):
         """
@@ -81,6 +84,7 @@ class ChallengeFactory(ActivityFactory):
         for test_no, test_case in enumerate(self.testcases):
             with open(f'{self.activity_folder_dir}/{TESTCASE_FOLDER}/{test_no}', '+w') as fd:
                 fd.write(test_case)
+        self.used_file_dir.append(f'{self.activity_folder_dir}/{TESTCASE_FOLDER}')
 
     def prepare_folders(self):
         """

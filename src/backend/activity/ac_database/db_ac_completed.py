@@ -74,7 +74,7 @@ class CompletedDB():
         self.connect.commit()
 
 
-class ChallangeCompleted_DB(CompletedDB):
+class ChallengeCompleted_DB(CompletedDB):
     def __init__(self, ac_id) -> None:
         super().__init__(
             ac_id,
@@ -153,7 +153,7 @@ class ActivityDictionary():
             case Activity.AType.Quiz.value:
                 return QuizCompleted_DB(activity)
             case Activity.AType.Challenge.value:
-                return ChallangeCompleted_DB(activity)
+                return ChallengeCompleted_DB(activity)
 
     @classmethod
     def initialize_dict(cls):
@@ -164,7 +164,7 @@ class ActivityDictionary():
             cls.dictionary[id[0]] = cls.databaseDispatcher(id[0], id[1])
 
     @classmethod
-    def getDatabase(cls, id) -> ModuleCompleted_DB | ChallangeCompleted_DB | QuizCompleted_DB:
+    def getDatabase(cls, id) -> ModuleCompleted_DB | ChallengeCompleted_DB | QuizCompleted_DB:
         from src.backend.database.database_activity import ActivityDB
 
         if ActivityDB().checkIDExists(id):

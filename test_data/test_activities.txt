@@ -1,5 +1,5 @@
 MD0000:1:This is A Test Module:1:"functions,variables":"Lorem ipsum dolor sit amet, consectetur adipiscing elit vel."
 QZ0000:3:This is A Test Quiz:1:"functions,variables":"Sample Simple Quiz"
 CH0000:2:Hello World!:1:"input/output":"The objective of this challenge is to learn about the print function."
-CH0001:2:Sample of a Multi-TestCase Module:2:"input/output,operators":"Sample of a Challange with multiple test cases"
+CH0001:2:Sample of a Multi-TestCase Module:2:"input/output,operators":"Sample of a Challenge with multiple test cases"
 CH0002:2:fizzbuzz:4:"loops,math":"A classic programming problem"

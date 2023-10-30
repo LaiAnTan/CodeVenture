@@ -4,7 +4,7 @@ from ..ui_app import App
 from ..ui_app_frame import App_Frame
 
 
-class EditorWindow(App_Frame):
+class EditorWindow(App_Frame, DeprecationWarning):
 
     """
     Frame class for displaying the main selection screen for educators.
@@ -18,7 +18,6 @@ class EditorWindow(App_Frame):
         super().__init__()
         self.rowconfigure((0, 1), weight=1)
         self.columnconfigure(0, weight=1)
-
         self.SetFrames()
 
     def refresh_variables(self):
@@ -61,7 +60,7 @@ class EditorWindow(App_Frame):
         )
         bigtitle.grid(row=0, column=0, padx=50, pady=5)
 
-        self.values = ['Module', 'Quiz', 'Challange']
+        self.values = ['Module', 'Quiz', 'Challenge']
         self.chosen = ctk.StringVar(value='Module')
         self.option_dropdown = ctk.CTkComboBox(
             self.content,

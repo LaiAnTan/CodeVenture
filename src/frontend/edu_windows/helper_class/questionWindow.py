@@ -71,6 +71,15 @@ class answerframe(ctk.CTkFrame):
         self.content_frame.refresh_elements()
         self.content_frame.scroll_frame(0)
 
+    def get_error_list(self):
+        error_list = [x.getError() for x in self.content_frame.get_tracking_list()]
+        error_msg = []
+
+        for index, error in enumerate(error_list):
+            if error:
+                error_msg.append((f'Option {index + 1}', error))
+        return error_msg
+
 class answerwidget(EntryForm):
     def __init__(self, master: RefreshableScrollableFrame, parent, main_editor):
         super().__init__(master, main_editor)
@@ -111,9 +120,10 @@ class answerwidget(EntryForm):
         return super().grid(**kwargs)
 
     def getError(self):
+        error_list = []
         if self.prompt.get('0.0', ctk.END).strip() == '':
-            return 'Empty Prompt, Remove if not needed'
-        return None
+            error_list.append('Empty Prompt, Remove if not needed')
+        return error_list
 
     def getData(self):
         return (
@@ -154,6 +164,7 @@ class QuestionEditWindow(ctk.CTkToplevel):
 
     def save_data(self):
         errors = self.file_editor.get_error_list()
+        errors.extend(self.answer_editor.get_error_list())
 
         if errors:
             error_window = ErrorWindow(self, 450, 550, errors, 'saving prompt details')

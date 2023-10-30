@@ -43,9 +43,12 @@ class ParagraphEntryForm(EntryForm):
         )
 
     def getError(self):
+        error_list = []
+
         if self.ContentEntryForm.get('0.0', ctk.END).strip() == '':
-            return (True, 'Paragraph Entry not used, removed if not needed')
-        return super().getError()
+            error_list.append('Paragraph Entry not used, remove if not needed')
+
+        return error_list
 
     def peek(self):
         """Check if there are content in the main entry form 

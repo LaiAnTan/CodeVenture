@@ -13,7 +13,7 @@ from src.backend.activity.ac_classes.ac_module import Activity
 class TestModuleParsing(unittest.TestCase):
     """
     Simulates the expected behavior when an activity (any module, quiz,
-    or challange) is parsed
+    or challenge) is parsed
     """
 
     def set_up_test_activity_fast(self, code: str) -> Activity:

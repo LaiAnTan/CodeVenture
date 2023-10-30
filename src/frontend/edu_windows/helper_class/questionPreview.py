@@ -16,6 +16,7 @@ class QuestionPreview(EntryForm):
 
         self.SetFrames(True)
 
+
     def swap_up(self):
         index = self.get_index_instance()
         if index == 0:
@@ -23,12 +24,14 @@ class QuestionPreview(EntryForm):
         self.parent_frame.swap_order(index, index - 1)
         self.parent_frame.refresh_elements()
 
+
     def swap_down(self):
         index = self.get_index_instance()
         if index == (self.master.get_tracking_no() - 1):
             return
         self.parent_frame.swap_order(index, index + 1)
         self.parent_frame.refresh_elements()
+
 
     def SetContentFrame(self):
         self.content.columnconfigure(0, weight=1)
@@ -82,6 +85,10 @@ class QuestionPreview(EntryForm):
         self.winfo_toplevel().wait_window(editor_window)
 
         # get the description
+        self.__get_description()
+
+
+    def __get_description(self):
         found = False
         prompt = self.inner_content[0]
         if prompt:
@@ -95,28 +102,36 @@ class QuestionPreview(EntryForm):
         else:
             self.displaying_preview.set('Nothing here, place some content in \'Edit Question\'')
 
+
     def importData(self, data: tuple[str]):
-        pass
+        # data parameter will be in the following format
+        # (prompt data, (answer, option list))
+        self.inner_content = data
+        self.__get_description()
+
 
     def getError(self):
+        error_list = []
+
         if not self.inner_content[0]:
-            return 'Empty Question, remove if not needed'
+            return ['Empty Question, remove if not needed']
 
         checker = dataFileEditor(self, self.assets)
         checker.import_data_list(self.inner_content[0])
 
-        error_list = checker.get_error_list()
-        if error_list:
-            return 'There is an issue with this question, check question content'
+        inner_errors = checker.get_error_list()
+        if inner_errors:
+            error_list.append('There is an issue with this question, check question content')
         checker.destroy()
 
         if not self.inner_content[1][1]:
-            return 'No options for question'
+            error_list.append('No options for question')
 
         if self.inner_content[1][0] == -1:
-            return 'No answer for question'
+            error_list.append('No answer for question')
 
-        return None
+        return error_list
+
 
     def getData(self):
         return self.inner_content

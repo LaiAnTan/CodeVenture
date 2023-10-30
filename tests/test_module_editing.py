@@ -235,7 +235,7 @@ class TestModuleExport(unittest.TestCase):
         )
 
         self.assertEqual(
-            error[0][1],
+            error[0][1][0],
             'Error in Image Attachment - Invalid File Format',
             'Wrong Error issued'
         )
@@ -260,8 +260,8 @@ class TestModuleExport(unittest.TestCase):
         )
 
         self.assertEqual(
-            error[0],
-            (1, 'Error in Image Asset - Unable to Open File'),
+            error[0][1][0],
+            'Error in Image Asset - Unable to Open File',
             'Wrong Error issued'
         )
 
@@ -310,9 +310,9 @@ class TestModuleExport(unittest.TestCase):
         asset_preview.refreshPreview()
 
         check_errors = asset_preview.getError()
-        self.assertFalse(
-            check_errors[0],
-            'Error flag is set to true even though everything is fine'
+        self.assertTrue(
+            len(check_errors) == 0,
+            'Error issued even though everything is fine'
         )
 
     def test_export_valid_asset(self) -> None:
@@ -372,7 +372,7 @@ class TestModuleExport(unittest.TestCase):
         )
 
         self.assertEqual(
-            error[0][1],
+            error[0][1][0],
             'Entry Frame is left unused, Remove if not needed',
             'Wrong error message generated'
         )
@@ -415,8 +415,8 @@ class TestModuleExport(unittest.TestCase):
         )
 
         self.assertEqual(
-            error[0][1],
-            'Invalid Asset Selected',
+            error[0][1][0],
+            'Invalid Asset Chosen',
             'Wrong Error issued'
         )
 

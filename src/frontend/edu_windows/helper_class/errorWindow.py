@@ -18,31 +18,39 @@ class ErrorFrame(ctk.CTkScrollableFrame):
             all_good_label.grid(row=0, column=0, padx=5, pady=5)
             return
 
-        for index, error in enumerate(error_list):
-            error_frame = ctk.CTkFrame(self, fg_color='#169398')
-            error_frame.grid(row=index, column=0, padx=5, pady=5, sticky='new')
+        for error_detail in error_list:
+            for error in error_detail[1]:
+                error_frame = ctk.CTkFrame(self, fg_color='#169398')
+                error_frame.grid(row=len(self.winfo_children()), 
+                                 column=0, 
+                                 padx=5, 
+                                 pady=5, 
+                                 sticky='new')
 
-            error_frame.rowconfigure(0, weight=1)
-            error_frame.columnconfigure(0, weight=1)
+                error_frame.rowconfigure(0, weight=1)
+                error_frame.columnconfigure(0, weight=1)
 
-            error_location = ctk.CTkLabel(
-                error_frame,
-                text=f'Error in Entry {error[0]}',
-                width=100,
-                wraplength=90,
-                fg_color='black',
-                corner_radius=50
-            )
-            error_location.grid(row=0, column=0, padx=5, pady=5)
+                error_location_frame = ctk.CTkFrame(error_frame, fg_color='black')
+                error_location_frame.rowconfigure(0, weight=1)
+                error_location_frame.columnconfigure(0, weight=1)
+                error_location_frame.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
 
-            error_message = ctk.CTkLabel(
-                error_frame,
-                text=f'{error[1]}',
-                width = width - 100 - 85,
-                wraplength = width - 15 - 100 - 85,
-                justify='left'
-            )
-            error_message.grid(row=0, column=1, padx=5, pady=5, sticky='w')
+                error_location = ctk.CTkLabel(
+                    error_location_frame,
+                    text=f'Error in Entry {error_detail[0]}',
+                    width=100,
+                    wraplength=90,
+                )
+                error_location.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
+
+                error_message = ctk.CTkLabel(
+                    error_frame,
+                    text=f'{error}',
+                    width = width - 100 - 85,
+                    wraplength = width - 15 - 100 - 85,
+                    justify='left'
+                )
+                error_message.grid(row=0, column=1, padx=5, pady=5, sticky='w')
 
 class ErrorWindow(ctk.CTkToplevel):
     def __init__(self, master, width, height, error_list: list[str], user_action: str) -> None:

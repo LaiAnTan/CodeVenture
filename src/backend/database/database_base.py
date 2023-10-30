@@ -152,8 +152,6 @@ class DBBase(object):
             case "REAL":
                 if isinstance(new_value, float) == False:
                     raise cls.WrongDatatypeException
-            case _:
-                pass
 
         if cls.fetch_attr(cls.db_idfield, data_id) == None:
             raise cls.EntryNotFoundException

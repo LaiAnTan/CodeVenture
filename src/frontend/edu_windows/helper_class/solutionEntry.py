@@ -126,14 +126,14 @@ class Modified_IDE(IDE):
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
-        self.error, self.error_msg = self.get_code_from_filepath(file_path, False)
+        self.error = self.get_code_from_filepath(file_path, False)
 
     def GetInputFromFile(self):
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
         else:
-            self.error, self.error_msg = self.get_input_from_file(file_path, False)
+            self.error = self.get_input_from_file(file_path, False)
 
     def get_content(self):
         return (
@@ -142,10 +142,21 @@ class Modified_IDE(IDE):
         )
     
     def get_error(self):
-        if self.getCodeContent() == '':
-            return [(
-                'Solution',
-                'Empty Solution'
-            )]
+        error_list = []
 
-        return [('Solution', self.error_msg)] if self.error is True else []
+        if self.getCodeContent() == '':
+            error_list.append('Empty Solution')
+        if self.error == True:
+            if self.getCodeContent() == 'Invalid File Type, Please only import python files':
+                error_list.append('Invalid File Type for Code Import')
+            if self.getInputContent() == 'Invalid File Type, Please import Text Files only!':
+                error_list.append('Invalid File Type for Code Input Import')
+
+        if error_list:
+            return [('Solution', error_list)]
+        else:
+            return []
+
+    def import_data(self, data: tuple[str]):
+        self.InsertContent('0.0', data[0], 1)
+        self.InsertContent('0.0', data[1], 2)

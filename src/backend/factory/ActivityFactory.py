@@ -41,6 +41,8 @@ class ActivityFactory(ABC):
 
         self.data_fd = None
 
+        self.used_file_dir = [f'{self.activity_folder_dir}/completed.db'] # prevents accidental removal the completion database
+
     def build_Header(self):
         """
         Builds the header portion of the file.
@@ -129,8 +131,10 @@ class ActivityFactory(ABC):
                     f'Image_{image_id}.{extension}')
         destination_file = f'{self.activity_folder_dir}/{new_name}'
 
-        sht.copy(source_file, destination_file)
+        if source_file != destination_file:
+            sht.copy(source_file, destination_file)
 
+        self.used_file_dir.append(destination_file)
         self.id_name_image[image_id] = new_name
 
     def make_code_dir(self, code_data, code_id):
@@ -156,13 +160,13 @@ class ActivityFactory(ABC):
             with open(f'{code_dir}/input', '+w') as input_fd:
                 input_fd.write(input_buffer)
 
+        self.used_file_dir.append(code_dir)
         self.id_name_code[code_id] = code_name
 
     def add_EntrytoDatabase(self):
         """
         adds activity to database
         """
-        print(tuple(self.header))
         try:
             ActivityDB().add_entry(tuple(self.header))
         except DBBase.DuplicateEntryException:
@@ -208,3 +212,14 @@ class ActivityFactory(ABC):
 
         to_where.write("CODE-CONT-END\n")
         to_where.write("SOURCES-END\n\n")
+
+    def clean_up(self):
+        all_dir = [f'{self.activity_folder_dir}/{x}' for x in os.listdir(self.activity_folder_dir)]
+
+        for directory in all_dir:
+            if directory not in self.used_file_dir:
+                if os.path.isfile(directory): # a standard file
+                    os.remove(directory)
+                else: # a directory
+                    sht.rmtree(directory)
+        # print(all_dir)

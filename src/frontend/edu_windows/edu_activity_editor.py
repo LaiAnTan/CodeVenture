@@ -7,6 +7,9 @@ from ...backend.database.database_activity import ActivityDB
 from abc import abstractmethod, ABC
 from .helper_class.confirmationWindow import ConfirmationWindow
 from .helper_class.sucessWindow import successWindow
+from .helper_class.tagSelection import TagSelection
+
+from ...backend.activity.ac_classes.ac_challenge import Challenge
 
 
 class ActivityEditor(App_Frame, ABC):
@@ -32,11 +35,79 @@ class ActivityEditor(App_Frame, ABC):
 
         self.ac_type_name = type.name
 
-        self.id_variable = ctk.StringVar(value=self.GetActivityID())
+        self.id_variable = ctk.StringVar()
         self.name_variable = ctk.StringVar()
-        self.difficulty_value = ctk.IntVar(value=1)
+        self.difficulty_value = ctk.IntVar()
 
+        # only used for editing
+        self.ref_asset_dic = {}
+        self.asset = self.get_correct_format_asset()
+
+
+    # most probably not used since 
+    # theres no way you can 
+    # go back to this page
+    # just re-init just in case
     def refresh_variables(self):
+        self.id_variable.set(self.GetActivityID())
+        self.name_variable.set(self.GetActivityName())
+        self.difficulty_value.set(self.GetActivityDifficulty())
+
+        self.ref_asset_dic = {}
+        self.asset = self.get_correct_format_asset()
+
+    def get_correct_format_asset(self):
+        asset = []
+
+        if self.editing is False:
+            return asset
+
+        self.format_image_chunks(self.ac, asset)
+        self.format_code_chunks(self.ac, asset)
+
+        # Challange has additional compiling for Hints
+        if self.ac_type == Activity.AType.Challenge:
+            self.ac: Challenge
+            self.format_image_chunks(self.ac.hints, asset)
+            self.format_code_chunks(self.ac.hints, asset)
+
+        return asset
+
+    def format_image_chunks(self, source, append_to):
+        ac_dir = self.ac.ModulePath
+
+        for id, value in source.img.items():
+            name = '.'.join(value.split('.')[:-1]) # failsafe if file somehow has... multiple dot... # m dont think that will happen
+            img_dir = f'{ac_dir}/{value}'
+            asset_chunk = ('image', name, img_dir)
+            if asset_chunk not in append_to:
+                self.ref_asset_dic[id] = asset_chunk
+                append_to.append(asset_chunk)
+
+    def format_code_chunks(self, source, append_to):
+        ac_dir = self.ac.ModulePath
+
+        for id, value in source.code.items():
+            full_dir = f'{ac_dir}/{value}'
+            code_val = ''
+            input_val = ''
+            with open(f'{full_dir}/main.py', 'r') as code_fd:
+                code_val = ''.join(code_fd.readlines())
+
+            try:
+                with open(f'{full_dir}/input', 'r') as input_fd:
+                    input_val = ''.join(input_fd.readlines())
+            except FileNotFoundError: # code is NOT runnable
+                input_val = None
+
+            asset_chunk = ('code', value, code_val, input_val)
+
+            if asset_chunk not in append_to:
+                self.ref_asset_dic[id] = asset_chunk
+                append_to.append(asset_chunk)
+
+    @abstractmethod
+    def import_data(self):
         pass
 
     def attach_elements(self) -> None:
@@ -165,40 +236,49 @@ class ActivityEditor(App_Frame, ABC):
             self.header_data,
             corner_radius=0
         )
+        second_row.columnconfigure(0, weight=30)
+        second_row.columnconfigure(1, weight=70)
         second_row.grid(row=1, column=0, sticky="ew")
 
+        difficulty_frame = ctk.CTkFrame(second_row, fg_color='transparent')
+        difficulty_frame.columnconfigure(1, weight=1)
+        difficulty_frame.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
+
         difficulty_label = ctk.CTkLabel(
-            second_row,
+            difficulty_frame,
             text=f"{self.ac_type_name}'s Difficulty: "
         )
         difficulty_label.grid(row=0, column=0, padx=5, pady=5)
 
         difficulty_slider = ctk.CTkSlider(
-            second_row,
+            difficulty_frame,
             from_=1,
             to=10,
             variable=self.difficulty_value,
             command=self.UpdateDifficultyLabel
         )
-        difficulty_slider.grid(row=0, column=1, padx=5, pady=5)
+        difficulty_slider.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
         self.difficulty_display = ctk.CTkLabel(
-            second_row,
+            difficulty_frame,
             text=self.difficulty_value.get()
         )
         self.difficulty_display.grid(row=0, column=2, padx=5, pady=5)
 
+        tag_frame = ctk.CTkFrame(second_row, fg_color='transparent')
+        tag_frame.columnconfigure(1, weight=1)
+        tag_frame.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+
         tag_label = ctk.CTkLabel(
-            second_row,
+            tag_frame,
             text=f'{self.ac_type_name}\'s Tags'
         )
-        tag_label.grid(row=0, column=3, padx=5, pady=5)
+        tag_label.grid(row=0, column=0, padx=5, pady=5)
 
-        tag_entry = ctk.CTkLabel(
-            second_row,
-            text="TODO: Implement Tag Choosing"
+        self.tag_entry = TagSelection(
+            tag_frame
         )
-        tag_entry.grid(row=0, column=4, padx=5, pady=5, sticky='ew')
+        self.tag_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
         # third row
         thirdrow = ctk.CTkFrame(
@@ -219,8 +299,16 @@ class ActivityEditor(App_Frame, ABC):
             thirdrow,
             height=65
         )
-        self.description_entry.grid(row=0, column=1, padx=5, pady=5,
-                                    sticky='ew')
+        self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+        self.SetActivtiyDescription()
+
+        self.id_variable.set(self.GetActivityID())
+        self.name_variable.set(self.GetActivityName())
+        self.difficulty_value.set(self.GetActivityDifficulty())
+
+        if self.editing:
+            self.tag_entry.import_values(self.ac.tag)
+
 
     @abstractmethod
     def ContentData(self):
@@ -250,11 +338,11 @@ class ActivityEditor(App_Frame, ABC):
 
         from ..std_windows.ui_std_module_window import ModuleWindow
         from ..std_windows.ui_std_quiz_window import QuizWindow
-        from ..std_windows.ui_std_challenge_window import ChallangeWindow
+        from ..std_windows.ui_std_challenge_window import ChallengeWindow
 
         from ...backend.activity.ac_classes.ac_module import Module
         from ...backend.activity.ac_classes.ac_quiz import Quiz
-        from ...backend.activity.ac_classes.ac_challenge import Challange
+        from ...backend.activity.ac_classes.ac_challenge import Challenge
 
         ac_id = self.id_variable.get()
         App().clean_frame()
@@ -266,8 +354,7 @@ class ActivityEditor(App_Frame, ABC):
                 App().change_frame(QuizWindow(Quiz(ac_id), None, True),
                                    False)
             case Activity.AType.Challenge:
-                App().change_frame(ChallangeWindow(Challange(ac_id), None,
-                                                   True), False)
+                App().change_frame(ChallengeWindow(Challenge(ac_id), None, True), False)
 
     @abstractmethod
     def ExportData(self):
@@ -288,7 +375,7 @@ class ActivityEditor(App_Frame, ABC):
             self.ac_type.value,
             self.name_variable.get(),
             self.difficulty_value.get(),
-            ["py001", 'py002', 'py004'],
+            self.tag_entry.get(),
             self.description_entry.get("0.0", ctk.END)
         ]
 
@@ -300,6 +387,19 @@ class ActivityEditor(App_Frame, ABC):
         """
 
         self.difficulty_display.configure(text=self.difficulty_value.get())
+
+    def SetActivtiyDescription(self):
+        if self.editing:
+            description = ActivityDB().fetch_attr(ActivityDB().field.description.name, self.ac.id)
+        else:
+            description = ''
+        self.description_entry.insert('0.0', description)
+
+    def GetActivityDifficulty(self):
+        if self.editing:
+            return self.ac.difficulty
+        else:
+            return 1
 
     def GetActivityName(self):
         """
@@ -343,10 +443,14 @@ class ActivityEditor(App_Frame, ABC):
                 break
         return f'{self.ac_type.getSubScript()}{index:04d}'
 
-# if __name__ == "__main__":
-#     master = App()
-#     editwin = ActivityEditor(master, 620, 450, Activity.AType['Module'])
-#     editwin.grid(row=0, column=0)
+    def get_header_errors(self):
+        error_list = []
 
-#     master.main_frame.grid(row=0, column=0)
-#     master.mainloop()
+        if self.name_variable.get().strip() == '':
+            error_list.append('Name is Empty')
+        if self.description_entry.get('0.0', ctk.END).strip() == '':
+            error_list.append('No description for activity')
+        if len(self.tag_entry.get()) == 0:
+            error_list.append('Tag is not chosen for the activity')
+
+        return ('Header', error_list)

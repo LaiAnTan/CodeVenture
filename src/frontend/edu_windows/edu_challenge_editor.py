@@ -1,16 +1,9 @@
 import customtkinter as ctk
+from os import path, listdir
 
-
-from ..ui_app import App
 from .edu_activity_editor import ActivityEditor
-from .helper_class.solutionEntry import Modified_IDE
-from .helper_class.dataFileEditor import dataFileEditor
-from .helper_class.ch_errorWindow import Ch_ErrorWindow
-from .helper_class.testcaseEditor import testCaseEditor
 from ...backend.activity.ac_classes.ac_activity import Activity
-from ...backend.factory.ChallengeFactory import ChallengeFactory
-from ...backend.activity.ac_classes.ac_challenge import Challange
-
+from ...backend.activity.ac_classes.ac_challenge import Activity, Challenge
 
 class ChallangeEditor(ActivityEditor):
 
@@ -18,14 +11,68 @@ class ChallangeEditor(ActivityEditor):
     Frame class for displaying the challenge editor window for educators.
     """
 
-    def __init__(self, existing_module: Challange = None):
+    def __init__(self, existing_module: Challenge = None):
         """
         Initialises the class.
         """
 
         super().__init__(Activity.AType['Challenge'], existing_module)
-        self.asset = []
+
         self.SetFrames()
+        if self.editing:
+            self.import_data()
+    
+    def import_data(self):
+        solution_path = f'{self.ac.ModulePath}/solution'
+        testcases_path = f'{self.ac.ModulePath}/testcase'
+        data = []
+
+        # get prompt
+        for content in self.ac.content:
+            type = content[0]
+            value = content[1]
+            match type:
+                case Activity.Content_Type.Paragraph:
+                    widget_type = 'paragraph'
+                    widget_content = value
+                case Activity.Content_Type.Code | Activity.Content_Type.Image:
+                    widget_type = 'asset'
+                    widget_content = self.ref_asset_dic[value]
+            data.append((widget_type, widget_content))
+        self.prompt.import_data_list(data)
+
+        # get solution
+        if path.exists(solution_path):
+            with open(f'{solution_path}/main.py', 'r') as main_fd:
+                code_in = ''.join(main_fd.readlines())
+            with open(f'{solution_path}/input', 'r') as input_fd:
+                input_in = ''.join(input_fd.readlines())
+            self.solution.import_data((code_in, input_in))
+
+        # get hints
+        data.clear()
+        for content in self.ac.hints.content:
+            type = content[0]
+            value = content[1]
+            match type:
+                case Activity.Content_Type.Paragraph:
+                    widget_type = 'paragraph'
+                    widget_content = value
+                case Activity.Content_Type.Code | Activity.Content_Type.Image:
+                    widget_type = 'asset'
+                    widget_content = self.ref_asset_dic[value]
+            data.append((widget_type, widget_content))
+        self.hints.import_data_list(data)
+
+        # get test_cases data
+        data.clear()
+        if path.exists(testcases_path):
+            testcases = listdir(testcases_path)
+            for testcase in testcases:
+                with open(f'{testcases_path}/{testcase}') as tc_fd:
+                    data.append(''.join(tc_fd.readlines()))
+            self.testcase.import_data(data)
+
 
     def ContentData(self):
         """
@@ -34,11 +81,10 @@ class ChallangeEditor(ActivityEditor):
         self.content_data.rowconfigure(1, weight=1)
         self.content_data.columnconfigure(0, weight=1)
 
-        self.screen_var = ctk.StringVar(value='Challange Question Prompt')
+        self.screen_var = ctk.StringVar(value = 'Challenge Question Prompt')
         segmented_button = ctk.CTkSegmentedButton(
             self.content_data,
-            values=['Challange Question Prompt', 'Solution', 'Hints',
-                    'Test Cases'],
+            values=['Challenge Question Prompt', 'Solution', 'Hints', 'Test Cases'],
             variable=self.screen_var,
             dynamic_resizing=False,
             command=self.switch
@@ -61,7 +107,7 @@ class ChallangeEditor(ActivityEditor):
         """
 
         match self.screen_var.get():
-            case 'Challange Question Prompt':
+            case 'Challenge Question Prompt':
                 self.display_PromptEditor()
             case 'Solution':
                 self.display_solution()
@@ -151,7 +197,9 @@ class ChallangeEditor(ActivityEditor):
         Getter for error list.
         """
 
+        header_error = self.get_header_errors()
         return (
+            [header_error] if header_error[1] else [],
             self.prompt.get_error_list(),
             self.solution.get_error(),
             self.hints.get_error_list(),
@@ -159,28 +207,16 @@ class ChallangeEditor(ActivityEditor):
         )
 
     def ExportData(self):
-        """
-        Handles the event where the challenge is exported.
-        """
-
-        print("LOG: Exporting Challange...")
+        print("LOG: Exporting Challenge...")
 
         error = self.get_error_list()
         content = self.GetContentData()
 
-        if content[0] == []:
-            error[0].append(('Prompt', 'Empty Prompt'))
-        if content[2] == []:
-            error[2].append(('Hints', 'Empty Hints'))
-        if content[3] == []:
-            error[3].append(('Test Cases', 'No Test Cases'))
-
-        if error != ([], [], [], []):  # all empty
+        if error != ([], [], [], [], []): # all empty
             error_window = Ch_ErrorWindow(self, 450, 550, error)
             self.winfo_toplevel().wait_window(error_window)
             return False
 
-        # print(content)
         ChallengeFactory(self.GetHeaderData(), content, self.asset).build()
 
         print("Export Complete!")
@@ -188,5 +224,5 @@ class ChallangeEditor(ActivityEditor):
 
 
 if __name__ == "__main__":
-    App().change_frame(ChallangeEditor(None))
+    App().change_frame(ChallengeEditor(None))
     App().mainloop()

@@ -39,25 +39,28 @@ class QuestionFrame(ctk.CTkFrame):
         self.prompt_frame.columnconfigure(0, weight=1)
         self.prompt_frame.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
-        for index, prompt in enumerate(self.prompt):
-            if "IMG-CONT" in prompt:
-                self.prompt = self.parent.ImageHandler(
-                    prompt.removeprefix('<IMG-CONT>'),
-                    200,  # TODO: Change this value
-                    self.max_width,
-                    self.prompt_frame
-                )
-            elif "CODE-CONT" in prompt:
-                self.prompt = self.parent.CodeHandler(
-                    prompt.removeprefix('<CODE-CONT>'),
-                    self.max_width,
-                    self.prompt_frame
-                )
-            else:
-                self.prompt = ParagraphDisplayer(
-                    self.prompt_frame,
-                    prompt
-                )
+        for index, prompt_info in enumerate(self.prompt):
+            prompt_type = prompt_info[0]
+            prompt_content = prompt_info[1]
+            match prompt_type:
+                case Quiz.Content_Type.Paragraph:
+                    self.prompt = ParagraphDisplayer(
+                        self.prompt_frame,
+                        prompt_content
+                    )
+                case Quiz.Content_Type.Code:
+                    self.prompt = self.parent.CodeHandler(
+                        prompt_content,
+                        self.max_width,
+                        self.prompt_frame
+                    )
+                case Quiz.Content_Type.Image:
+                    self.prompt = self.parent.ImageHandler(
+                        prompt_content,
+                        200,  # TODO: Change this value
+                        self.max_width,
+                        self.prompt_frame
+                    )
             self.prompt.grid(row=index, column=0, sticky='ew')
 
         self.options_frame = ctk.CTkFrame(self, fg_color='transparent')

@@ -23,8 +23,37 @@ class QuizEditor(ActivityEditor):
 
         super().__init__(Activity.AType['Quiz'], existing_quiz)
 
-        self.asset = []
         self.SetFrames()
+        if self.editing:
+            self.import_data()
+
+    def import_data(self):
+        data = ()
+        self.ac : Quiz
+
+        for index, question in enumerate(self.ac.questions):
+            prompt_data = []
+            for segment in question.prompt:
+                type = segment[0]
+                value = segment[1]
+                match type:
+                    case Activity.Content_Type.Paragraph:
+                        widget_type = 'paragraph'
+                        widget_content = value
+                    case Activity.Content_Type.Code | Activity.Content_Type.Image:
+                        widget_type = 'asset'
+                        widget_content = self.ref_asset_dic[value]
+                prompt_data.append((widget_type, widget_content))
+            
+            options_data = []
+            for answer in question.options:
+                options_data.append(answer)
+
+            answer_data = (int(self.ac.answers[index]), options_data)
+            data = (prompt_data, answer_data)
+
+            q_preview_frame = self.addQuestions()
+            q_preview_frame.importData(data)
 
     def ContentData(self):
         """
@@ -73,6 +102,8 @@ class QuizEditor(ActivityEditor):
         self.questions.refresh_elements()
         self.questions.scroll_frame(1)
 
+        return new_question
+
     def GetContentData(self):
         """
         Creates and returns the content data.
@@ -84,10 +115,17 @@ class QuizEditor(ActivityEditor):
         Creates and returns the error list.
         """
         error_list = []
+        header_error = self.get_header_errors()
+        if header_error[1]:
+            error_list.append(header_error)
+
+        if self.questions.get_tracking_no() == 0:
+            error_list.append(('Questions', ['No Questions!']))
+
         for index, question in enumerate(self.questions.get_tracking_list()):
             error = question.getError()
-            if error is not None:
-                error_list.append((index + 1, question.getError()))
+            if error:
+                error_list.append((f'Question {index + 1}', error))
         return error_list
 
     def ExportData(self):
@@ -98,6 +136,7 @@ class QuizEditor(ActivityEditor):
 
         error_list = self.get_error_list()
         content = self.GetContentData()
+        
         if error_list:
             error_window = ErrorWindow(self, 450, 550, error_list,
                                        'exporting quiz activity')

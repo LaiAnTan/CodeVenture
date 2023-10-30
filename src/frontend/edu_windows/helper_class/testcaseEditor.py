@@ -121,6 +121,10 @@ class Modified_IDE(IDE):
             self.insertTerminal(self.output_term, error_output, True)
 
 
+    def import_data(self, data: str):
+        self.InsertContent('0.0', data, 2)
+
+
 class testCaseFrame(EntryForm):
     def __init__(self, master, editor):
         super().__init__(master, editor)
@@ -133,10 +137,7 @@ class testCaseFrame(EntryForm):
         return self.ide.getInputContent()
 
     def getError(self):
-        return (
-            False,
-            'nothing here'
-        )
+        return []
 
     def SetContentFrame(self):
         self.content.columnconfigure(0, weight=1)
@@ -146,8 +147,8 @@ class testCaseFrame(EntryForm):
         self.set_focus_widget(self.ide.InputTextBox)
         self.ide.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
 
-    def importData(self, data: tuple[str]):
-        pass
+    def importData(self, data: str):
+        self.ide.import_data(data)
 
 
 class testCaseEditor(ctk.CTkFrame):
@@ -180,11 +181,19 @@ class testCaseEditor(ctk.CTkFrame):
         new.focus()
         self.testcase_frame.scroll_frame(1)
 
+        return new
+
+    def import_data(self, data_list):
+        for data in data_list:
+            frame = self.add_a_test_case()
+            frame.importData(data)
+
     def get_content_data(self):
         return [x.getData() for x in self.testcase_frame.get_tracking_list()]
 
     def get_error_list(self):
-        # this is probably the only error checked for this
-        if self.get_content_data == []:
-            return [('Test Case', 'No Test Case Provided')]
-        return []
+        error_list = []
+        if self.get_content_data() == []:
+            error_list.append(('Test Case', ['No Test Case Provided']))
+
+        return error_list

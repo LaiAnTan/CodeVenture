@@ -2,6 +2,7 @@ import customtkinter as ctk
 from abc import ABC, abstractmethod
 from .confirmationWindow import ConfirmationWindow
 from .entryAdder import EntryAdder
+from .entryShifter import EntryShifterConfig
 
 from .refreshScrollFrame import RefreshableScrollableFrame
 from .refreshScrollFrame import RSFWidget
@@ -12,9 +13,6 @@ class EntryForm(RSFWidget, ABC):
         self.main_editor = main_editor
 
         self.type = "base"
-
-        self.error = True
-        self.error_msg = 'Entry Frame is left unused, Remove if not needed'
 
     def SetFrames(self, no_entry_adder: bool = False):
         """Builds both Header and Content Frame"""
@@ -44,21 +42,22 @@ class EntryForm(RSFWidget, ABC):
             self.SetEntryAdder()
 
     def SetHeader(self):
-        self.header.columnconfigure((0, 1), weight=1)
+        self.header.columnconfigure((1, 2), weight=40)
 
+        # theres a reason why these two are at 1 and 2...
         cool_label = ctk.CTkLabel(
             self.header,
             text=f'{self.type.capitalize()} Entry Form',
             corner_radius=10,
         )
-        cool_label.grid(row=0, column=0, sticky='w')
+        cool_label.grid(row=0, column=1, sticky='w')
 
         remove_button = ctk.CTkButton(
             self.header,
             text="Remove",
             command= self.delete_self
         )
-        remove_button.grid(row=0, column=1, sticky='e')
+        remove_button.grid(row=0, column=2, sticky='e')
 
     @abstractmethod
     def SetContentFrame(self):
@@ -81,11 +80,10 @@ class EntryForm(RSFWidget, ABC):
         return super().delete_self()
 
     def SetEntryAdder(self):
-        entry_adder = EntryAdder(self, 
-                                 self.parent_frame, 
-                                 self.main_editor, 
-                                 )
-        entry_adder.grid(row=0, column=0, pady=(0, 10), sticky='ew')
+        EntryShifterConfig(self,
+                           self.parent_frame,
+                           self.main_editor,
+                           )
 
     def getNextSimilarType(self):
         parent_tracking = self.parent_frame.get_tracking_list()
@@ -95,8 +93,6 @@ class EntryForm(RSFWidget, ABC):
                 return (self_index + 1) + x
         return -1
 
+    @abstractmethod
     def getError(self):
-        return (
-            self.error,
-            self.error_msg
-        )
+        pass

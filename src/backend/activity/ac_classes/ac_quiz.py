@@ -12,10 +12,22 @@ class Question():
         Initialises the class.
         """
         self.id = id
-        self.prompt: list[str] = []
+        self.prompt: list[tuple[Activity.Content_Type, str]] = []
         self.options: list[str] = []
 
         self.__get_values(question_block)
+
+    def __append_prompt(self, content: str):
+        if content.find("<IMG-CONT>") == 0:
+            content = content.removeprefix('<IMG-CONT>')
+            data_chunk = (Activity.Content_Type.Image, content)
+        elif content.find('<CODE-CONT>') == 0:
+            content = content.removeprefix('<CODE-CONT>')
+            data_chunk = (Activity.Content_Type.Code, content)
+        else:
+            data_chunk = (Activity.Content_Type.Paragraph, content)
+
+        self.prompt.append(data_chunk)
 
     def __get_values(self, q_block: list[str]):
         while len(q_block):
@@ -24,7 +36,7 @@ class Question():
                 content = q_block.pop(0)
                 self.options = content.split('|')
             else:
-                self.prompt.append(content)
+                self.__append_prompt(content)
 
     def __str__(self):
         """
@@ -167,4 +179,3 @@ class Quiz(Activity):
 if __name__ == "__main__":
     test = Quiz("QZ0000")
     print(test)
-    pass

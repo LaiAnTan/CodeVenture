@@ -6,7 +6,11 @@ class EntryAdder(ctk.CTkFrame):
     """may god forgive me for what im about to do
     
     this widget allows EntryForm objects to make a new instance in the main editor instance
-    The new instance is placed ABOVE the object (there is a button to add at the bottom)"""
+    The new instance is placed ABOVE the object (there is a button to add at the bottom)
+    
+    Mostly depreciated due to it being ugly
+    """
+
     def __init__(self,
                  master: RSFWidget,
                  attached_form: RefreshableScrollableFrame, 
@@ -54,9 +58,6 @@ class EntryAdder(ctk.CTkFrame):
         for the edu_module_editor instead
 
         God bless this spaghetti code"""
-        from .paragraphEntry import ParagraphEntryForm
-        from .assetPreview import AssetPreview
-
         index_to_add = self.master.get_index_instance()
         to_add = self.chosen_para_type.get()
 

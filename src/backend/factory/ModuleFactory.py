@@ -32,9 +32,11 @@ class ModuleFactory(ActivityFactory):
             self.build_Data()
             self.generate_Data_Files()
             self.build_Data_Link()
+        self.used_file_dir.append(f'{self.activity_folder_dir}/{DATA_FILE}')
 
         # disabled temporary
         self.add_EntrytoDatabase()
+        self.clean_up()
 
     # helper functions
 

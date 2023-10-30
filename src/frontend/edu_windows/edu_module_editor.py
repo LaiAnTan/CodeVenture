@@ -19,8 +19,26 @@ class ModuleEditor(ActivityEditor):
 
         super().__init__(Activity.AType['Module'], existing_module)
 
-        self.assets = []
         self.SetFrames()
+        if self.editing:
+            self.import_data()
+
+    def import_data(self):
+        ac_data = []
+
+        for content in self.ac.content:
+            type = content[0]
+            value = content[1]
+            match type:
+                case Activity.Content_Type.Paragraph:
+                    widget_type = 'paragraph'
+                    widget_content = value
+                case Activity.Content_Type.Code | Activity.Content_Type.Image:
+                    widget_type = 'asset'
+                    widget_content = self.ref_asset_dic[value]
+            ac_data.append((widget_type, widget_content))
+
+        self.data_editor.import_data_list(ac_data)
 
     def ContentData(self):
         """
@@ -32,7 +50,7 @@ class ModuleEditor(ActivityEditor):
 
         self.data_editor = dataFileEditor(
             self.content_data,
-            self.assets
+            self.asset
         )
         self.data_editor.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
 
@@ -56,8 +74,16 @@ class ModuleEditor(ActivityEditor):
         Handles the event where the module is exported.
         """
         print('LOG: Exporting...')
+        error_messages = []
 
-        error_messages = self.get_error_list()
+        # check header
+        header_error = self.get_header_errors()
+        if header_error[1]:
+            error_messages.append(header_error)
+
+        # check content
+        error_messages.extend(self.get_error_list())
+
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages,
                                        'export Module')
@@ -67,7 +93,7 @@ class ModuleEditor(ActivityEditor):
         header = self.GetHeaderData()
         content = self.GetContentData()
 
-        ModuleFactory(header, content, self.assets).build()
+        ModuleFactory(header, content, self.asset).build()
         print('Export Complete!')
         return True
 
@@ -76,7 +102,7 @@ class ModuleEditor(ActivityEditor):
         Getter for asset list.
         """
 
-        return self.assets
+        return self.asset
 
 
 if __name__ == "__main__":

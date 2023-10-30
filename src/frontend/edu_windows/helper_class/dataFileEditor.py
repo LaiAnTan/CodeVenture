@@ -104,9 +104,12 @@ class dataFileEditor(ctk.CTkFrame):
         error_status = [x.getError() for x in self.content_frame.get_tracking_list()]
         error_messages = []
 
+        if self.get_content_data() == []:
+            error_messages.append(('Data Editor', ['Empty Content']))
+
         for index, error_ret in enumerate(error_status):
-            if error_ret[0] is True:
-                error_messages.append((index + 1, error_ret[1]))
+            if error_ret:
+                error_messages.append((f'Data Editor Entry {index + 1}', error_ret))
         return error_messages
     
     def refresh_assets(self):

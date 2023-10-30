@@ -90,14 +90,14 @@ def dispatcher(activityID, activityType, student: Student, editor_view=False):
     Function that handles the frame switch to the correct activity window.
     """
 
-    from .std_windows.ui_std_challenge_window import ChallangeWindow
+    from .std_windows.ui_std_challenge_window import ChallengeWindow
     from .std_windows.ui_std_quiz_window import QuizWindow
     from .std_windows.ui_std_module_window import ModuleWindow
 
     from ..backend.activity.ac_classes.ac_activity import Activity
     from ..backend.activity.ac_classes.ac_module import Module
     from ..backend.activity.ac_classes.ac_quiz import Quiz
-    from ..backend.activity.ac_classes.ac_challenge import Challange
+    from ..backend.activity.ac_classes.ac_challenge import Challenge
 
     App().clean_frame()
     match activityType:
@@ -106,4 +106,4 @@ def dispatcher(activityID, activityType, student: Student, editor_view=False):
         case Activity.AType.Quiz.value:
             App().change_frame(QuizWindow(Quiz(activityID), student))
         case Activity.AType.Challenge.value:
-            App().change_frame(ChallangeWindow(Challange(activityID), student))
+            App().change_frame(ChallengeWindow(Challenge(activityID), student))
