@@ -1,9 +1,17 @@
 import customtkinter as ctk
 
-from customtkinter.windows.widgets.core_widget_classes.dropdown_menu import DropdownMenu
 
 class TagSelection(ctk.CTkOptionMenu):
+
+    """
+    Class that handles the tag selection in editor.
+    """
+
     def __init__(self, master):
+        """
+        Initialises the class.
+        """
+
         self.font = ctk.CTkFont(
             'Helvetica',
             size=15
@@ -18,22 +26,25 @@ class TagSelection(ctk.CTkOptionMenu):
         self._dropdown_menu.delete(0)
 
     def init_tag_checkboxes(self):
+        """
+        Initialises the tag checkboxes beside the dropdown menu.
+        """
+
         from ....backend.database.database_activity import ActivityDB
 
         tag_list = ActivityDB().getAllowedTags()
         for tag in tag_list:
             tag_var = ctk.BooleanVar(value=False)
             self.tag_variable[tag] = tag_var
-            self._dropdown_menu.add_checkbutton(label=f'{tag}', 
-                                                command=lambda x=tag: 
-                                                self.set(x), 
-                                                onvalue=1, 
-                                                offvalue=0, 
+            self._dropdown_menu.add_checkbutton(label=f'{tag}',
+                                                command=lambda x=tag:
+                                                self.set(x),
+                                                onvalue=1,
+                                                offvalue=0,
                                                 variable=tag_var,
                                                 font=self.font,
                                                 selectcolor='#3DCBC7'
                                                 )
-
 
     def set(self, tag):
         if tag in self.selected_tags:
@@ -43,18 +54,20 @@ class TagSelection(ctk.CTkOptionMenu):
         self.set_display()
         self._open_dropdown_menu()
 
-
     def set_display(self):
         if self.selected_tags:
-            format_string = str(self.selected_tags).replace('[', '').replace(']', '').replace('\'', '').replace(',', ', ')
+            format_string = (str(self.selected_tags).replace('[', '')
+                             .replace(']', '').replace('\'', '')
+                             .replace(',', ', '))
             self._text_label.configure(text=f"{format_string}")
         else:
             self._text_label.configure(text='Select Tags')
 
-
     def get(self):
+        """
+        Get the selected tags.
+        """
         return self.selected_tags
-
 
     def import_values(self, values):
         self.selected_tags = values
@@ -64,6 +77,7 @@ class TagSelection(ctk.CTkOptionMenu):
             else:
                 print(f"LOG: Unkown Tag Found: {selected_tag}")
         self.set_display()
+
 
 if __name__ == "__main__":
     from ...ui_app import App

@@ -1,24 +1,31 @@
-"""
-Like Code Entry, but not really LIKE code entry yeah?
-"""
-
 import customtkinter as ctk
 
 from ...std_windows.helper_class.ide import IDE
-from ...std_windows.helper_class.textboxWithPlaceholder import TextBox_Placeholder
+from ...std_windows.helper_class.textboxWithPlaceholder import \
+    TextBox_Placeholder
 from config import DEFAULT_IDE_MESSAGE, DEFAULT_INPUT_MESSAGE
 
+
 class Modified_IDE(IDE):
+
     """
     A heavily modifed IDE class
     """
-    def __init__(self, master, content = None) -> None:
+
+    def __init__(self, master, content=None) -> None:
+        """
+        Initialises the class.
+        """
         super().__init__(master, 450, 350, 'temp', '', '.', content)
 
         self.error = False
         self.error_msg = ''
 
     def InitFrames(self):
+        """
+        Initialise the frames in the class.
+        """
+
         font = ctk.CTkFont(
             "Helvetica",
             size=12,
@@ -59,8 +66,9 @@ class Modified_IDE(IDE):
 
     def setUpFrame(self, previous_content=None):
         """
-        Overriden
+        Setup the frames in the class.
         """
+
         self.rowconfigure(0, weight=1)
         self.columnconfigure((0, 1), weight=1)
 
@@ -82,7 +90,8 @@ class Modified_IDE(IDE):
 
         self.InitFrames()
         self.output_term = self.terminalOutputLabel(self.right)
-        self.output_term.grid(row=2, column=0, padx=5, pady=(0, 5), sticky='nsew')
+        self.output_term.grid(row=2, column=0, padx=5, pady=(0, 5),
+                              sticky='nsew')
 
         button_frame = ctk.CTkFrame(
             self.left
@@ -113,8 +122,9 @@ class Modified_IDE(IDE):
 
     def display_output_terminal(self, code_output, error_output):
         """
-        Overriden
+        Display the output terminal with the output of the code.
         """
+
         self.output_term.configure(state='normal')
         self.output_term.delete("0.0", ctk.END)
         if code_output:
@@ -123,12 +133,20 @@ class Modified_IDE(IDE):
             self.insertTerminal(self.output_term, error_output, True)
 
     def GetCodeFromFile(self):
+        """
+        Get the code from the code file.
+        """
+
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
         self.error = self.get_code_from_filepath(file_path, False)
 
     def GetInputFromFile(self):
+        """
+        Get the input from the input file.
+        """
+
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
@@ -140,8 +158,12 @@ class Modified_IDE(IDE):
             self.getCodeContent(),
             self.getInputContent()
         )
-    
+
     def get_error(self):
+        """
+        Get potential errors if they exist.
+        """
+
         error_list = []
 
         if self.getCodeContent() == '':
@@ -158,5 +180,9 @@ class Modified_IDE(IDE):
             return []
 
     def import_data(self, data: tuple[str]):
+        """
+        Import data passed as parameter into content.
+        """
+
         self.InsertContent('0.0', data[0], 1)
         self.InsertContent('0.0', data[1], 2)

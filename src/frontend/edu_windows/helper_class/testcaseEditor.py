@@ -6,18 +6,24 @@ from ...std_windows.helper_class.ide import IDE, TextBox_Placeholder, \
 
 
 class Modified_IDE(IDE):
+
     """
-    you did not modify ide again YES I DID BABYYY
+    New iteration of IDE class.
     """
+
     def __init__(self, master, editor):
+        """
+        Initialises the class.
+        """
         super().__init__(master, 180, 240, 'temp', '', '.', None)
 
         self.editor = editor
 
     def setUpFrame(self, previous_content=None):
         """
-        Overriden
+        Setup the frame.
         """
+
         self.rowconfigure(0, weight=1)
         self.columnconfigure((0, 1), weight=1)
 
@@ -96,6 +102,10 @@ class Modified_IDE(IDE):
         self.InputTextBox.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
 
     def GetInputFromFile(self):
+        """
+        Gets a file (handled by ctk.filedialog).
+        """
+
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
@@ -104,6 +114,10 @@ class Modified_IDE(IDE):
                                                                   False)
 
     def RunCode(self):
+        """
+        Runs the intended solution code.
+        """
+
         solution_code = self.editor.solution.getCodeContent()
         self.IDETextBox.delete('0.0', ctk.END)
         self.IDETextBox.insert('0.0', solution_code)
@@ -111,8 +125,9 @@ class Modified_IDE(IDE):
 
     def display_output_terminal(self, code_output, error_output):
         """
-        Overriden
+        Displays the code output.
         """
+
         self.output_term.configure(state='normal')
         self.output_term.delete("0.0", ctk.END)
         if code_output:
@@ -120,13 +135,25 @@ class Modified_IDE(IDE):
         if error_output:
             self.insertTerminal(self.output_term, error_output, True)
 
-
     def import_data(self, data: str):
+        """
+        Inserts data passed by parameter as IDE content.
+        """
+
         self.InsertContent('0.0', data, 2)
 
 
 class testCaseFrame(EntryForm):
+
+    """
+    Frame class for a test case.
+    """
+
     def __init__(self, master, editor):
+        """
+        Initialises the class.
+        """
+
         super().__init__(master, editor)
         self.type = 'Test Case'
 
@@ -134,12 +161,24 @@ class testCaseFrame(EntryForm):
         self.SetFrames(True)
 
     def getData(self):
+        """
+        Getter for data in ide.
+        """
+
         return self.ide.getInputContent()
 
     def getError(self):
+        """
+        Getter for error.
+        """
+
         return []
 
     def SetContentFrame(self):
+        """
+        Setup the content frame.
+        """
+
         self.content.columnconfigure(0, weight=1)
         self.content.rowconfigure(0, weight=1)
 
@@ -148,11 +187,24 @@ class testCaseFrame(EntryForm):
         self.ide.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
 
     def importData(self, data: str):
+        """
+        Import data passed as parameter into ide.
+        """
+
         self.ide.import_data(data)
 
 
 class testCaseEditor(ctk.CTkFrame):
+
+    """
+    Frame class for the test case editor.
+    """
+
     def __init__(self, master, editor):
+        """
+        Initialises the class.
+        """
+
         super().__init__(master)
         self.editor = editor
         self.rowconfigure(1, weight=1)
@@ -172,6 +224,10 @@ class testCaseEditor(ctk.CTkFrame):
                                  sticky='nsew')
 
     def add_a_test_case(self):
+        """
+        Handles the event of adding a test case.
+        """
+
         new = testCaseFrame(
             self.testcase_frame,
             self.editor
@@ -184,14 +240,24 @@ class testCaseEditor(ctk.CTkFrame):
         return new
 
     def import_data(self, data_list):
+        """
+        Import data from data_list.
+        """
+
         for data in data_list:
             frame = self.add_a_test_case()
             frame.importData(data)
 
     def get_content_data(self):
+        """
+        Getter for content data.
+        """
         return [x.getData() for x in self.testcase_frame.get_tracking_list()]
 
     def get_error_list(self):
+        """
+        Getter for error list.
+        """
         error_list = []
         if self.get_content_data() == []:
             error_list.append(('Test Case', ['No Test Case Provided']))
