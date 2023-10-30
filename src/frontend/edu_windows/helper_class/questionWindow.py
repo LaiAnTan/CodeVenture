@@ -1,15 +1,18 @@
 from __future__ import annotations
 import customtkinter as ctk
 
-from src.frontend.edu_windows.helper_class.refreshScrollFrame import RefreshableScrollableFrame
-
 from .errorWindow import ErrorWindow
 from .dataFileEditor import dataFileEditor
-
 from .entryForm import EntryForm
 from .refreshScrollFrame import RefreshableScrollableFrame
 
+
 class answerframe(ctk.CTkFrame):
+
+    """
+    Class.
+    """
+
     def __init__(self, master):
         super().__init__(master)
 

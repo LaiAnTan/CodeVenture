@@ -3,13 +3,26 @@ from .entryForm import EntryForm
 from _tkinter import TclError
 
 class ParagraphEntryForm(EntryForm):
+
+    """
+    Custom widget class for paragraph entry form.
+    """
+
     def __init__(self, master, main_editor):
+        """
+        Initialises the class.
+        """
+
         super().__init__(master, main_editor)
         self.type = "paragraph"
 
         self.SetFrames()
 
     def SetContentFrame(self):
+        """
+        Setup the content frame.
+        """
+
         self.content.rowconfigure(0, weight=1)
         self.content.columnconfigure(0, weight=1)
         self.ContentEntryForm = ctk.CTkTextbox(
@@ -21,25 +34,41 @@ class ParagraphEntryForm(EntryForm):
 
         self.setContentFormEvent()
         self.ContentEntryForm.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
-    
+
     def setContentFormEvent(self):
+        """
+        Binds content form events.
+        """
+
         self.ContentEntryForm.bind("<Return>", self.goNextChunk)
         self.ContentEntryForm.bind("<Control-KeyPress-v>", self.PasteData)
         self.ContentEntryForm.bind("<BackSpace>", self.RemoveSelf)
 
     def insertData(self, content):
+        """
+        Inserts data into the form.
+        """
+
         self.ContentEntryForm.insert(ctk.INSERT, content)
 
     def getData(self):
-        """returns data input into the frame in the following format
-        
-        (type, data keyed into the paragraph)"""
+        """
+        Gets the data inputted into the form.
+        returns data input into the frame in the following format
+
+        (type, data keyed into the paragraph)
+        """
+
         return (
             self.type,
             self.ContentEntryForm.get("0.0", ctk.END).strip()
         )
 
     def getError(self):
+        """
+        Gets the errors in the form.
+        """
+
         error_list = []
 
         if self.ContentEntryForm.get('0.0', ctk.END).strip() == '':
@@ -48,12 +77,14 @@ class ParagraphEntryForm(EntryForm):
         return error_list
 
     def peek(self):
-        """Check if there are content in the main entry form 
+        """
+        Check if there are content in the main entry form
 
-        Returns false if its empty"""
+        Returns false if its empty
+        """
         return self.ContentEntryForm.get("0.0", ctk.END).strip() != ""
 
-    ## helper functions
+    # helper functions
 
     def RemoveSelf(self, placeholder=None):
         if not self.peek():

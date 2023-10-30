@@ -1,6 +1,7 @@
 from config import DATA_FILE, ANSWER_FILE
 from .ActivityFactory import ActivityFactory
 
+
 class QuizFactory(ActivityFactory):
 
     """
