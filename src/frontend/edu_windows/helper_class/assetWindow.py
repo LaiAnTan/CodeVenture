@@ -109,6 +109,12 @@ class AssetWindow(ctk.CTkToplevel):
         self.asset_frame.track_element(entry_form)
 
     def get_error_message(self) -> list[tuple[str]]:
+        """
+        Gets error that may occured in the window
+
+        Formats the error message in the following way
+        (where it happend, [list of errors])
+        """
         error_status = [x.getError() for x in self.asset_frame.get_tracking_list()]
         error_messages = []
 
@@ -119,6 +125,12 @@ class AssetWindow(ctk.CTkToplevel):
         return error_messages
 
     def save_data(self) -> None:
+        """
+        Saves asset in editor with the new asset list stored in window
+
+        if error occured in the window, displays the list of errors in a seperate window
+        then returns back to asset window
+        """
         error_messages = self.get_error_message()
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages, 'save assets')
@@ -130,6 +142,14 @@ class AssetWindow(ctk.CTkToplevel):
         self.destroy()
 
     def add_new_asset(self) -> ImageEntryForm | CodeEntryForm:
+        """
+        Adds a new asset
+
+        Asset can either be Picture or a Code Snippet
+
+        Type is determined by chosen_type String Variable, which changes
+        based on Option Menu
+        """
         to_add  = self.chosen_type.get()
         match to_add:
             case 'Picture':

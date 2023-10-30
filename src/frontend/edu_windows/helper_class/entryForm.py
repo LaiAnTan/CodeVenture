@@ -1,13 +1,15 @@
 import customtkinter as ctk
 from abc import ABC, abstractmethod
 from .confirmationWindow import ConfirmationWindow
-from .entryAdder import EntryAdder
 from .entryShifter import EntryShifterConfig
 
 from .refreshScrollFrame import RefreshableScrollableFrame
 from .refreshScrollFrame import RSFWidget
 
 class EntryForm(RSFWidget, ABC):
+    """
+    Abstract base class that handles all entry forms used in editor
+    """
     def __init__(self, master: RefreshableScrollableFrame, main_editor):
         super().__init__(master=master)
         self.main_editor = main_editor
@@ -42,6 +44,9 @@ class EntryForm(RSFWidget, ABC):
             self.SetEntryAdder()
 
     def SetHeader(self):
+        """
+        Builds the header in the widget
+        """
         self.header.columnconfigure((1, 2), weight=40)
 
         # theres a reason why these two are at 1 and 2...
@@ -61,17 +66,41 @@ class EntryForm(RSFWidget, ABC):
 
     @abstractmethod
     def SetContentFrame(self):
+        """
+        Sets content of the widget
+
+        Meant to be overriden
+        """
         pass
 
     @abstractmethod
     def getData(self):
+        """
+        Function to get data contained in the widget
+
+        Meant to be overriden
+        """
         pass
 
     @abstractmethod
     def importData(self, data: tuple[str]):
-        self.error = False
+        """
+        Function to import data from a external source
+
+        Meant to be overriden
+        """
+        pass
 
     def delete_self(self, confirm=True) -> None:
+        """
+        Function to remove itself from the parent frame
+
+        Prompts user for confirmation to remove itself
+
+        Runs delete_self function from RSFWidget
+
+        The prompt is not shown if confirm is set to False
+        """
         if confirm:
             confirmation = ConfirmationWindow(self.master, 'remove this entry form')
             self.winfo_toplevel().wait_window(confirmation)
@@ -80,12 +109,20 @@ class EntryForm(RSFWidget, ABC):
         return super().delete_self()
 
     def SetEntryAdder(self):
+        """
+        Sets the entry shifter for entry widget
+
+        allows the entry to reposition itself in the frame
+        """
         EntryShifterConfig(self,
                            self.parent_frame,
                            self.main_editor,
                            )
 
     def getNextSimilarType(self):
+        """
+        Gets the next similar type in the parent list
+        """
         parent_tracking = self.parent_frame.get_tracking_list()
         self_index = parent_tracking.index(self)
         for x, frames in enumerate(parent_tracking[self_index + 1:]):
@@ -95,4 +132,9 @@ class EntryForm(RSFWidget, ABC):
 
     @abstractmethod
     def getError(self):
+        """
+        Gets error within the widget
+
+        meant to be overriden
+        """
         pass

@@ -13,6 +13,11 @@ from ...std_windows.helper_class.imagelabel import ImageLabel
 from config import ROOT_DIR
 
 class CodeBufferRunner(ctk.CTkFrame):
+    """
+    a specific frame used to display code from a buffer
+    
+    if input buffer is None, code is unrunnable and is view only
+    """
     def __init__(self, master, max_img_width, code_name, code_buffer, input_buffer) -> None:
         super().__init__(master)
 
@@ -43,6 +48,10 @@ class CodeBufferRunner(ctk.CTkFrame):
         self.setUpFrame()
 
     def	DisplayCodeline_FromBuffer(self):
+        """
+        Loads code content from code buffer and displays it as
+        a syntax highlighted picture
+        """
         pyg.highlight(
             self.code_buffer,
             PythonLexer(),
@@ -66,6 +75,9 @@ class CodeBufferRunner(ctk.CTkFrame):
         return ret_widget
 
     def	setUpFrame(self):
+        """
+        Sets up contents in the widget
+        """
         title = ctk.CTkLabel(
             self.HeaderFrame,
             text=self.code_name
@@ -86,6 +98,17 @@ class CodeBufferRunner(ctk.CTkFrame):
         CodeContent.grid(row=0, column=0, padx=5, pady=5)
 
     def RunCode(self):
+        """
+        Function to run the code stored in code buffer
+
+        first loads code and input from buffer into a temporary file
+        then runs the code
+
+        Then, displays the code output
+
+        timeout is set to 5 seconds and will automatically terminate after the
+        set period of time has passed
+        """
         for widget in self.outputFrame.winfo_children():
             widget.destroy()
         self.outputFrame.forget()

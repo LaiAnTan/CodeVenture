@@ -4,6 +4,11 @@ from ...std_windows.helper_class.ide import IDE
 from os import path
 
 class CodeEntryForm(EntryForm):
+    """
+    Allow user to create code snippet by typing
+    out the code snippet or importing from 
+    already existing python files
+    """
     def __init__(self, master, main_editor):
         super().__init__(master, main_editor)
 
@@ -15,10 +20,12 @@ class CodeEntryForm(EntryForm):
         self.SetFrames(no_entry_adder=True)
 
     def SetContentFrame(self):
+        """
+        Sets content frame of the widget
+        """
         self.content.rowconfigure(0, weight=1)
         self.content.columnconfigure(0, weight=70)
         self.content.columnconfigure(1, weight=30)
-        # self.content.columnconfigure((0, 1), weight=1)
 
         ImportFrame = ctk.CTkFrame(self.content, fg_color='transparent')
         ImportFrame.columnconfigure(0, weight=1)
@@ -82,6 +89,15 @@ class CodeEntryForm(EntryForm):
         runnable.grid(row=2, column=0, padx=5, pady=5)
 
     def GetCodeFromFile(self):
+        """
+        Displays a prompt to choose a file from
+
+        Then extracts the content of the python file and 
+        places them into the IDE entry form
+
+        error flag is set if file imported is invalid, or
+        file attempted to import doesnt exist
+        """
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
@@ -91,6 +107,16 @@ class CodeEntryForm(EntryForm):
             self.nameVar.set(name.split('.')[0])
 
     def GetInputFromFile(self):
+        """
+        Displays a prompt to choose a file from
+
+        Then extracts the content of the python file and 
+        places them into the Input entry form to be used
+        as code input
+
+        error flag is set if file imported is invalid, or
+        file attempted to import doesnt exist
+        """
         file_path = ctk.filedialog.askopenfilename()
         if not file_path:
             return
@@ -109,6 +135,11 @@ class CodeEntryForm(EntryForm):
         )
 
     def getError(self):
+        """
+        returns a list of errors that may have occured within the widget
+
+        error returned in the format of a list of strings
+        """
         errorlist = []
 
         if self.ide.getCodeContent() == "" and self.nameVar.get().strip() == '':
@@ -126,6 +157,12 @@ class CodeEntryForm(EntryForm):
         return errorlist
 
     def importData(self, data: tuple[str]):
+        """
+        imports existing data into the widget
+
+        data must be in the following format
+        ('code', name, code content, input content (None if is unrunnable))
+        """
         if data[0] != 'code':
             assert AssertionError("Wrong Type")
 

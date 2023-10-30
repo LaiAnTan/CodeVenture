@@ -1,13 +1,12 @@
-"""
-Like Challenge Window
-
-But for challenge editor
-"""
-
 import customtkinter as ctk
 from .errorWindow import ErrorFrame
 
 class Ch_ErrorWindow(ctk.CTkToplevel):
+    """
+    Similar to Error window, but tailored for challanges
+
+    this is due to challanges having 5 sections to worry
+    """
     def __init__(self, master, width, height, error_lists: tuple[list[str]]):
         super().__init__(master)
         self.geometry(f"{width}x{height}")
@@ -41,6 +40,9 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
         self.switch_frames(self.header_error)
 
     def init_frames(self):
+        """
+        Initializes frames displayed
+        """
         self.header_error = ErrorFrame(self, self.widget_width, self.error_lists[0])
         self.prompt_error = ErrorFrame(self, self.widget_width, self.error_lists[1])
         self.solution_error = ErrorFrame(self, self.widget_width, self.error_lists[2])
@@ -48,6 +50,9 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
         self.test_case_error = ErrorFrame(self, self.widget_width, self.error_lists[4])
 
     def switch(self, placeholder):
+        """
+        Switches frames that are displayed
+        """
         match self.screen_var.get():
             case 'Header':
                 self.switch_frames(self.header_error)
@@ -61,6 +66,11 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
                 self.switch_frames(self.test_case_error)
 
     def switch_frames(self, to_who):
+        """
+        Ungrids the currently displayed frame
+
+        then replaces it with another frame specified in (to_who)
+        """
         self.nowdisplaying.grid_forget()
         self.nowdisplaying = to_who
         to_who.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')

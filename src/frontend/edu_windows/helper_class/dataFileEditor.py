@@ -9,6 +9,14 @@ from config import ASSET_FOLDER
 
 
 class dataFileEditor(ctk.CTkFrame):
+    """
+    Editor frame to edit the contents of data.dat file
+
+    Allowed widgets are paragraph entry widgets and asset preview widgets
+
+    Asset button is provided to add assets, which can then be attached 
+    using asset preview widgets
+    """
     def __init__(self, master, asset_list):
         super().__init__(master=master, fg_color='transparent')
         self.assets = asset_list
@@ -84,6 +92,13 @@ class dataFileEditor(ctk.CTkFrame):
         return entry_form
 
     def widget_factory(self, to_add) -> ParagraphEntryForm | AssetWindow:
+        """
+        Creates new widgets based on the given parameter in (to_add)
+
+        allowed widgets for dataFileEditor are
+        - ParagraphEntryForm
+        - AssetPreview
+        """
         match to_add:
             case 'Paragraph':
                 entry_form = ParagraphEntryForm(
@@ -99,9 +114,19 @@ class dataFileEditor(ctk.CTkFrame):
         return entry_form
  
     def get_content_data(self):
+        """
+        Gets the content stored in all the widgets attached to the content
+        """
         return [x.getData() for x in self.content_frame.get_tracking_list()]
 
     def get_error_list(self):
+        """
+        Gets potential errors stored in all the widgets attached to the content
+
+        Errors are returned in a list, each element has the following format
+
+        (where the error occured, [list of errors that occured in the widget])
+        """
         error_status = [x.getError() for x in self.content_frame.get_tracking_list()]
         error_messages = []
 
@@ -114,11 +139,22 @@ class dataFileEditor(ctk.CTkFrame):
         return error_messages
     
     def refresh_assets(self):
+        """
+        Refreshes all asset widgets contained in the content frame
+
+        Used after every AssetWindow opening to ensure all AssetPreview
+        widget are up to date
+        """
         for content in self.content_frame.get_tracking_list():
             if isinstance(content, AssetPreview):
                 content.refreshPreview()
 
     def show_asset_window(self):
+        """
+        Displays the Asset Window
+
+        After the window is closed, refresh elements in the content
+        """
         asset_window = AssetWindow(self, 800, 700, self.assets)
         self.winfo_toplevel().wait_window(asset_window)
 
@@ -126,6 +162,15 @@ class dataFileEditor(ctk.CTkFrame):
         self.refresh_assets()
 
     def import_data_list(self, data_list = list[tuple[str]]):
+        """
+        Import data from data_list
+
+        each element in the data_list must either be a
+        - Paragraph
+        ('paragraph', content in paragraph)
+        - Asset
+        ('asset', (image or code content))
+        """
         for data in data_list:
             entry_form = self.widget_factory(data[0].capitalize())
             entry_form.importData(data)

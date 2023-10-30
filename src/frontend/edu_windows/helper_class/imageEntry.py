@@ -5,6 +5,11 @@ from config import ASSET_DIR
 from os import path
 
 class ImageEntryForm(EntryForm):
+    """
+    Widget that allows user to import a Image into the editor's asset 
+    list
+    """
+
     def __init__(self, master, parent):
         super().__init__(master, parent)
 
@@ -15,6 +20,9 @@ class ImageEntryForm(EntryForm):
         self.SetFrames(True)
 
     def SetContentFrame(self):
+        """
+        Sets content frame of the widget
+        """
         DirectoryAndNameFrame = ctk.CTkFrame(self.content)
         DirectoryAndNameFrame.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
@@ -96,6 +104,13 @@ class ImageEntryForm(EntryForm):
         self.PreviewImage(file_path)
 
     def ErrorImage(self, error_msg, original_dir):
+        """
+        Displays cant_display_image.png from asset directory
+        Sets name to Invalid File Format
+        All text color are changed to red
+        
+        Used when something had went wrong when trying to preview image
+        """
         self.error_msg = error_msg
 
         self.PreviewLabel.configure(
@@ -115,6 +130,11 @@ class ImageEntryForm(EntryForm):
         return "break"
 
     def PreviewImage(self, file_path):
+        """
+        Preview Image from file_path
+
+        If an error occured, self.ErrorImage is called instead
+        """
         if not file_path:
             return
         directory = file_path
@@ -148,6 +168,13 @@ class ImageEntryForm(EntryForm):
         return "break"
 
     def importData(self, data: tuple[str]):
+        """
+        Imports data from outer source
+
+        data must be in the following format:
+
+        ('image', image name, image directory)
+        """
         if data[0] != 'image':
             raise AssertionError("Wrong Type")
 
@@ -156,6 +183,11 @@ class ImageEntryForm(EntryForm):
         self.NameVar.set(data[1])
 
     def getError(self):
+        """
+        Gets error that may occured in the widget
+
+        returns the list of error messages
+        """
         error_list = []
 
         if self.DirectoryEntry.get() == '' and self.NameEntry.get() == '':

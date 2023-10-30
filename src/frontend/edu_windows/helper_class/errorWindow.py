@@ -1,10 +1,15 @@
 import customtkinter as ctk
 
 class ErrorFrame(ctk.CTkScrollableFrame):
+    """
+    Frame to display lists of errors from the provided error list
+    """
+
     def __init__(self, master, width, error_list):
         super().__init__(master)
         self.columnconfigure(0, weight=1)
 
+        # if error list is not provided, give a positive message
         if not error_list:
             all_goodframe = ctk.CTkFrame(self, fg_color='#00FF6F')
             all_goodframe.columnconfigure(0, weight=1)
@@ -18,6 +23,8 @@ class ErrorFrame(ctk.CTkScrollableFrame):
             all_good_label.grid(row=0, column=0, padx=5, pady=5)
             return
 
+        # displays all errors in error list
+        # for each error segments, displays where and what went wrong
         for error_detail in error_list:
             for error in error_detail[1]:
                 error_frame = ctk.CTkFrame(self, fg_color='#169398')
@@ -53,6 +60,11 @@ class ErrorFrame(ctk.CTkScrollableFrame):
                 error_message.grid(row=0, column=1, padx=5, pady=5, sticky='w')
 
 class ErrorWindow(ctk.CTkToplevel):
+    """
+    Error window pop up
+
+    Called when there are errors in the widget
+    """
     def __init__(self, master, width, height, error_list: list[str], user_action: str) -> None:
         super().__init__(master)
         self.geometry(f"{width}x{height}")

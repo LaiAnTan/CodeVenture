@@ -16,7 +16,6 @@ class Modified_IDE(IDE):
         super().__init__(master, 450, 350, 'temp', '', '.', content)
 
         self.error = False
-        self.error_msg = ''
 
     def InitFrames(self):
         font = ctk.CTkFont(

@@ -7,9 +7,6 @@ class ParagraphEntryForm(EntryForm):
         super().__init__(master, main_editor)
         self.type = "paragraph"
 
-        self.error = False
-        self.error_msg = ''
-
         self.SetFrames()
 
     def SetContentFrame(self):

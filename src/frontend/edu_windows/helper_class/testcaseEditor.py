@@ -100,8 +100,8 @@ class Modified_IDE(IDE):
         if not file_path:
             return
         else:
-            self.error, self.error_msg = self.get_input_from_file(file_path,
-                                                                  False)
+            self.error = self.get_input_from_file(file_path,
+                                                  False)
 
     def RunCode(self):
         solution_code = self.editor.solution.getCodeContent()

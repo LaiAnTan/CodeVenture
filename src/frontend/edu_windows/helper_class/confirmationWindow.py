@@ -1,6 +1,13 @@
 import customtkinter as ctk
 
 class ConfirmationWindow(ctk.CTkToplevel):
+    """
+    A window that prompts user for confirmation for any action
+    they want to take
+
+    Displays the action that they are about to take and 
+    prompts a yes and no button
+    """
     def __init__(self, master, user_action: str) -> None:
         super().__init__(master)
         self.geometry("400x200")
@@ -40,8 +47,16 @@ class ConfirmationWindow(ctk.CTkToplevel):
         self.grab_set()
 
     def set_return_result(self, value):
+        """
+        Sets return result of the window
+
+        then, destroys itself
+        """
         self.return_result = value
         self.destroy()
 
     def get_value(self):
+        """
+        Get the return result of the window
+        """
         return self.return_result

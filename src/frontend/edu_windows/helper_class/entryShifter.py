@@ -3,13 +3,14 @@ import customtkinter as ctk
 from .refreshScrollFrame import RefreshableScrollableFrame, RSFWidget
 
 class EntryShifterConfig(ctk.CTkFrame):
-    """may god forgive me for what im about to do
-    
-    this widget allows EntryForm objects to shift around the RSF
+    """
+    Class that implements the functionality that
+    allows EntryForm objects to shift around the RSF
+    onto RSFWidgets
     """
 
     def __init__(self,
-                 master,
+                 master: RSFWidget,
                  attached_form: RefreshableScrollableFrame, 
                  main_editor):
         # super().__init__(master, fg_color='#779DEB')
@@ -36,6 +37,9 @@ class EntryShifterConfig(ctk.CTkFrame):
         bring_down.grid(row=0, column=3, padx=5, pady=5, sticky='ew')
 
     def swap_up(self):
+        """
+        Swaps the current widget position with the widget above it
+        """
         index = self.master.get_index_instance()
         if index == 0:
             return
@@ -45,6 +49,9 @@ class EntryShifterConfig(ctk.CTkFrame):
         self.master.focus()
 
     def swap_down(self):
+        """
+        Swaps the current widget postiion with the widget below it
+        """
         index = self.master.get_index_instance()
         if index == (self.parent.get_tracking_no() - 1):
             return
