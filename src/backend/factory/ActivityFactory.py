@@ -38,7 +38,7 @@ class ActivityFactory(ABC):
 
         self.data_fd = None
 
-        self.used_file_dir = [f'{self.activity_folder_dir}/completed.db'] # dont accidentally remove the completion database
+        self.used_file_dir = [f'{self.activity_folder_dir}/completed.db'] # prevents accidental removal the completion database
 
     def build_Header(self):
         self.data_fd.write("HEADER-START\n")
@@ -205,11 +205,11 @@ class ActivityFactory(ABC):
 
     def clean_up(self):
         all_dir = [f'{self.activity_folder_dir}/{x}' for x in os.listdir(self.activity_folder_dir)]
-        
+
         for directory in all_dir:
             if directory not in self.used_file_dir:
                 if os.path.isfile(directory): # a standard file
                     os.remove(directory)
                 else: # a directory
                     sht.rmtree(directory)
-        print(all_dir)
+        # print(all_dir)

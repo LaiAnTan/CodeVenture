@@ -89,7 +89,10 @@ class QuizEditor(ActivityEditor):
         return [x.getData() for x in self.questions.get_tracking_list()]
     
     def get_error_list(self):
-        error_list = [self.get_header_errors()]
+        error_list = []
+        header_error = self.get_header_errors()
+        if header_error[1]:
+            error_list.append(header_error)
 
         if self.questions.get_tracking_no() == 0:
             error_list.append(('Questions', ['No Questions!']))
@@ -105,6 +108,7 @@ class QuizEditor(ActivityEditor):
 
         error_list = self.get_error_list()
         content = self.GetContentData()
+        
         if error_list:
             error_window = ErrorWindow(self, 450, 550, error_list, 'exporting quiz activity')
             self.winfo_toplevel().wait_window(error_window)

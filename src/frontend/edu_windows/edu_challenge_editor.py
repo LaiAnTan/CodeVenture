@@ -155,7 +155,10 @@ class ChallengeEditor(ActivityEditor):
         )
 
     def get_error_list(self):
+        header_error = self.get_header_errors()
+
         return (
+            [header_error] if header_error[1] else [],
             self.prompt.get_error_list(),
             self.solution.get_error(),
             self.hints.get_error_list(),
@@ -168,7 +171,7 @@ class ChallengeEditor(ActivityEditor):
         error = self.get_error_list()
         content = self.GetContentData()
 
-        if error != ([], [], [], []): # all empty
+        if error != ([], [], [], [], []): # all empty
             error_window = Ch_ErrorWindow(self, 450, 550, error)
             self.winfo_toplevel().wait_window(error_window)
             return False

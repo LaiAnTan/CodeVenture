@@ -52,8 +52,16 @@ class ModuleEditor(ActivityEditor):
 
     def ExportData(self):
         print('LOG: Exporting...')
+        error_messages = []
 
-        error_messages = self.get_error_list()
+        # check header
+        header_error = self.get_header_errors()
+        if header_error[1]:
+            error_messages.append(header_error)
+
+        # check content
+        error_messages.extend(self.get_error_list())
+
         if error_messages:
             error_window = ErrorWindow(self, 450, 550, error_messages, 'export Module')
             self.winfo_toplevel().wait_window(error_window)
