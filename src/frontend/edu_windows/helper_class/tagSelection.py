@@ -15,6 +15,7 @@ class TagSelection(ctk.CTkOptionMenu):
         self.tag_variable = {}
         self.init_tag_checkboxes()
 
+        self._dropdown_menu.delete(0)
 
     def init_tag_checkboxes(self):
         from ....backend.database.database_activity import ActivityDB
