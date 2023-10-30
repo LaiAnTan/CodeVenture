@@ -365,7 +365,7 @@ class SelectionScreen(App_Frame):
 
                 # sidebar type buttons (filter by type)
 
-                button_labels = ["All", "Module", "Quiz", "Challange"]
+                button_labels = ["All", "Module", "Quiz", "Challenge"]
                 button_functions = [
                     lambda: self.display_all_info(0, content_width,
                                                   main_contents_bar),

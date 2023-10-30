@@ -156,3 +156,7 @@ class Modified_IDE(IDE):
             return [('Solution', error_list)]
         else:
             return []
+
+    def import_data(self, data: tuple[str]):
+        self.InsertContent('0.0', data[0], 1)
+        self.InsertContent('0.0', data[1], 2)

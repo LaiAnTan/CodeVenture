@@ -15,11 +15,8 @@ class Hints(Activity):
         self.ParseContent()
         self.ParseSources()
 
-    def RunActivity(self):
-        pass
 
-
-class Challange(Activity):
+class Challenge(Activity):
 
     """
     Challenge class for parsing challenges.
@@ -86,5 +83,5 @@ class Challange(Activity):
 
 
 if __name__ == "__main__":
-    test = Challange("CH0000")
+    test = Challenge("CH0000")
     print(test)

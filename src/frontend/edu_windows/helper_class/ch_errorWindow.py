@@ -1,7 +1,7 @@
 """
-Like Challange Window
+Like Challenge Window
 
-But for challange editor
+But for challenge editor
 """
 
 import customtkinter as ctk
@@ -21,15 +21,15 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
 
         error_title = ctk.CTkLabel(
             self,
-            text=f'Errors detected when attempting to export challange activity',
+            text=f'Errors detected when attempting to export challenge activity',
             wraplength= width - 15
         )
         error_title.grid(row=0, column=0, padx=5, pady=5, sticky='w')
 
-        self.screen_var = ctk.StringVar(value = 'Challange Question Prompt')
+        self.screen_var = ctk.StringVar(value = 'Challenge Question Prompt')
         segmented_button = ctk.CTkSegmentedButton(
             self,
-            values=['Challange Question Prompt', 'Solution', 'Hints', 'Test Cases'],
+            values=['Challenge Question Prompt', 'Solution', 'Hints', 'Test Cases'],
             variable=self.screen_var,
             dynamic_resizing=False,
             command=self.switch
@@ -48,7 +48,7 @@ class Ch_ErrorWindow(ctk.CTkToplevel):
 
     def switch(self, placeholder):
         match self.screen_var.get():
-            case 'Challange Question Prompt':
+            case 'Challenge Question Prompt':
                 self.show_prompt_error()
             case 'Solution':
                 self.show_solution_error()

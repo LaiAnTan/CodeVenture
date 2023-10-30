@@ -40,7 +40,7 @@ class EntryShifterConfig(ctk.CTkFrame):
         if index == 0:
             return
         self.parent.swap_order(index, index - 1)
-        self.parent.scroll_frame((index - 1) / self.parent.get_tracking_no())
+        self.parent.scroll_frame((index) / self.parent.get_tracking_no())
         self.parent.refresh_elements()
         self.master.focus()
 

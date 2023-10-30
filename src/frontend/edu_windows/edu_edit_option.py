@@ -2,6 +2,8 @@ import customtkinter as ctk
 from ..ui_app import App
 from ..ui_app_frame import App_Frame
 
+# depreciated
+
 class EditorWindow(App_Frame):
     def __init__(self):
         super().__init__()
@@ -40,7 +42,7 @@ class EditorWindow(App_Frame):
         )
         bigtitle.grid(row=0, column=0, padx=50, pady=5)
 
-        self.values = ['Module', 'Quiz', 'Challange']
+        self.values = ['Module', 'Quiz', 'Challenge']
         self.chosen = ctk.StringVar(value='Module')
         self.option_dropdown = ctk.CTkComboBox(
             self.content,

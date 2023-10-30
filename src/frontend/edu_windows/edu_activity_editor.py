@@ -8,6 +8,9 @@ from abc import abstractmethod, ABC
 from .helper_class.confirmationWindow import ConfirmationWindow
 from .helper_class.sucessWindow import successWindow
 
+from ...backend.activity.ac_classes.ac_challenge import Hints, Challenge
+from os import path
+
 class ActivityEditor(App_Frame, ABC):
     def __init__(self, type: Activity.AType, activity: Activity=None):
         super().__init__()
@@ -23,10 +26,78 @@ class ActivityEditor(App_Frame, ABC):
         self.ac_type_name = type.name
 
         self.id_variable = ctk.StringVar(value=self.GetActivityID())
-        self.name_variable = ctk.StringVar()
-        self.difficulty_value = ctk.IntVar(value=1)
+        self.name_variable = ctk.StringVar(value=self.GetActivityName())
+        self.difficulty_value = ctk.IntVar(value=self.GetActivityDifficulty())
 
+        # only used for editing
+        self.ref_asset_dic = {}
+
+        self.asset = self.get_correct_format_asset()
+
+    # most probably not used since theres no way you can 
+    # go back to this page
+    # just init just in case
     def refresh_variables(self):
+        self.id_variable.set(self.GetActivityID())
+        self.name_variable.set(self.GetActivityName())
+        self.difficulty_value.set(self.GetActivityDifficulty())
+
+        self.ref_asset_dic = {}
+        self.asset = self.get_correct_format_asset()
+
+    def get_correct_format_asset(self):
+        asset = []
+
+        if self.editing is False:
+            return asset
+
+        self.format_image_chunks(self.ac, asset)
+        self.format_code_chunks(self.ac, asset)
+
+        # Challange has additional compiling for Hints
+        if self.ac_type == Activity.AType.Challenge:
+            self.ac: Challenge
+            self.format_image_chunks(self.ac.hints, asset)
+            self.format_code_chunks(self.ac.hints, asset)
+
+        print(self.ref_asset_dic)
+        return asset
+
+    def format_image_chunks(self, source, append_to):
+        ac_dir = self.ac.ModulePath
+
+        for id, value in source.img.items():
+            name = ''.join(value.split('.')[:-1]) # failsafe if file somehow has... multiple dot... # m dont think that will happen
+            img_dir = f'{ac_dir}/{value}'
+            asset_chunk = ('image', name, img_dir)
+            if asset_chunk not in append_to:
+                self.ref_asset_dic[id] = asset_chunk
+                append_to.append(asset_chunk)
+
+    def format_code_chunks(self, source, append_to):
+        ac_dir = self.ac.ModulePath
+
+        for id, value in source.code.items():
+            full_dir = f'{ac_dir}/{value}'
+            code_val = ''
+            input_val = ''
+            with open(f'{full_dir}/main.py', 'r') as code_fd:
+                code_val = ''.join(code_fd.readlines())
+
+            try:
+                with open(f'{full_dir}/input', 'r') as input_fd:
+                    input_val = ''.join(input_fd.readlines())
+            except FileNotFoundError: # code is NOT runnable
+                input_val = None
+
+            asset_chunk = ('code', value, code_val, input_val)
+
+            if asset_chunk not in append_to:
+                self.ref_asset_dic[id] = asset_chunk
+                append_to.append(asset_chunk)
+
+    @abstractmethod
+    def import_data(self):
         pass
 
     def attach_elements(self):
@@ -188,6 +259,7 @@ class ActivityEditor(App_Frame, ABC):
             height=65
         )
         self.description_entry.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+        self.SetActivtiyDescription()
 
     @abstractmethod
     def ContentData(self):
@@ -208,11 +280,11 @@ class ActivityEditor(App_Frame, ABC):
     def preview_win(self):
         from ..std_windows.ui_std_module_window import ModuleWindow
         from ..std_windows.ui_std_quiz_window import QuizWindow
-        from ..std_windows.ui_std_challenge_window import ChallangeWindow
+        from ..std_windows.ui_std_challenge_window import ChallengeWindow
 
         from ...backend.activity.ac_classes.ac_module import Module
         from ...backend.activity.ac_classes.ac_quiz import Quiz
-        from ...backend.activity.ac_classes.ac_challenge import Challange
+        from ...backend.activity.ac_classes.ac_challenge import Challenge
 
         ac_id = self.id_variable.get()
         App().clean_frame()
@@ -222,7 +294,7 @@ class ActivityEditor(App_Frame, ABC):
             case Activity.AType.Quiz:
                 App().change_frame(QuizWindow(Quiz(ac_id), None, True), False)
             case Activity.AType.Challenge:
-                App().change_frame(ChallangeWindow(Challange(ac_id), None, True), False)
+                App().change_frame(ChallengeWindow(Challenge(ac_id), None, True), False)
 
     @abstractmethod
     def ExportData(self):
@@ -249,6 +321,19 @@ class ActivityEditor(App_Frame, ABC):
 
     def UpdateDifficultyLabel(self, value):
         self.difficulty_display.configure(text=self.difficulty_value.get())
+
+    def SetActivtiyDescription(self):
+        if self.editing:
+            description = ActivityDB().fetch_attr(ActivityDB().field.description.name, self.ac.id)
+        else:
+            description = ''
+        self.description_entry.insert('0.0', description)
+
+    def GetActivityDifficulty(self):
+        if self.editing:
+            return self.ac.difficulty
+        else:
+            return 1
 
     def GetActivityName(self):
         if self.editing:

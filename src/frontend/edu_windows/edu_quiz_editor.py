@@ -16,8 +16,37 @@ class QuizEditor(ActivityEditor):
     def __init__(self, existing_quiz: Quiz = None):
         super().__init__(Activity.AType['Quiz'], existing_quiz)
 
-        self.asset = []
         self.SetFrames()
+        if self.editing:
+            self.import_data()
+
+    def import_data(self):
+        data = ()
+        self.ac : Quiz
+
+        for index, question in enumerate(self.ac.questions):
+            prompt_data = []
+            for segment in question.prompt:
+                type = segment[0]
+                value = segment[1]
+                match type:
+                    case Activity.Content_Type.Paragraph:
+                        widget_type = 'paragraph'
+                        widget_content = value
+                    case Activity.Content_Type.Code | Activity.Content_Type.Image:
+                        widget_type = 'asset'
+                        widget_content = self.ref_asset_dic[value]
+                prompt_data.append((widget_type, widget_content))
+            
+            options_data = []
+            for answer in question.options:
+                options_data.append(answer)
+
+            answer_data = (int(self.ac.answers[index]), options_data)
+            data = (prompt_data, answer_data)
+
+            q_preview_frame = self.addQuestions()
+            q_preview_frame.importData(data)
 
     def ContentData(self):
         self.content_data.rowconfigure(1, weight=1)
@@ -54,6 +83,8 @@ class QuizEditor(ActivityEditor):
         self.questions.refresh_elements()
         self.questions.scroll_frame(1)
 
+        return new_question
+
     def GetContentData(self):
         return [x.getData() for x in self.questions.get_tracking_list()]
     
@@ -75,7 +106,8 @@ class QuizEditor(ActivityEditor):
             self.winfo_toplevel().wait_window(error_window)
             return False
 
-        QuizFactory(self.GetHeaderData(), content, self.asset).build()
+        print(content)
+        # QuizFactory(self.GetHeaderData(), content, self.asset).build()
         print("Exported Quiz!")
         return True
 

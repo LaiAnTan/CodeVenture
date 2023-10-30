@@ -6,19 +6,19 @@ from ..ui_app import App
 from .helper_class.ide import IDE
 from .helper_class.code_runner import CodeRunner
 from .ui_std_activity_window import ActivityWindow
-from ...backend.activity.ac_classes.ac_challenge import Challange
+from ...backend.activity.ac_classes.ac_challenge import Challenge
 from ...backend.activity.ac_database.db_ac_completed import ActivityDictionary
 from ...backend.user.user_student import Student
 from .helper_class.textdisplay import ParagraphDisplayer
 
 
-class ChallangeWindow(ActivityWindow):
+class ChallengeWindow(ActivityWindow):
 
     """
     Frame class for displaying the challenge window.
     """
 
-    def __init__(self, challenge: Challange, student: Student,
+    def __init__(self, challenge: Challenge, student: Student,
                  editor_view=False):
         """
         Initialize the class.
@@ -186,19 +186,19 @@ class ChallangeWindow(ActivityWindow):
 
         for index, content in enumerate(self.ac.content):
             match content[0]:
-                case Challange.Content_Type.Paragraph:
+                case Challenge.Content_Type.Paragraph:
                     paragraph = ParagraphDisplayer(
                         self.displayed_frame,
                         content[1]
                     )
-                case Challange.Content_Type.Image:
+                case Challenge.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
                         1600, # change height value later
                         frame_width,
                         self.displayed_frame
                     )
-                case Challange.Content_Type.Code:
+                case Challenge.Content_Type.Code:
                     paragraph = self.CodeHandler(
                         content[1],
                         frame_width,
@@ -241,12 +241,12 @@ class ChallangeWindow(ActivityWindow):
 
         for index, content in enumerate(self.ac.hints.content):
             match content[0]:
-                case Challange.Content_Type.Paragraph:
+                case Challenge.Content_Type.Paragraph:
                     paragraph = ParagraphDisplayer(
                         self.displayed_frame,
                         content[1]
                     )
-                case Challange.Content_Type.Image:
+                case Challenge.Content_Type.Image:
                     paragraph = self.ImageHandler(
                         content[1],
                         1600,  # TODO: Change the height value
@@ -342,5 +342,5 @@ class ChallangeWindow(ActivityWindow):
 
 if __name__ == "__main__":
     ActivityDictionary()
-    App().change_frame(ChallangeWindow(Challange("CH0001"), Student("james")))
+    App().change_frame(ChallengeWindow(Challenge("CH0001"), Student("james")))
     App().mainloop()
