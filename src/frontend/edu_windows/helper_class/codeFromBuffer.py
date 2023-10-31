@@ -124,7 +124,7 @@ class CodeBufferRunner(ctk.CTkFrame):
             file_input.write(self.input_buffer)
 
         # run the temporary python file
-        cmd = f"{sys.executable} {self.temp_file}"
+        cmd = f"'{sys.executable}' {self.temp_file}"
 
         font_color = "white"
         try:

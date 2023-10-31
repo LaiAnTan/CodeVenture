@@ -252,7 +252,7 @@ class IDE(ctk.CTkFrame):
             file.write(text)
 
         # run code
-        cmd = f"{sys.executable} \"{self.activity_folder}/{self.code_name}\""
+        cmd = f"'{sys.executable}' \"{self.activity_folder}/{self.code_name}\""
 
         user_input = self.InputTextBox.get("0.0", "end")
         user_input = bytes(user_input, "utf-8")

@@ -138,7 +138,7 @@ class CodeRunner(ctk.CTkFrame):
 
         print("Running Code.")
 
-        cmd = f"{sys.executable} \"{self.code_folder}/main.py\""
+        cmd = f"'{sys.executable}' \"{self.code_folder}/main.py\""
         code_input = open(f"{self.code_folder}/input")
 
         font_color = "white"

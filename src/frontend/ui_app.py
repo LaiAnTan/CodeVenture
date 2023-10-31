@@ -36,9 +36,6 @@ class App():
     main.geometry(f"{width}x{height}")
     main.title("CodeVenture")
 
-    main.minsize(width, height)
-    main.maxsize(width, height)
-
     settings = Settings(f"{ROOT_DIR}/settings.conf")
 
     if settings.getSettingValue("lightmode").lower() == "false":
