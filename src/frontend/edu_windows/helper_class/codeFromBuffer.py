@@ -124,7 +124,7 @@ class CodeBufferRunner(ctk.CTkFrame):
             file_input.write(self.input_buffer)
 
         # run the temporary python file
-        cmd = f"'{sys.executable}' {self.temp_file}"
+        cmd = [sys.executable, f'{self.temp_file}']
 
         font_color = "white"
         try:
@@ -132,7 +132,7 @@ class CodeBufferRunner(ctk.CTkFrame):
                                                   timeout=5,
                                                   stdin=open(self.temp_file_input),
                                                   stderr=subprocess.STDOUT,
-                                                  shell=True).decode()
+                                                  ).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
             font_color = "red"

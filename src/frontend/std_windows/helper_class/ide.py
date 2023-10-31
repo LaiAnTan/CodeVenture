@@ -190,13 +190,13 @@ class IDE(ctk.CTkFrame):
         with open(f"{self.activity_folder}/{self.code_name}", "w") as file:
             file.write(text)
 
-        cmd = f"{sys.executable} \"{self.activity_folder}/{self.code_name}\""
+        cmd = [sys.executable, f'{self.activity_folder}/{self.code_name}']
 
         try:
             code_output = subprocess.check_output(cmd, timeout=self.timeout_period,
                                                   stdin=testcase_in,
                                                   stderr=subprocess.STDOUT,
-                                                  shell=True).decode()
+                                                  ).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
         except subprocess.TimeoutExpired:
@@ -252,7 +252,7 @@ class IDE(ctk.CTkFrame):
             file.write(text)
 
         # run code
-        cmd = f"'{sys.executable}' \"{self.activity_folder}/{self.code_name}\""
+        cmd = [sys.executable, f'{self.activity_folder}/{self.code_name}']
 
         user_input = self.InputTextBox.get("0.0", "end")
         user_input = bytes(user_input, "utf-8")
@@ -261,7 +261,7 @@ class IDE(ctk.CTkFrame):
                                          timeout=5,
                                          input=user_input,
                                          capture_output=True,
-                                         shell=True)
+                                         )
             code_output = code_runner.stdout
             error_output = code_runner.stderr
         except subprocess.TimeoutExpired as err:

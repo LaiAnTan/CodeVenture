@@ -114,13 +114,14 @@ class CodeRunner(ctk.CTkFrame):
         """
         Runs the test cases specified in testcase_path.
         """
-        cmd = f"{sys.executable} \"{self.code_folder}/main.py\""
+        cmd = [sys.executable, f'{self.code_folder}/main.py']
+
         testcase_in = open(testcase_path)
         try:
             code_output = subprocess.check_output(cmd, timeout=5,
                                                   stdin=testcase_in,
                                                   stderr=subprocess.STDOUT,
-                                                  shell=True).decode()
+                                                  ).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
         except subprocess.TimeoutExpired:
@@ -138,15 +139,14 @@ class CodeRunner(ctk.CTkFrame):
 
         print("Running Code.")
 
-        cmd = f"'{sys.executable}' \"{self.code_folder}/main.py\""
+        cmd = [sys.executable, f'{self.code_folder}/main.py']
         code_input = open(f"{self.code_folder}/input")
 
         font_color = "white"
         try:
             code_output = subprocess.check_output(cmd, timeout=5,
                                                   stdin=code_input,
-                                                  stderr=subprocess.STDOUT,
-                                                  shell=True).decode()
+                                                  stderr=subprocess.STDOUT,).decode()
         except subprocess.CalledProcessError as errxc:
             code_output = errxc.output
             font_color = "red"
